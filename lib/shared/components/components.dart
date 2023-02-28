@@ -118,9 +118,9 @@ Widget myDrawer() => SingleChildScrollView(
             height: 100,
             width: double.infinity,
             child: Padding(
-              padding: const EdgeInsetsDirectional.symmetric(
-                vertical: 30,
-                horizontal: 20,
+              padding: const EdgeInsetsDirectional.all(25.0
+             //   vertical: 30,
+              //  horizontal: 20,
               ),
               child: Row(
                 children: [
