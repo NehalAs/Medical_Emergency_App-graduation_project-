@@ -20,6 +20,7 @@ class HomeScreen extends StatelessWidget {
               target: LatLng(30.033333, 31.233334),
               zoom: 10
           ),
+
           // onMapCreated: (GoogleMapController googleMapController) {
           //   AppCubit.get(context).addMarker(
           //     markerId: '1',
