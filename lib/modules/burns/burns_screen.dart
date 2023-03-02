@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../shared/cubit/cubit.dart';
 import '../../shared/cubit/states.dart';
+import 'package:graduation_project/shared/components/components.dart';
+
 
 class BurnsScreen extends StatelessWidget {
 
@@ -17,13 +19,7 @@ class BurnsScreen extends StatelessWidget {
               target: LatLng(30.033333, 31.233334),
               zoom: 10
           ),
-          // onMapCreated: (GoogleMapController googleMapController) {
-          //   AppCubit.get(context).addMarker(
-          //     markerId: '1',
-          //     markerPosition: LatLng(30.033333, 31.233334),
-          //   );
-          // },
-          // markers: AppCubit.get(context).myMarkers,
+          mapType:AppCubit.get(context).mapTypeUser==popupMenuValues.normalView? MapType.normal : AppCubit.get(context).mapTypeUser== popupMenuValues.satelliteView? MapType.hybrid:MapType.terrain,
           onMapCreated:AppCubit.get(context).onMapCreated,
         );
       },
