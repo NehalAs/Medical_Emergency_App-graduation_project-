@@ -204,7 +204,7 @@ Widget myDrawer() => SingleChildScrollView(
     );
 
 Widget menuItem({
-  required IconData itemIcon,
+  IconData? itemIcon,
   required String itemName,
   required Function() onTap,
   double iconSize = 20,
@@ -235,3 +235,6 @@ Widget menuItem({
             ),
           )),
  );
+
+
+enum popupMenuValues{satelliteView,normalView,terrainnView,}
