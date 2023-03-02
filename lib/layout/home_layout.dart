@@ -29,8 +29,8 @@ class HomeLayout extends StatelessWidget {
                 AppCubit.get(context).screens[AppCubit.get(context).currentIndex],
                 Padding(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 35
+                    horizontal: 20,
+                    vertical: 40,
                   ),
                   child: Row(
                     children: [
@@ -66,7 +66,7 @@ class HomeLayout extends StatelessWidget {
                       SizedBox(width: 10,),
                       Expanded(
                         child: Container(
-                          height: 40,
+                          height: 50,
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(30),
