@@ -12,6 +12,7 @@ import 'package:graduation_project/shared/styles/colors.dart';
 class HomeLayout extends StatelessWidget {
   var scaffoldKey = GlobalKey<ScaffoldState>();
   var searchController =TextEditingController();
+
   @override
   Widget build(BuildContext context) {
 
@@ -20,6 +21,7 @@ class HomeLayout extends StatelessWidget {
       child: BlocConsumer<AppCubit,AppStates>(
         listener: (context, state) {},
         builder: (context, state) {
+
           return Scaffold(
             key: scaffoldKey,
             body: Stack(
@@ -28,7 +30,7 @@ class HomeLayout extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 10,
-                    vertical: 25
+                    vertical: 35
                   ),
                   child: Row(
                     children: [
@@ -92,6 +94,29 @@ class HomeLayout extends StatelessWidget {
                           ),
                         ),
                       ),
+                      SizedBox(width: 10,),
+                      CircleAvatar(
+                        radius: 20,
+                        backgroundColor: Colors.white,
+                        child: PopupMenuButton<popupMenuValues>(
+                          onSelected:(value){AppCubit.get(context).changeMapView(value);},
+                          itemBuilder: (context)=> [
+                            PopupMenuItem(
+                            child:Text('Satellite view'),
+                            value:popupMenuValues.satelliteView,
+                            ),
+                            PopupMenuItem(
+                              child:Text('Normal view'),
+                              value:popupMenuValues.normalView,
+                            ),
+                            PopupMenuItem(
+                              child:Text('Terrainn view'),
+                              value:popupMenuValues.terrainnView,
+                            ),
+                          ],
+                        ),
+                      ),
+
                     ],
                   ),
                 ),
