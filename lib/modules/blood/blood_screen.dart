@@ -649,7 +649,7 @@ class BloodScreen extends StatelessWidget {
 
                 icon: BitmapDescriptor.defaultMarker,
               );
-
+//
             },
 
             markers: AppCubit.get(context).myMarkers,
