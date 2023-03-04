@@ -15,13 +15,12 @@ class HomeLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return BlocProvider(
       create: (context) => AppCubit(),
       child: BlocConsumer<AppCubit,AppStates>(
         listener: (context, state) {},
         builder: (context, state) {
-
+          AppCubit.get(context).getCustomMarker();
           return Scaffold(
             key: scaffoldKey,
             body: Stack(
@@ -128,13 +127,11 @@ class HomeLayout extends StatelessWidget {
                   child: Column(
                     children: [
                       myDrawer(),
-
                     ],
                   ),
                 ),
               ),
             ),
-
             bottomNavigationBar: BottomNavigationBar(
             currentIndex: AppCubit.get(context).currentIndex,
             onTap: (value) {

@@ -15,7 +15,11 @@ import '../../modules/burns/burns_screen.dart';
 class AppCubit extends Cubit<AppStates> {
 AppCubit() :super (AppInitialState());
 
-var myMarkers = HashSet<Marker>();
+var myBloodMarkers = HashSet<Marker>();
+var myBurnsMarkers = HashSet<Marker>();
+var myHomeMarkers = HashSet<Marker>();
+var mySearchMarkers = HashSet<Marker>();
+var customMarker;
 
 final GlobalKey<AnimatedFloatingActionButtonState> key =GlobalKey<AnimatedFloatingActionButtonState>();
 
@@ -48,7 +52,7 @@ List<Widget>screens=
 
 static AppCubit get(context) =>BlocProvider.of(context);
 
-void addMarker(
+void addBloodMarker(
   {
      context,
     required String markerId,
@@ -58,7 +62,7 @@ void addMarker(
     BitmapDescriptor icon = BitmapDescriptor.defaultMarker,
   })
 {
-  myMarkers.add(Marker(
+  myBloodMarkers.add(Marker(
     markerId:MarkerId(markerId),
     position: markerPosition,
     infoWindow:InfoWindow(
@@ -68,8 +72,75 @@ void addMarker(
     icon: icon,
    // visible: true,
   ));
-emit(AppAddMarkerState());
+  emit(AppAddMarkerState());
 }
+void addBurnsMarker(
+  {
+     context,
+    required String markerId,
+    required  markerPosition,
+    String? infoWindowTitle,
+    String? infoWindowDescription,
+    BitmapDescriptor icon = BitmapDescriptor.defaultMarker,
+  })
+{
+  myBurnsMarkers.add(Marker(
+    markerId:MarkerId(markerId),
+    position: markerPosition,
+    infoWindow:InfoWindow(
+        title:infoWindowTitle,
+        snippet: infoWindowDescription
+    ),
+    icon: icon,
+   // visible: true,
+  ));
+  emit(AppAddMarkerState());
+}
+void addHomeMarker(
+  {
+     context,
+    required String markerId,
+    required  markerPosition,
+    String? infoWindowTitle,
+    String? infoWindowDescription,
+    BitmapDescriptor icon = BitmapDescriptor.defaultMarker,
+  })
+{
+  myHomeMarkers.add(Marker(
+    markerId:MarkerId(markerId),
+    position: markerPosition,
+    infoWindow:InfoWindow(
+        title:infoWindowTitle,
+        snippet: infoWindowDescription
+    ),
+    icon: icon,
+   // visible: true,
+  ));
+  emit(AppAddMarkerState());
+}
+void addSearchMarker(
+  {
+     context,
+    required String markerId,
+    required  markerPosition,
+    String? infoWindowTitle,
+    String? infoWindowDescription,
+    BitmapDescriptor icon = BitmapDescriptor.defaultMarker,
+  })
+{
+  mySearchMarkers.add(Marker(
+    markerId:MarkerId(markerId),
+    position: markerPosition,
+    infoWindow:InfoWindow(
+        title:infoWindowTitle,
+        snippet: infoWindowDescription
+    ),
+    icon: icon,
+   // visible: true,
+  ));
+  emit(AppAddMarkerState());
+}
+
 
   void changeIndex(int index) {
     currentIndex = index;
@@ -88,6 +159,11 @@ void changeSearchAddress(value)
   searchAddress=value;
   emit(AppChangeSearchAddressState());
 }
+
+getCustomMarker() async {
+  customMarker= await BitmapDescriptor.fromAssetImage(ImageConfiguration.empty,'assets/images/location-pin.png');
+}
+
 void searchAndNavigate(){
   locationFromAddress(searchAddress!).then((result){
     mapController!.animateCamera(CameraUpdate.newCameraPosition(
@@ -95,11 +171,13 @@ void searchAndNavigate(){
         target: LatLng(result[0].latitude,result[0].longitude),
         zoom: 10,
       )));
-    // myMarkers=HashSet<Marker>();
-    // addMarker(
-    //     markerId: 'search1',
-    //     markerPosition: LatLng(result[0].latitude,result[0].longitude),
-    // );
+      addSearchMarker(
+        markerId: 'search1',
+        markerPosition: LatLng(result[0].latitude,result[0].longitude),
+        infoWindowTitle: '$searchAddress',
+        infoWindowDescription: 'Your search result',
+        icon: customMarker,
+      );
     emit(AppSearchSuccessState());
   }).catchError((error){
     print(error.toString());

@@ -1,6 +1,7 @@
 abstract class AppStates{}
 class AppInitialState extends AppStates {}
 class AppAddMarkerState extends AppStates {}
+//class AppAddCustomMarkerState extends AppStates {}
 class AppChangeBottomNavBarState extends AppStates {}
 class AppChangeMapControllerState extends AppStates {}
 class AppChangeSearchAddressState extends AppStates {}

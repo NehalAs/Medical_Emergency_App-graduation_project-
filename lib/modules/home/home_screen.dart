@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -6,8 +8,6 @@ import '../../shared/cubit/cubit.dart';
 import '../../shared/cubit/states.dart';
 
 class HomeScreen extends StatelessWidget {
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -27,44 +27,44 @@ class HomeScreen extends StatelessWidget {
           AppCubit.get(context).onMapCreated(googleMapController);
 
           //markers
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
               markerId: '1',
               markerPosition: const LatLng(30.05160665975826, 31.21054654046658),
               infoWindowTitle:'المركز القومى لنقل الدم',
               infoWindowDescription: 'العجوزة، حي العجوزة، الجيزة 3753530'
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
               markerId: '2',
               markerPosition: const LatLng(30.070037976343123, 31.284155908532693),
               infoWindowTitle: 'المركز الإقليمي لنقل الدم بالعباسية',
               infoWindowDescription: ' امام, مدرسة '
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '3',
             markerPosition: const LatLng(30.015734113461725, 31.22772343015096),
             infoWindowTitle: 'المركز الاقليمى لنقل الدم وتجميع البلازما بدار السلام',
             infoWindowDescription: 'استكشاف المركز الاقليمى لنقل الدم وتجميع البلازما بدار السلام',
           );
 
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '4',
             markerPosition: const LatLng(30.043390224368093, 31.217853117984525),
             infoWindowTitle: 'مركز نقل الدم بمستشفى الدكتور مجدى',
             infoWindowDescription: 'شارع بولس حنا، الدقي قسم، قسم الدقي، الجيزة 3753410',
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '5',
             markerPosition: const LatLng(30.065843713162607, 31.244354625377646),
             infoWindowTitle: 'بنك الدم المركزى',
             infoWindowDescription: ' الهلال الأحمر المصري، الجيارة، الأزبكية، محافظة القاهرة 4320151',
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '6',
             markerPosition: const LatLng(30.05192076644373, 31.211052163215275),
             infoWindowTitle: 'المركز القومى لنقل الدم National Blood Transfusion Center, 26X6+MCG',
             infoWindowDescription: 'العجوزة، العمرانية, الجيزة 3753530',
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '7',
             markerPosition: const LatLng(30.04484433519289, 31.210344506356613),
 
@@ -72,82 +72,82 @@ class HomeScreen extends StatelessWidget {
             infoWindowDescription: '26R6+W57، شارع وزارة الزراعة، الدقي، قسم الدقي، الجيزة 3751254',
           );
 
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '8',
             markerPosition: const LatLng(30.037857242715162, 31.209218132614158),
             infoWindowTitle: 'المركز القومى لنقل الدم',
             infoWindowDescription: ',26M6+P4 قسم الدقي,15 May Bridge، الدكتور السبكي',
           );
 
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '9',
             markerPosition: const LatLng(30.05212242683355, 31.211021180236536),
             infoWindowTitle: 'بنك الدم السويسري، المستشفي السويسري',
             infoWindowDescription: ',0237613117، العجوزة، حي العجوزة، الجيزة 3753530',
           );
 
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '10',
             markerPosition: const LatLng(30.054054012579744, 31.210334534735367),
             infoWindowTitle: 'المركز القومى لنقل الدم',
             infoWindowDescription: 'البطل أحمد عبد العزيز امام بنك hsbc,، العمرانية، الجيزة,0233374317',
           );
 
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '11',
             markerPosition: const LatLng(30.045155859720996, 31.23022679471311),
             infoWindowTitle: 'المركز الاقليمى لنقل الدم',
             infoWindowDescription: '987 كورنيش النيل، باب اللوق، عابدين، محافظة القاهرة 4272040',
           );
 
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '12',
             markerPosition: const LatLng(30.07346400739051, 31.28485888329649),
             infoWindowTitle: 'بنك الدم الاقليمي',
             infoWindowDescription: '378M+9X5، Unnamed Road, السرايات، الوايلى،، الوايلى، محافظة القاهرة',
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '13',
             markerPosition: const LatLng(30.02323041387819, 31.237252230235853),
             infoWindowTitle: 'بنك الدم 57357',
             infoWindowDescription: ',0225351500,Children Canser Hospital, زينهم، قسم السيدة زينب، محافظة القاهرة 4260102',
           );
 
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '14',
             markerPosition: const LatLng(30.073166901070287, 31.281462942806964),
             infoWindowTitle: 'Greek Hospital Blood Bank :: بنك الدم المستشفى اليوناني',
             infoWindowDescription: '15 شارع السرايات, العباسية,0226836668',
           );
 
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '15',
             markerPosition: const LatLng(30.025424652831912, 31.237583933650427),
             infoWindowTitle: 'مستشفى سرطان الاطفال 57357',
             infoWindowDescription: ',0225351500,سكة حديد المحجر، زينهم، قسم السيدة زينب، محافظة القاهرة 4260102',
           );
 
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '16',
             markerPosition: const LatLng(30.029817886746002, 31.232273542392065),
             infoWindowTitle: 'جمعية اصدقاء المبادرة القومية ضد السرطان',
             infoWindowDescription: '33 القصر العيني، العيني، قسم السيدة زينب، محافظة القاهرة,4260016,0225353040,',
           );
 
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '17',
             markerPosition: const LatLng(30.044517238506575, 31.210157081923427),
             infoWindowTitle: 'مستشفى الزراعيين',
             infoWindowDescription: '1 ش النهضة بجوار وزارة الزراعة، شارع وزارة الزراعة، الدقي، قسم الدقي، الجيزة,0233377677',
           );
 
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '18',
             markerPosition: const LatLng(30.605758347137343, 31.006484897177497),
             infoWindowTitle: 'المركز الاقليمى لنقل الدم بشبين الكوم',
             infoWindowDescription: 'H2F6+VR2،,0482331379,قسم شبين الكوم، المنوفية 6132703',
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '19',
             markerPosition: const LatLng(30.025721902404115, 31.237927256401008),
             infoWindowTitle: 'مستشفى د. محمد الشبراويشى',
@@ -155,7 +155,7 @@ class HomeScreen extends StatelessWidget {
           );
 
 
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '20',
             markerPosition: const LatLng(
                 30.06389801557521, 31.259661948463698 ),
@@ -166,7 +166,7 @@ class HomeScreen extends StatelessWidget {
             icon: BitmapDescriptor.defaultMarker,
           );
 
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '21',
             markerPosition: const LatLng(
                 30.06833436735362, 31.29338304819735),
@@ -176,7 +176,7 @@ class HomeScreen extends StatelessWidget {
 
             icon: BitmapDescriptor.defaultMarker,
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '22',
             markerPosition: const LatLng(
                 30.602608831652418, 31.482351105606053 ),
@@ -186,7 +186,7 @@ class HomeScreen extends StatelessWidget {
 
             icon: BitmapDescriptor.defaultMarker,
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '23',
             markerPosition: const LatLng(
                 30.030469867303026, 31.23626741984464),
@@ -196,7 +196,7 @@ class HomeScreen extends StatelessWidget {
 
             icon: BitmapDescriptor.defaultMarker,
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '24',
             markerPosition: const LatLng(
                 30.069819962462216, 31.294815243074865),
@@ -206,7 +206,7 @@ class HomeScreen extends StatelessWidget {
 
             icon: BitmapDescriptor.defaultMarker,
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '25',
             markerPosition: const LatLng(
                 30.02058282917547, 32.54624379111682),
@@ -216,7 +216,7 @@ class HomeScreen extends StatelessWidget {
 
             icon: BitmapDescriptor.defaultMarker,
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '26',
             markerPosition: const LatLng(
                 29.988970802929213, 31.272705680432043),
@@ -227,7 +227,7 @@ class HomeScreen extends StatelessWidget {
             icon: BitmapDescriptor.defaultMarker,
           );
 
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '27',
             markerPosition: const LatLng(
                 30.0346310683986, 31.2268260439908),
@@ -237,7 +237,7 @@ class HomeScreen extends StatelessWidget {
 
             icon: BitmapDescriptor.defaultMarker,
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '28',
             markerPosition: const LatLng(
                 30.05152250319907, 31.26607451475684),
@@ -247,7 +247,7 @@ class HomeScreen extends StatelessWidget {
 
             icon: BitmapDescriptor.defaultMarker,
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '29',
             markerPosition: const LatLng(
                 30.084496646151642, 31.28966540160409),
@@ -257,7 +257,7 @@ class HomeScreen extends StatelessWidget {
 
             icon: BitmapDescriptor.defaultMarker,
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '30',
             markerPosition: const LatLng(
                 31.286739379431644, 29.91112654199217 ),
@@ -267,7 +267,7 @@ class HomeScreen extends StatelessWidget {
 
             icon: BitmapDescriptor.defaultMarker,
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '31',
             markerPosition: const LatLng(
                 31.278235682989365, 29.91661969759209 ),
@@ -278,7 +278,7 @@ class HomeScreen extends StatelessWidget {
             icon: BitmapDescriptor.defaultMarker,
           );
 
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '33',
             markerPosition: const LatLng(
                 31.32799950109503, 29.955071683502787),
@@ -288,7 +288,7 @@ class HomeScreen extends StatelessWidget {
 
             icon: BitmapDescriptor.defaultMarker,
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '34',
             markerPosition: const LatLng(
                 31.075047782730014, 31.363274801800014),
@@ -298,7 +298,7 @@ class HomeScreen extends StatelessWidget {
 
             icon: BitmapDescriptor.defaultMarker,
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '35',
             markerPosition: const LatLng(
                 30.027932405096088, 31.23094591709254),
@@ -308,7 +308,7 @@ class HomeScreen extends StatelessWidget {
 
             icon: BitmapDescriptor.defaultMarker,
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '36',
             markerPosition: const LatLng(
                 30.144562212053618, 31.355737632984656 ),
@@ -318,7 +318,7 @@ class HomeScreen extends StatelessWidget {
 
             icon: BitmapDescriptor.defaultMarker,
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '37',
             markerPosition: const LatLng(
                 30.03329355852859, 31.23094591709066 ),
@@ -329,7 +329,7 @@ class HomeScreen extends StatelessWidget {
             icon: BitmapDescriptor.defaultMarker,
           );
 
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '39',
             markerPosition: const LatLng(
                 30.640302483584918, 32.28745098043834),
@@ -339,7 +339,7 @@ class HomeScreen extends StatelessWidget {
 
             icon: BitmapDescriptor.defaultMarker,
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '40',
             markerPosition: const LatLng(
                 30.147730114465325, 31.385083586592234 ),
@@ -349,10 +349,8 @@ class HomeScreen extends StatelessWidget {
 
             icon: BitmapDescriptor.defaultMarker,
           );
-
           ////
-
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '41',
             markerPosition: const LatLng(
                 30.033671660663572, 31.227995197038087 ),
@@ -362,7 +360,7 @@ class HomeScreen extends StatelessWidget {
 
             icon: BitmapDescriptor.defaultMarker,
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '42',
             markerPosition: const LatLng(
                 29.081860672402183, 31.121403769913048),
@@ -372,7 +370,7 @@ class HomeScreen extends StatelessWidget {
 
             icon: BitmapDescriptor.defaultMarker,
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '43',
             markerPosition: const LatLng(
                 29.089061350144544, 31.12415035175445),
@@ -382,7 +380,7 @@ class HomeScreen extends StatelessWidget {
 
             icon: BitmapDescriptor.defaultMarker,
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '44',
             markerPosition: const LatLng(
                 30.098493746618168, 31.328491733014516),
@@ -392,7 +390,7 @@ class HomeScreen extends StatelessWidget {
 
             icon: BitmapDescriptor.defaultMarker,
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '45',
             markerPosition: const LatLng(
                 31.28518249059463, 29.894647072060863),
@@ -402,7 +400,7 @@ class HomeScreen extends StatelessWidget {
 
             icon: BitmapDescriptor.defaultMarker,
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '46',
             markerPosition: const LatLng(
                 30.09881289972861, 31.291096016095015),
@@ -412,7 +410,7 @@ class HomeScreen extends StatelessWidget {
 
             icon: BitmapDescriptor.defaultMarker,
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '47',
             markerPosition: const LatLng(
                 30.558768964685054, 31.24876563277087 ),
@@ -423,7 +421,7 @@ class HomeScreen extends StatelessWidget {
             icon: BitmapDescriptor.defaultMarker,
           );
 
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '48',
             markerPosition: const LatLng(
                 30.235665930534893, 31.481944237700983),
@@ -433,7 +431,7 @@ class HomeScreen extends StatelessWidget {
 
             icon: BitmapDescriptor.defaultMarker,
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '49',
             markerPosition: const LatLng(
                 30.013448219960967, 32.54075066026421 ),
@@ -443,7 +441,7 @@ class HomeScreen extends StatelessWidget {
 
             icon: BitmapDescriptor.defaultMarker,
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '50',
             markerPosition: const LatLng(
                 28.175775838893017, 30.77265313647568 ),
@@ -453,7 +451,7 @@ class HomeScreen extends StatelessWidget {
 
             icon: BitmapDescriptor.defaultMarker,
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '51',
             markerPosition: const LatLng(
                 31.098290159302742, 31.368768004540723 ),
@@ -463,7 +461,7 @@ class HomeScreen extends StatelessWidget {
 
             icon: BitmapDescriptor.defaultMarker,
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '52',
             markerPosition: const LatLng(
                 29.97783114756183, 32.550467211782376 ),
@@ -473,7 +471,7 @@ class HomeScreen extends StatelessWidget {
 
             icon: BitmapDescriptor.defaultMarker,
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '53',
             markerPosition: const LatLng(
                 30.072568428449916, 31.276650851960085 ),
@@ -483,7 +481,7 @@ class HomeScreen extends StatelessWidget {
 
             icon: BitmapDescriptor.defaultMarker,
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '54',
             markerPosition: const LatLng(
                 30.589537635318045, 31.00670549709788 ),
@@ -493,7 +491,7 @@ class HomeScreen extends StatelessWidget {
 
             icon: BitmapDescriptor.defaultMarker,
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '55',
             markerPosition: const LatLng(
                 25.392690598608382, 46.63273463437496),
@@ -503,7 +501,7 @@ class HomeScreen extends StatelessWidget {
 
             icon: BitmapDescriptor.defaultMarker,
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '56',
             markerPosition: const LatLng(
                 30.819614617122227, 30.998463967644348),
@@ -514,7 +512,7 @@ class HomeScreen extends StatelessWidget {
             icon: BitmapDescriptor.defaultMarker,
           );
 
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '58',
             markerPosition: const LatLng(
                 26.78497064798173, 31.787543788537988),
@@ -525,7 +523,7 @@ class HomeScreen extends StatelessWidget {
             icon: BitmapDescriptor.defaultMarker,
           );
 
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '59',
             markerPosition: const LatLng(
                 25.92936795138513, 32.852973613703305),
@@ -535,7 +533,7 @@ class HomeScreen extends StatelessWidget {
 
             icon: BitmapDescriptor.defaultMarker,
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '60',
             markerPosition: const LatLng(
                 30.99524147009114, 31.71881841207787),
@@ -545,7 +543,7 @@ class HomeScreen extends StatelessWidget {
 
             icon: BitmapDescriptor.defaultMarker,
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '61',
             markerPosition: const LatLng(
                 30.31647014595019, 31.743196960386587 ),
@@ -555,7 +553,7 @@ class HomeScreen extends StatelessWidget {
 
             icon: BitmapDescriptor.defaultMarker,
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '62',
             markerPosition: const LatLng(
                 30.585341380706012, 31.49883788802093 ),
@@ -565,7 +563,7 @@ class HomeScreen extends StatelessWidget {
 
             icon: BitmapDescriptor.defaultMarker,
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '63',
             markerPosition: const LatLng(
                 27.33111817013578, 31.206331644086358 ),
@@ -575,7 +573,7 @@ class HomeScreen extends StatelessWidget {
 
             icon: BitmapDescriptor.defaultMarker,
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '64',
             markerPosition: const LatLng(
                 30.03383715734181, 31.43728258160833  ),
@@ -585,7 +583,7 @@ class HomeScreen extends StatelessWidget {
 
             icon: BitmapDescriptor.defaultMarker,
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '65',
             markerPosition: const LatLng(
                 30.074351063771537, 31.275756983685152),
@@ -595,7 +593,7 @@ class HomeScreen extends StatelessWidget {
 
             icon: BitmapDescriptor.defaultMarker,
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '66',
             markerPosition: const LatLng(
                 30.04357842265291, 31.21672725544704 ),
@@ -605,7 +603,7 @@ class HomeScreen extends StatelessWidget {
 
             icon: BitmapDescriptor.defaultMarker,
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '67',
             markerPosition: const LatLng(
                 31.24454271564153, 29.920350270551847),
@@ -615,7 +613,7 @@ class HomeScreen extends StatelessWidget {
 
             icon: BitmapDescriptor.defaultMarker,
           );
-          AppCubit.get(context).addMarker(
+          AppCubit.get(context).addHomeMarker(
             markerId: '68',
             markerPosition: const LatLng(
                 31.090402009976852, 31.382500878474165 ),
@@ -627,7 +625,7 @@ class HomeScreen extends StatelessWidget {
           );
 
           },
-          markers: AppCubit.get(context).myMarkers,
+          markers: state is AppSearchSuccessState?AppCubit.get(context).mySearchMarkers:AppCubit.get(context).myHomeMarkers,
         );
       },
     );

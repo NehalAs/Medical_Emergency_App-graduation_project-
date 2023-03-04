@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:graduation_project/shared/styles/colors.dart';
 
@@ -114,14 +115,10 @@ Widget myDrawer() => SingleChildScrollView(
       child: Column(
         children: [
           Container(
-//color: defaultColor,
             height: 100,
             width: double.infinity,
             child: Padding(
-              padding: const EdgeInsetsDirectional.all(25.0
-             //   vertical: 30,
-              //  horizontal: 20,
-              ),
+              padding: const EdgeInsetsDirectional.all(25.0),
               child: Row(
                 children: [
                   Text(
@@ -158,6 +155,21 @@ Widget myDrawer() => SingleChildScrollView(
           menuItem(
             itemIcon: Icons.emergency_outlined,
             itemName: 'Emergency numbers',
+            onTap: () {},
+          ),
+          menuItem(
+            itemIcon: Icons.local_hospital_outlined,
+            itemName: 'Hospitals',
+            onTap: () {},
+          ),
+          menuItem(
+            itemIcon: Icons.bloodtype_outlined,
+            itemName: 'Blood banks',
+            onTap: () {},
+          ),
+          menuItem(
+            itemIcon: CupertinoIcons.person_2,
+            itemName: 'Users',
             onTap: () {},
           ),
           menuItem(
@@ -234,7 +246,10 @@ Widget menuItem({
               ],
             ),
           )),
- );
+    );
 
-
-enum popupMenuValues{satelliteView,normalView,terrainnView,}
+enum popupMenuValues {
+  satelliteView,
+  normalView,
+  terrainnView,
+}
