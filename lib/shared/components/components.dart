@@ -157,10 +157,7 @@ Widget myDrawer(context) => SingleChildScrollView(
           menuItem(
             itemIcon: Icons.emergency_outlined,
             itemName: 'Emergency numbers',
-            onTap: ()
-              {
-                navigateTo(context, EmergencyNumbersScreen());
-              },
+            onTap: () {},
           ),
           menuItem(
             itemIcon: Icons.local_hospital_outlined,
