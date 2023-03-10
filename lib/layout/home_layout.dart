@@ -126,7 +126,7 @@ class HomeLayout extends StatelessWidget {
                 child: Container(
                   child: Column(
                     children: [
-                      myDrawer(),
+                      myDrawer(context),
                     ],
                   ),
                 ),

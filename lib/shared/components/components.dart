@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:graduation_project/shared/styles/colors.dart';
 
+import '../../modules/emergency_numbers/emergency_numbers_screen.dart';
+
 Widget defaultButton({
   double width = double.infinity,
   required Function() function,
@@ -111,7 +113,7 @@ Widget myDevider() => Padding(
       ),
     );
 
-Widget myDrawer() => SingleChildScrollView(
+Widget myDrawer(context) => SingleChildScrollView(
       child: Column(
         children: [
           Container(
@@ -155,7 +157,10 @@ Widget myDrawer() => SingleChildScrollView(
           menuItem(
             itemIcon: Icons.emergency_outlined,
             itemName: 'Emergency numbers',
-            onTap: () {},
+            onTap: ()
+              {
+                navigateTo(context, EmergencyNumbersScreen());
+              },
           ),
           menuItem(
             itemIcon: Icons.local_hospital_outlined,
