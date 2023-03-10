@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:graduation_project/modules/First_Aid/First_Aid.dart';
 import 'package:graduation_project/shared/styles/colors.dart';
 
 import '../../modules/emergency_numbers/emergency_numbers_screen.dart';
@@ -152,12 +153,16 @@ Widget myDrawer(context) => SingleChildScrollView(
           menuItem(
             itemIcon: Icons.medical_services_outlined,
             itemName: 'First aid',
-            onTap: () {},
+            onTap: () {
+              navigateTo(context, Firstaid());
+              },
           ),
           menuItem(
             itemIcon: Icons.emergency_outlined,
             itemName: 'Emergency numbers',
-            onTap: () {},
+            onTap: () {
+                  navigateTo(context, EmergencyNumbersScreen());
+              },
           ),
           menuItem(
             itemIcon: Icons.local_hospital_outlined,
