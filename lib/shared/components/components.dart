@@ -1,11 +1,9 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:graduation_project/modules/First_Aid/First_Aid.dart';
-
 import 'package:graduation_project/shared/styles/colors.dart';
 
-
+import '../../modules/emergency_numbers/emergency_numbers_screen.dart';
 
 Widget defaultButton({
   double width = double.infinity,
@@ -26,7 +24,7 @@ Widget defaultButton({
         onPressed: function,
         child: Text(
           isUppercase ? text.toUpperCase() : text,
-          style: const TextStyle(
+          style: TextStyle(
             color: Colors.white,
             fontSize: 20.0,
             fontWeight: FontWeight.bold,
@@ -116,7 +114,7 @@ Widget myDevider() => Padding(
       ),
     );
 
-Widget myDrawer(BuildContext context) => SingleChildScrollView(
+Widget myDrawer(context) => SingleChildScrollView(
       child: Column(
         children: [
           Container(
@@ -156,13 +154,15 @@ Widget myDrawer(BuildContext context) => SingleChildScrollView(
             itemIcon: Icons.medical_services_outlined,
             itemName: 'First aid',
             onTap: () {
-              navigateTo(context ,const Firstaid());
-            },
+              navigateTo(context, Firstaid());
+              },
           ),
           menuItem(
             itemIcon: Icons.emergency_outlined,
             itemName: 'Emergency numbers',
-            onTap: () {},
+            onTap: () {
+                  navigateTo(context, EmergencyNumbersScreen());
+              },
           ),
           menuItem(
             itemIcon: Icons.local_hospital_outlined,
