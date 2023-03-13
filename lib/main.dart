@@ -7,7 +7,6 @@ import 'package:graduation_project/shared/bloc_observer.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
   Bloc.observer = MyBlocObserver();
   runApp(MyApp());
 }
