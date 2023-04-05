@@ -1,14 +1,19 @@
 import 'dart:collection';
+import 'package:animated_floating_buttons/widgets/animated_floating_action_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:graduation_project/modules/blood/blood_screen.dart';
+import 'package:graduation_project/modules/burns/burns_screen.dart';
 import 'package:graduation_project/modules/home/home_screen.dart';
 import 'package:graduation_project/shared/components/components.dart';
 import 'package:graduation_project/shared/cubit/cubit.dart';
 import 'package:graduation_project/shared/cubit/states.dart';
 import 'package:graduation_project/shared/styles/colors.dart';
 import 'package:hexcolor/hexcolor.dart';
+
+import '../shared/styles/themes.dart';
 
 class HomeLayout extends StatelessWidget {
   var scaffoldKey = GlobalKey<ScaffoldState>();
@@ -26,7 +31,35 @@ class HomeLayout extends StatelessWidget {
             key: scaffoldKey,
             body: Stack(
               children: [
-                AppCubit.get(context).screens[AppCubit.get(context).currentIndex],
+                //AppCubit.get(context).screens[AppCubit.get(context).currentIndex],
+                GoogleMap(
+                  initialCameraPosition: CameraPosition(
+                      target: LatLng(30.033333, 31.233334),
+                      zoom: 10
+                  ),
+                  mapType:AppCubit.get(context).mapTypeUser==popupMenuValues.normalView? MapType.normal : AppCubit.get(context).mapTypeUser== popupMenuValues.satelliteView? MapType.hybrid:MapType.terrain,
+
+                  onMapCreated: (GoogleMapController googleMapController) {
+
+
+                    //GoogleMapController.init(googleMapController.mapId,CameraPosition(target:LatLng(30.033333, 31.233334)), AppCubit.get(context).isDark? googleMapDarkTheme(googleMapController):null,);
+
+                    // for search function
+                    AppCubit.get(context).onMapCreated(googleMapController);
+
+                    // darkMapTheme
+                    if(AppCubit.get(context).isDark) {
+                      googleMapDarkTheme(googleMapController);
+                    }
+                    //markers
+                    addHomeMarkers(context);
+                    addBloodMarkers(context);
+                    addBurnsMarker(context);
+
+
+                  },
+                  markers: state is AppSearchSuccessState?AppCubit.get(context).mySearchMarkers: AppCubit.get(context).currentIndex==0 && state is !AppSearchSuccessState? AppCubit.get(context).myHomeMarkers :AppCubit.get(context).currentIndex==1 && state is !AppSearchSuccessState?AppCubit.get(context).myBloodMarkers:AppCubit.get(context).myBurnsMarkers,
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 20,
@@ -65,19 +98,19 @@ class HomeLayout extends StatelessWidget {
                       // ),
                       SizedBox(width: 10,),
                       Expanded(child: CupertinoSearchTextField(
-                          controller: searchController,
-                          backgroundColor: AppCubit.get(context).isDark?HexColor('282828'):Colors.white,
-                          itemColor: Colors.grey,
-                          style: TextStyle(color: Colors.grey),
-                          autocorrect: true,
-                          onSubmitted: (value){
-                            AppCubit.get(context).searchAndNavigate();
-                          },
-                          onChanged: (value){
-                            AppCubit.get(context).changeSearchAddress(value);
-                          },
+                        controller: searchController,
+                        backgroundColor: AppCubit.get(context).isDark?HexColor('282828'):Colors.white,
+                        itemColor: Colors.grey,
+                        style: TextStyle(color: Colors.grey),
+                        autocorrect: true,
+                        onSubmitted: (value){
+                          AppCubit.get(context).searchAndNavigate();
+                        },
+                        onChanged: (value){
+                          AppCubit.get(context).changeSearchAddress(value);
+                        },
 
-                        )),
+                      )),
                       // Expanded(
                       //   child: Container(
                       //     height: 50,
@@ -117,8 +150,8 @@ class HomeLayout extends StatelessWidget {
                           //color: AppCubit.get(context).isDark? HexColor('282828'):null,
                           itemBuilder: (context)=> [
                             PopupMenuItem(
-                            child:Text('Satellite view'),
-                            value:popupMenuValues.satelliteView,
+                              child:Text('Satellite view'),
+                              value:popupMenuValues.satelliteView,
                             ),
                             PopupMenuItem(
                               child:Text('Normal view'),
@@ -135,6 +168,24 @@ class HomeLayout extends StatelessWidget {
                     ],
                   ),
                 ),
+                if(AppCubit.get(context).currentIndex==1)
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: AnimatedFloatingActionButton(
+                      //Fab list
+                        curve: Curves.bounceInOut,
+                        durationAnimation: 300,
+                        spaceBetween: -10.0,
+                        fabButtons: <Widget>[
+                          AppCubit.get(context).float1(context),AppCubit.get(context).float2(context)
+                        ],
+                        key : key,
+                        colorStartAnimation: defaultColor??Colors.red,
+                        colorEndAnimation: defaultColor??Colors.red,
+                        animatedIconData: AnimatedIcons.menu_close //To principal button
+                    ),
+                  ),
+
               ],
             ),
             drawer: Drawer(
@@ -149,28 +200,13 @@ class HomeLayout extends StatelessWidget {
               ),
             ),
             bottomNavigationBar: BottomNavigationBar(
-            currentIndex: AppCubit.get(context).currentIndex,
-            onTap: (value) {
-              AppCubit.get(context).changeIndex(value);
-            },
-            items:AppCubit.get(context).bottomItem,
-          ),
+              currentIndex: AppCubit.get(context).currentIndex,
+              onTap: (value) {
+                AppCubit.get(context).changeIndex(value);
+              },
+              items:AppCubit.get(context).bottomItem,
+            ),
 
-            // floatingActionButton: FloatingActionButton(
-            //     onPressed: (){
-            //       scaffoldKey.currentState?.showBottomSheet((context) => Container(
-            //         width: double.infinity,
-            //         height: 200,
-            //         decoration: BoxDecoration(
-            //           //boxShadow: BoxShadow()
-            //           borderRadius: BorderRadius.circular(20),
-            //           color: Colors.grey,
-            //         ),
-            //       ));
-            //
-            //     },
-            //     child: Icon(CupertinoIcons.plus),
-            // ),
 
           );
         },
@@ -178,5 +214,5 @@ class HomeLayout extends StatelessWidget {
     );
   }
 
-  }
+}
 

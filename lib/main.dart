@@ -3,10 +3,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation_project/layout/home_layout.dart';
+import 'package:graduation_project/modules/login/login_screen.dart';
 import 'package:graduation_project/shared/bloc_observer.dart';
 import 'package:graduation_project/shared/cubit/cubit.dart';
 import 'package:graduation_project/shared/cubit/states.dart';
 import 'package:graduation_project/shared/styles/themes.dart';
+
+import 'modules/on_boarding/on_boarding_screen.dart';
 
 
 Future<void> main() async {
@@ -30,7 +33,7 @@ class MyApp extends StatelessWidget{
             theme: lightTheme,
             darkTheme: darkTheme,
             themeMode:AppCubit.get(context).isDark?ThemeMode.dark:ThemeMode.light,
-            home: HomeLayout(),
+            home: OnBoardingScreen(),
           );
         },
       ),

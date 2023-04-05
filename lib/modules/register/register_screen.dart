@@ -22,7 +22,7 @@ class RegisterScreen extends StatelessWidget {
       create: (context) => RegisterCubit(),
       child: BlocConsumer<RegisterCubit,RegisterStates>(
         listener: (context, state) {
-          if(state is RegisterSuccessState)
+          if(state is CreateUserSuccessState)
           {
             navigatAndFinish(context, LoginScreen());
           }
@@ -89,10 +89,10 @@ class RegisterScreen extends StatelessWidget {
                           suffix: IconButton(
                             onPressed: (){},
                             icon: IconButton(
-                                onPressed: (){
-                                  RegisterCubit.get(context).changePasswordVisibility();
-                                },
-                                icon: Icon(RegisterCubit.get(context).suffix),
+                              onPressed: (){
+                                RegisterCubit.get(context).changePasswordVisibility();
+                              },
+                              icon: Icon(RegisterCubit.get(context).suffix),
                             ),
                           ),
                           obsecure: RegisterCubit.get(context).isPassword,
@@ -133,22 +133,22 @@ class RegisterScreen extends StatelessWidget {
                           height: 20.0,
                         ),
                         ConditionalBuilder(
-                            condition: state is! RegisterLoadingState,
-                            builder: (context) => defaultButton(
-                              function: (){
-                                if(formKey.currentState!.validate())
-                                {
-                                  RegisterCubit.get(context).userRegister(
-                                    email: emailController.text,
-                                    name: nameController.text,
-                                    password: passwordController.text,
-                                    phone: phoneController.text,
-                                  );
-                                }
-                              },
-                              text: 'Register',
-                            ),
-                            fallback: (context) => Center(child: CircularProgressIndicator()),
+                          condition: state is! RegisterLoadingState,
+                          builder: (context) => defaultButton(
+                            function: (){
+                              if(formKey.currentState!.validate())
+                              {
+                                RegisterCubit.get(context).userRegister(
+                                  email: emailController.text,
+                                  name: nameController.text,
+                                  password: passwordController.text,
+                                  phone: phoneController.text,
+                                );
+                              }
+                            },
+                            text: 'Register',
+                          ),
+                          fallback: (context) => Center(child: CircularProgressIndicator()),
                         ),
                       ],
                     ),

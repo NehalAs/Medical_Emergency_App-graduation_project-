@@ -6,10 +6,9 @@ class RegisterErrorState extends RegisterStates {
   late String error;
   RegisterErrorState(this.error);
 }
-
-// class CreateUserSuccessState extends RegisterStates {}
-// class CreateUserErrorState extends RegisterStates {
-//   late String error;
-//   CreateUserErrorState(this.error);
-// }
+class CreateUserSuccessState extends RegisterStates {}
+class CreateUserErrorState extends RegisterStates {
+  late String error;
+  CreateUserErrorState(this.error);
+}
 class ChangeRegisterPasswordVisibilityState extends RegisterStates {}

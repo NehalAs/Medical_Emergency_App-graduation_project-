@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:graduation_project/shared/styles/colors.dart';
@@ -30,17 +31,17 @@ ThemeData lightTheme =ThemeData(
   ),
   floatingActionButtonTheme: FloatingActionButtonThemeData(backgroundColor: defaultColor),
   textTheme: TextTheme(
-      bodyText1: TextStyle(
-        fontSize: 18.0,
-        fontWeight: FontWeight.w600,
-        color: Colors.black,
-      ),
-      subtitle1:  TextStyle(
-        fontSize: 16.0,
-        fontWeight: FontWeight.w600,
-        color: Colors.black,
-        height: 1.0,
-      ),
+    bodyText1: TextStyle(
+      fontSize: 18.0,
+      fontWeight: FontWeight.w600,
+      color: Colors.black,
+    ),
+    subtitle1:  TextStyle(
+      fontSize: 16.0,
+      fontWeight: FontWeight.w600,
+      color: Colors.black,
+      height: 1.0,
+    ),
   ),
   fontFamily: 'Jannah',
 );
@@ -70,6 +71,7 @@ ThemeData darkTheme =ThemeData(
 
   ),
   floatingActionButtonTheme: FloatingActionButtonThemeData(backgroundColor:defaultColor),
+
   //iconTheme: IconThemeData(color: defaultColor),
 );
 

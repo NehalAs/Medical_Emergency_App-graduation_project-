@@ -45,10 +45,13 @@ dependencies:
   hexcolor: ^2.0.7
   animated_floating_buttons: ^0.0.1
   url_launcher: ^6.1.10
+  smooth_page_indicator: ^1.0.1
+
 
   #firebase
   firebase_core: ^2.6.1
   firebase_auth: ^4.2.8
+  cloud_firestore: ^4.5.0
 
 
 dev_dependencies:
