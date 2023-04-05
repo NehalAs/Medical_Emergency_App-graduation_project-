@@ -3,7 +3,7 @@
 =======
 # graduation_project
 
-A new Flutter project.
+A new Emeregency Mobile app built with flutter.
 
 ## Getting Started
 
