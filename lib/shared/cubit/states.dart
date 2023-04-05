@@ -8,3 +8,4 @@ class AppChangeSearchAddressState extends AppStates {}
 class AppChangeMapViewState extends AppStates {}
 class AppSearchSuccessState extends AppStates {}
 class AppSearchErrorState extends AppStates {}
+class AppChangeModeState extends AppStates {}

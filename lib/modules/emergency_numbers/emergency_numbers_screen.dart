@@ -34,7 +34,7 @@ class EmergencyNumbersScreen extends StatelessWidget {
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
-                        fontSize: 17,
+                        fontSize: 20,
                       ),)
                   ],
                 ),

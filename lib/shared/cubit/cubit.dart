@@ -14,23 +14,25 @@ import '../../modules/blood/blood_screen.dart';
 import '../../modules/burns/burns_screen.dart';
 
 class AppCubit extends Cubit<AppStates> {
-AppCubit() :super (AppInitialState());
+  AppCubit() :super (AppInitialState());
 
-var myBloodMarkers = HashSet<Marker>();
-var myBurnsMarkers = HashSet<Marker>();
-var myHomeMarkers = HashSet<Marker>();
-var mySearchMarkers = HashSet<Marker>();
-var customMarker;
+  var myBloodMarkers = HashSet<Marker>();
+  var myBurnsMarkers = HashSet<Marker>();
+  var myHomeMarkers = HashSet<Marker>();
+  var mySearchMarkers = HashSet<Marker>();
+  var customMarker;
+  bool isDark = false;
 
-final GlobalKey<AnimatedFloatingActionButtonState> key =GlobalKey<AnimatedFloatingActionButtonState>();
+  final GlobalKey<AnimatedFloatingActionButtonState> key = GlobalKey<
+      AnimatedFloatingActionButtonState>();
 
-int currentIndex=0;
-GoogleMapController? mapController;
-String? searchAddress;
-popupMenuValues mapTypeUser=popupMenuValues.normalView;
+  int currentIndex = 0;
+  GoogleMapController? mapController;
+  String? searchAddress;
+  popupMenuValues mapTypeUser = popupMenuValues.normalView;
 
 
-List<BottomNavigationBarItem> bottomItem=[
+  List<BottomNavigationBarItem> bottomItem = [
     BottomNavigationBarItem(
       icon: Icon(Icons.home_outlined),
       label: 'Home',
@@ -44,103 +46,98 @@ List<BottomNavigationBarItem> bottomItem=[
       label: 'Burns',
     ),
   ];
-List<Widget>screens=
+  List<Widget>screens =
   [
     HomeScreen(),
     BloodScreen(),
     BurnsScreen(),
   ];
 
-static AppCubit get(context) =>BlocProvider.of(context);
+  static AppCubit get(context) => BlocProvider.of(context);
 
-void addBloodMarker(
-  {
-     context,
+  void addBloodMarker({
+    context,
     required String markerId,
-    required  markerPosition,
+    required markerPosition,
     String? infoWindowTitle,
     String? infoWindowDescription,
     BitmapDescriptor icon = BitmapDescriptor.defaultMarker,
-  })
-{
-  myBloodMarkers.add(Marker(
-    markerId:MarkerId(markerId),
-    position: markerPosition,
-    infoWindow:InfoWindow(
-        title:infoWindowTitle,
-        snippet: infoWindowDescription
-    ),
-    icon: icon,
-   // visible: true,
-  ));
-  emit(AppAddMarkerState());
-}
-void addBurnsMarker(
-  {
-     context,
+  }) {
+    myBloodMarkers.add(Marker(
+      markerId: MarkerId(markerId),
+      position: markerPosition,
+      infoWindow: InfoWindow(
+          title: infoWindowTitle,
+          snippet: infoWindowDescription
+      ),
+      icon: icon,
+      // visible: true,
+    ));
+    emit(AppAddMarkerState());
+  }
+
+  void addBurnsMarker({
+    context,
     required String markerId,
-    required  markerPosition,
+    required markerPosition,
     String? infoWindowTitle,
     String? infoWindowDescription,
     BitmapDescriptor icon = BitmapDescriptor.defaultMarker,
-  })
-{
-  myBurnsMarkers.add(Marker(
-    markerId:MarkerId(markerId),
-    position: markerPosition,
-    infoWindow:InfoWindow(
-        title:infoWindowTitle,
-        snippet: infoWindowDescription
-    ),
-    icon: icon,
-   // visible: true,
-  ));
-  emit(AppAddMarkerState());
-}
-void addHomeMarker(
-  {
-     context,
+  }) {
+    myBurnsMarkers.add(Marker(
+      markerId: MarkerId(markerId),
+      position: markerPosition,
+      infoWindow: InfoWindow(
+          title: infoWindowTitle,
+          snippet: infoWindowDescription
+      ),
+      icon: icon,
+      // visible: true,
+    ));
+    emit(AppAddMarkerState());
+  }
+
+  void addHomeMarker({
+    context,
     required String markerId,
-    required  markerPosition,
+    required markerPosition,
     String? infoWindowTitle,
     String? infoWindowDescription,
     BitmapDescriptor icon = BitmapDescriptor.defaultMarker,
-  })
-{
-  myHomeMarkers.add(Marker(
-    markerId:MarkerId(markerId),
-    position: markerPosition,
-    infoWindow:InfoWindow(
-        title:infoWindowTitle,
-        snippet: infoWindowDescription
-    ),
-    icon: icon,
-   // visible: true,
-  ));
-  emit(AppAddMarkerState());
-}
-void addSearchMarker(
-  {
-     context,
+  }) {
+    myHomeMarkers.add(Marker(
+      markerId: MarkerId(markerId),
+      position: markerPosition,
+      infoWindow: InfoWindow(
+          title: infoWindowTitle,
+          snippet: infoWindowDescription
+      ),
+      icon: icon,
+      // visible: true,
+    ));
+    emit(AppAddMarkerState());
+  }
+
+  void addSearchMarker({
+    context,
     required String markerId,
-    required  markerPosition,
+    required markerPosition,
     String? infoWindowTitle,
     String? infoWindowDescription,
     BitmapDescriptor icon = BitmapDescriptor.defaultMarker,
-  })
-{
-  mySearchMarkers.add(Marker(
-    markerId:MarkerId(markerId),
-    position: markerPosition,
-    infoWindow:InfoWindow(
-        title:infoWindowTitle,
-        snippet: infoWindowDescription
-    ),
-    icon: icon,
-   // visible: true,
-  ));
-  emit(AppAddMarkerState());
-}
+  }) {
+    mySearchMarkers.add(Marker(
+      markerId: MarkerId(markerId),
+      position: markerPosition,
+      infoWindow: InfoWindow(
+          title: infoWindowTitle,
+          snippet: infoWindowDescription
+      ),
+      icon: icon,
+      // visible: true,
+    ));
+    emit(AppAddMarkerState());
+  }
 
 
   void changeIndex(int index) {
@@ -149,74 +146,77 @@ void addSearchMarker(
   }
 
 
-void onMapCreated(controller)
-{
-  mapController= controller;
-  emit(AppChangeMapControllerState());
-}
+  void onMapCreated(controller) {
+    mapController = controller;
+    emit(AppChangeMapControllerState());
+  }
 
-void changeSearchAddress(value)
-{
-  searchAddress=value;
-  emit(AppChangeSearchAddressState());
-}
+  void changeSearchAddress(value) {
+    searchAddress = value;
+    emit(AppChangeSearchAddressState());
+  }
 
-getCustomMarker() async {
-  customMarker= await BitmapDescriptor.fromAssetImage(ImageConfiguration.empty,'assets/images/location-pin.png');
-}
+  getCustomMarker() async {
+    customMarker = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration.empty,'assets/images/location-pin.png');
+  }
 
-void searchAndNavigate(){
-  locationFromAddress(searchAddress!).then((result){
-    mapController!.animateCamera(CameraUpdate.newCameraPosition(
-      CameraPosition(
-        target: LatLng(result[0].latitude,result[0].longitude),
-        zoom: 10,
-      )));
+  void searchAndNavigate() {
+    locationFromAddress(searchAddress!).then((result) {
+      mapController!.animateCamera(CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: LatLng(result[0].latitude, result[0].longitude),
+            zoom: 10,
+          )));
       addSearchMarker(
         markerId: 'search1',
-        markerPosition: LatLng(result[0].latitude,result[0].longitude),
+        markerPosition: LatLng(result[0].latitude, result[0].longitude),
         infoWindowTitle: '$searchAddress',
         infoWindowDescription: 'Your search result',
         icon: customMarker,
       );
-    emit(AppSearchSuccessState());
-  }).catchError((error){
-    print(error.toString());
-    emit(AppSearchErrorState());
-  });
+      emit(AppSearchSuccessState());
+    }).catchError((error) {
+      print(error.toString());
+      emit(AppSearchErrorState());
+    });
+  }
+
+
+  Widget float1(context) {
+    return Container(
+      child: FloatingActionButton(
+        onPressed: () {
+          navigateTo(context, Donate());
+        },
+        heroTag: "btn1",
+        tooltip: 'Donate Here',
+        child: Icon(Icons.bloodtype_outlined),
+      ),
+    );
+  }
+
+  Widget float2(context) {
+    return Container(
+      child: FloatingActionButton(
+        onPressed: () {
+          navigateTo(context, listrequest());
+        },
+        heroTag: "btn2",
+        tooltip: 'List Request ',
+        child: Icon(Icons.list_alt_outlined),
+      ),
+    );
+  }
+
+  void changeMapView(value) {
+    mapTypeUser = value;
+    emit(AppChangeMapViewState());
+  }
+
+
+  void changeAppMode(value) {
+    isDark = value;
+    emit(AppChangeModeState());
+  }
 }
-
-
-Widget float1( context) {
-  return Container(
-    child: FloatingActionButton(
-      onPressed: (){
-        navigateTo(context,Donate());
-      },
-      heroTag: "btn1",
-      tooltip: 'Donate Here',
-      child: Icon(Icons.bloodtype_outlined),
-    ),
-  );
-}
-
-Widget float2(context) {
-  return Container(
-    child: FloatingActionButton(
-      onPressed: (){
-        navigateTo(context,listrequest());
-      },
-      heroTag: "btn2",
-      tooltip: 'List Request ',
-      child: Icon(Icons.list_alt_outlined),
-    ),
-  );
-}
-
-void changeMapView(value){
- mapTypeUser=value;
- emit(AppChangeMapViewState());
-}
-}
-
-

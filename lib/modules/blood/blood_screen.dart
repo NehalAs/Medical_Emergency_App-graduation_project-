@@ -6,6 +6,8 @@ import '../../shared/cubit/cubit.dart';
 import '../../shared/cubit/states.dart';
 import 'package:graduation_project/shared/components/components.dart';
 
+import '../../shared/styles/themes.dart';
+
 
 class BloodScreen extends StatelessWidget {
   const BloodScreen({super.key});
@@ -49,6 +51,11 @@ class BloodScreen extends StatelessWidget {
             onMapCreated: (GoogleMapController googleMapController) {
               //for search
               AppCubit.get(context).onMapCreated(googleMapController);
+
+              // darkMapTheme
+              if(AppCubit.get(context).isDark) {
+                googleMapDarkTheme(googleMapController);
+              }
 
               //markers
               AppCubit.get(context).addBloodMarker(

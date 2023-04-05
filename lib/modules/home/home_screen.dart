@@ -6,6 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:graduation_project/shared/components/components.dart';
 import '../../shared/cubit/cubit.dart';
 import '../../shared/cubit/states.dart';
+import '../../shared/styles/themes.dart';
 
 class HomeScreen extends StatelessWidget {
 
@@ -21,10 +22,16 @@ class HomeScreen extends StatelessWidget {
               zoom: 10
           ),
           mapType:AppCubit.get(context).mapTypeUser==popupMenuValues.normalView? MapType.normal : AppCubit.get(context).mapTypeUser== popupMenuValues.satelliteView? MapType.hybrid:MapType.terrain,
+
           onMapCreated: (GoogleMapController googleMapController) {
 
            // for search function
           AppCubit.get(context).onMapCreated(googleMapController);
+
+          // darkMapTheme
+          if(AppCubit.get(context).isDark) {
+            googleMapDarkTheme(googleMapController);
+          }
 
           //markers
           AppCubit.get(context).addHomeMarker(
@@ -623,7 +630,6 @@ class HomeScreen extends StatelessWidget {
 
             icon: BitmapDescriptor.defaultMarker,
           );
-
           },
           markers: state is AppSearchSuccessState?AppCubit.get(context).mySearchMarkers:AppCubit.get(context).myHomeMarkers,
         );

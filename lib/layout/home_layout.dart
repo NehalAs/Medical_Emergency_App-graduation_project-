@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -7,6 +8,7 @@ import 'package:graduation_project/shared/components/components.dart';
 import 'package:graduation_project/shared/cubit/cubit.dart';
 import 'package:graduation_project/shared/cubit/states.dart';
 import 'package:graduation_project/shared/styles/colors.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 class HomeLayout extends StatelessWidget {
   var scaffoldKey = GlobalKey<ScaffoldState>();
@@ -34,7 +36,7 @@ class HomeLayout extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 20,
-                        backgroundColor: Colors.white,
+                        backgroundColor: AppCubit.get(context).isDark? HexColor('282828'):Colors.white,
                         child: IconButton(
                             onPressed: (){
                               scaffoldKey.currentState?.openDrawer();
@@ -42,7 +44,7 @@ class HomeLayout extends StatelessWidget {
                             icon: Icon(
                               Icons.menu_rounded,
                               size: 25,
-                              color: defaultColor,
+                              color:AppCubit.get(context).isDark?Colors.grey:defaultColor,
                             )
                         ),
                       ),
@@ -62,42 +64,57 @@ class HomeLayout extends StatelessWidget {
                       //   ),
                       // ),
                       SizedBox(width: 10,),
-                      Expanded(
-                        child: Container(
-                          height: 50,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          child: defaultFormField(
-                            controller: searchController,
-                            type: TextInputType.name,
-                            validate: (value){},
-                            label: 'Search',
-                            suffix: IconButton(
-                              icon:Icon(
-                                Icons.search,
-                                //color: defaultColor,
-                              ),
-                              onPressed: (){},
-                            ),
-                            onSubmitt: (value){
-                              AppCubit.get(context).searchAndNavigate();
-                            },
-                            onChange: (value){
-                              AppCubit.get(context).changeSearchAddress(value);
-                            },
-                            radius: 30,
-                            outlineBorderColor: Colors.white,
-                          ),
-                        ),
-                      ),
+                      Expanded(child: CupertinoSearchTextField(
+                          controller: searchController,
+                          backgroundColor: AppCubit.get(context).isDark?HexColor('282828'):Colors.white,
+                          itemColor: Colors.grey,
+                          style: TextStyle(color: Colors.grey),
+                          autocorrect: true,
+                          onSubmitted: (value){
+                            AppCubit.get(context).searchAndNavigate();
+                          },
+                          onChanged: (value){
+                            AppCubit.get(context).changeSearchAddress(value);
+                          },
+
+                        )),
+                      // Expanded(
+                      //   child: Container(
+                      //     height: 50,
+                      //     decoration: BoxDecoration(
+                      //       color: Colors.white,
+                      //       borderRadius: BorderRadius.circular(30),
+                      //     ),
+                      //     child: defaultFormField(
+                      //       controller: searchController,
+                      //       type: TextInputType.text,
+                      //       validate: (value){},
+                      //       label: 'Search',
+                      //       suffix: IconButton(
+                      //         icon:Icon(
+                      //           Icons.search,
+                      //           //color: defaultColor,
+                      //         ),
+                      //         onPressed: (){},
+                      //       ),
+                      //       onSubmitt: (value){
+                      //         AppCubit.get(context).searchAndNavigate();
+                      //       },
+                      //       onChange: (value){
+                      //         AppCubit.get(context).changeSearchAddress(value);
+                      //       },
+                      //       radius: 30,
+                      //       outlineBorderColor: Colors.white,
+                      //     ),
+                      //   ),
+                      // ),
                       SizedBox(width: 10,),
                       CircleAvatar(
                         radius: 20,
-                        backgroundColor: Colors.white,
+                        backgroundColor: AppCubit.get(context).isDark?HexColor('282828'):Colors.white,
                         child: PopupMenuButton<popupMenuValues>(
                           onSelected:(value){AppCubit.get(context).changeMapView(value);},
+                          //color: AppCubit.get(context).isDark? HexColor('282828'):null,
                           itemBuilder: (context)=> [
                             PopupMenuItem(
                             child:Text('Satellite view'),
