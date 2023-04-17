@@ -16,57 +16,34 @@ class BurnsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return BlocConsumer<AppCubit,AppStates>(
-      listener: (context, state) {},
-      builder: (context, state) {
-        return  GoogleMap(
-          initialCameraPosition: CameraPosition(
-              target: LatLng(30.033333, 31.233334),
-              zoom: 10
-          ),
-          mapType:AppCubit.get(context).mapTypeUser==popupMenuValues.normalView? MapType.normal : AppCubit.get(context).mapTypeUser== popupMenuValues.satelliteView? MapType.hybrid:MapType.terrain,
-
-          onMapCreated: (GoogleMapController googleMapController) {
-
-            // for search function
-            AppCubit.get(context).onMapCreated(googleMapController);
-
-            // darkMapTheme
-            if(AppCubit.get(context).isDark) {
-              googleMapDarkTheme(googleMapController);
-            }
-
-            //markers
-
-            AppCubit.get(context).addBurnsMarker(
-              markerId: '1',
-              markerPosition: const LatLng(30.0131, 31.2089 ),
-              infoWindowTitle: 'My location',
-            );
-
-            AppCubit.get(context).addBurnsMarker(
-              markerId: '2',
-              markerPosition: const LatLng(30.0214489, 31.4904086),
-              infoWindowTitle: 'El-Demerdash Hospital',
-            );
-
-            AppCubit.get(context).addBurnsMarker(
-              markerId: '3',
-              markerPosition: const LatLng(30.10261, 31.2089001),
-              infoWindowTitle: 'Home',
-            );
-            AppCubit.get(context).addBurnsMarker(
-              markerId: '4',
-              markerPosition: const LatLng(30.20261, 31.6089001),
-              infoWindowTitle: 'Home',
-            );
-
-          },
-          markers: state is AppSearchSuccessState?AppCubit.get(context).mySearchMarkers:AppCubit.get(context).myBurnsMarkers,
-        );
-      },
-    );
+    return Stack();
   }
+}
+
+void addBurnsMarker(context)
+{
+  AppCubit.get(context).addBurnsMarker(
+    markerId: '1',
+    markerPosition: const LatLng(30.0131, 31.2089 ),
+    infoWindowTitle: 'My location',
+  );
+
+  AppCubit.get(context).addBurnsMarker(
+    markerId: '2',
+    markerPosition: const LatLng(30.0214489, 31.4904086),
+    infoWindowTitle: 'El-Demerdash Hospital',
+  );
+
+  AppCubit.get(context).addBurnsMarker(
+    markerId: '3',
+    markerPosition: const LatLng(30.10261, 31.2089001),
+    infoWindowTitle: 'Home',
+  );
+  AppCubit.get(context).addBurnsMarker(
+    markerId: '4',
+    markerPosition: const LatLng(30.20261, 31.6089001),
+    infoWindowTitle: 'Home',
+  );
 }
 
 // class _MapsState extends State<BurnsScreen> {
