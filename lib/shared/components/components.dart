@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:graduation_project/modules/First_Aid/First_Aid.dart';
+import 'package:graduation_project/modules/login/login_screen.dart';
 import 'package:graduation_project/modules/settings/settings_screen.dart';
 import 'package:graduation_project/shared/styles/colors.dart';
 
@@ -188,7 +190,15 @@ Widget myDrawer(context) => SingleChildScrollView(
           menuItem(
             itemIcon: Icons.logout,
             itemName: 'Logout',
-            onTap: () {},
+            onTap: () {
+              void signOut() async {
+                // final GoogleSignIn googleSignIn = GoogleSignIn();
+                final FirebaseAuth auth = FirebaseAuth.instance;
+                // await googleSignIn.signOut();
+                await auth.signOut();
+              }
+              navigatAndFinish(context,LoginScreen());
+            },
           ),
           myDevider(),
           menuItem(
