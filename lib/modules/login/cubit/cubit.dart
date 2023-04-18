@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation_project/modules/login/cubit/states.dart';
+import 'package:graduation_project/modules/login/login_screen.dart';
 
 class LoginCubit extends Cubit<LoginStates>
 {
@@ -40,5 +41,15 @@ class LoginCubit extends Cubit<LoginStates>
     isPassword? suffix=Icons.visibility: suffix=Icons.visibility_off;
     emit(ChangePasswordVisibilityState());
   }
+
+  void signOut() async {
+  //  final GoogleSignIn googleSignIn = GoogleSignIn();
+    final FirebaseAuth auth = FirebaseAuth.instance;
+   // await googleSignIn.signOut();
+    await auth.signOut();
+  }
+
+
+
 }
 
