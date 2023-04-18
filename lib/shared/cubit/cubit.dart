@@ -7,6 +7,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:graduation_project/modules/blood/Donate.dart';
 import 'package:graduation_project/modules/blood/List_Requests.dart';
+import 'package:graduation_project/modules/burns/Burn_Image.dart';
 import 'package:graduation_project/modules/home/home_screen.dart';
 import 'package:graduation_project/shared/components/components.dart';
 import 'package:graduation_project/shared/cubit/states.dart';
@@ -22,6 +23,9 @@ class AppCubit extends Cubit<AppStates> {
   var mySearchMarkers = HashSet<Marker>();
   var customMarker;
   bool isDark = false;
+
+
+
 
   final GlobalKey<AnimatedFloatingActionButtonState> key = GlobalKey<
       AnimatedFloatingActionButtonState>();
@@ -205,6 +209,19 @@ class AppCubit extends Cubit<AppStates> {
         heroTag: "btn2",
         tooltip: 'List Request ',
         child: Icon(Icons.list_alt_outlined),
+      ),
+    );
+  }
+
+  Widget float3(context) {
+    return Container(
+      child: FloatingActionButton(
+        onPressed: () {
+          navigateTo(context, Burn_Image());
+        },
+        heroTag: "btn3",
+        tooltip: 'Burn image Here',
+        child: Icon(Icons.local_fire_department_rounded),
       ),
     );
   }

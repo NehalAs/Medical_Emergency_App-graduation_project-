@@ -185,6 +185,23 @@ class HomeLayout extends StatelessWidget {
                         animatedIconData: AnimatedIcons.menu_close //To principal button
                     ),
                   ),
+                if(AppCubit.get(context).currentIndex==2)
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: AnimatedFloatingActionButton(
+                      //Fab list
+                        curve: Curves.bounceInOut,
+                        durationAnimation: 300,
+                        spaceBetween: -10.0,
+                        fabButtons: <Widget>[
+                          AppCubit.get(context).float3(context),AppCubit.get(context).float3(context)
+                        ],
+                        key : key,
+                        colorStartAnimation: defaultColor??Colors.red,
+                        colorEndAnimation: defaultColor??Colors.red,
+                        animatedIconData: AnimatedIcons.menu_close //To principal button
+                    ),
+                  ),
 
               ],
             ),

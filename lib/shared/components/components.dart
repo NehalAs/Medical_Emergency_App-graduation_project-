@@ -63,14 +63,12 @@ Widget defaultFormField({
         prefixIcon: prefix,
         suffixIcon: suffix,
         border: outLineBorder ? OutlineInputBorder() : null,
-        enabledBorder: outLineBorder
-            ? OutlineInputBorder(
+        enabledBorder: outLineBorder ? OutlineInputBorder(
                 borderSide: BorderSide(
                   color: outlineBorderColor ?? Colors.red,
                   width: 1.0,
                 ),
-                borderRadius: BorderRadius.circular(radius))
-            : null,
+                borderRadius: BorderRadius.circular(radius)) : null,
         disabledBorder: outLineBorder
             ? OutlineInputBorder(
                 borderSide: BorderSide(

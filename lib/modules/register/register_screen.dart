@@ -22,7 +22,7 @@ class RegisterScreen extends StatelessWidget {
       create: (context) => RegisterCubit(),
       child: BlocConsumer<RegisterCubit,RegisterStates>(
         listener: (context, state) {
-          if(state is CreateUserSuccessState)
+          if(state is RegisterSuccessState)
           {
             navigatAndFinish(context, LoginScreen());
           }
@@ -89,10 +89,10 @@ class RegisterScreen extends StatelessWidget {
                           suffix: IconButton(
                             onPressed: (){},
                             icon: IconButton(
-                              onPressed: (){
-                                RegisterCubit.get(context).changePasswordVisibility();
-                              },
-                              icon: Icon(RegisterCubit.get(context).suffix),
+                                onPressed: (){
+                                  RegisterCubit.get(context).changePasswordVisibility();
+                                },
+                                icon: Icon(RegisterCubit.get(context).suffix),
                             ),
                           ),
                           obsecure: RegisterCubit.get(context).isPassword,
@@ -132,23 +132,65 @@ class RegisterScreen extends StatelessWidget {
                         SizedBox(
                           height: 20.0,
                         ),
-                        ConditionalBuilder(
-                          condition: state is! RegisterLoadingState,
-                          builder: (context) => defaultButton(
-                            function: (){
-                              if(formKey.currentState!.validate())
-                              {
-                                RegisterCubit.get(context).userRegister(
-                                  email: emailController.text,
-                                  name: nameController.text,
-                                  password: passwordController.text,
-                                  phone: phoneController.text,
-                                );
-                              }
-                            },
-                            text: 'Register',
+
+                        DropdownButtonFormField<String>(
+                          value: RegisterCubit.get(context).selectedItem,
+                          items: ['User', 'Hospital']
+                              .map((e) => DropdownMenuItem<String>(
+                            value: e,
+                            child: Text(e),
+                          )).toList(),
+                          onChanged: (value){
+                            RegisterCubit.get(context).selectedItem =value!;
+                          },
+                          decoration: InputDecoration(
+                            border: RegisterCubit.get(context).outLineBorder ? OutlineInputBorder() : null,
+                            enabledBorder: RegisterCubit.get(context).outLineBorder  ? OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color:  Colors.red,
+                                  width: 1.0,
+                                ),
+                                borderRadius: BorderRadius.circular(20.0)) : null,
+                            disabledBorder: RegisterCubit.get(context).outLineBorder
+                                ? OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color:  Colors.red,
+                                  width: 1.0,
+                                ),
+                                borderRadius: BorderRadius.circular(20.0))
+                                : null,
+                            focusedBorder: RegisterCubit.get(context).outLineBorder
+                                ? OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color:  Colors.red,
+                                  width: 1.0,
+                                ),
+                                borderRadius: BorderRadius.circular(20.0))
+                                : null,
                           ),
-                          fallback: (context) => Center(child: CircularProgressIndicator()),
+                        ),
+
+
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        ConditionalBuilder(
+                            condition: state is! RegisterLoadingState,
+                            builder: (context) => defaultButton(
+                              function: (){
+                                if(formKey.currentState!.validate())
+                                {
+                                  RegisterCubit.get(context).userRegister(
+                                    email: emailController.text,
+                                    name: nameController.text,
+                                    password: passwordController.text,
+                                    phone: phoneController.text,
+                                  );
+                                }
+                              },
+                              text: 'Register',
+                            ),
+                            fallback: (context) => Center(child: CircularProgressIndicator()),
                         ),
                       ],
                     ),
