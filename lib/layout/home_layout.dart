@@ -58,6 +58,7 @@ class HomeLayout extends StatelessWidget {
 
 
                   },
+                 zoomControlsEnabled: false,
                   markers: state is AppSearchSuccessState?AppCubit.get(context).mySearchMarkers: AppCubit.get(context).currentIndex==0 && state is !AppSearchSuccessState? AppCubit.get(context).myHomeMarkers :AppCubit.get(context).currentIndex==1 && state is !AppSearchSuccessState?AppCubit.get(context).myBloodMarkers:AppCubit.get(context).myBurnsMarkers,
                 ),
                 Padding(
