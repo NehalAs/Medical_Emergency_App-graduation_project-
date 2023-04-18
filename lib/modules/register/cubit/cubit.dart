@@ -10,6 +10,9 @@ import '../../../models/user_model.dart';
 class RegisterCubit extends Cubit<RegisterStates>{
   RegisterCubit() : super(RegisterInitialState());
   static RegisterCubit get(context)=> BlocProvider.of(context);
+  bool outLineBorder = true;
+  var selectedItem;
+
   IconData suffix =  Icons.visibility;
   bool isPassword = true;
   void userRegister(

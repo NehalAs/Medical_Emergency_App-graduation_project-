@@ -21,6 +21,8 @@ class BoardingModel{
   );
 
 }
+
+
 class OnBoardingScreen extends StatelessWidget {
 
   List<BoardingModel> boarding=[
