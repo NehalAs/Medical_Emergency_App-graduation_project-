@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:graduation_project/modules/First_Aid/First_Aid.dart';
 import 'package:graduation_project/modules/login/login_screen.dart';
 import 'package:graduation_project/modules/settings/settings_screen.dart';
+import 'package:graduation_project/shared/cubit/cubit.dart';
 import 'package:graduation_project/shared/styles/colors.dart';
 
+import '../../modules/about_us/about_us_screen.dart';
 import '../../modules/emergency_numbers/emergency_numbers_screen.dart';
+import '../../modules/profile/profile_screen.dart';
 
 Widget defaultButton({
   double width = double.infinity,
@@ -116,120 +119,113 @@ Widget myDevider() => Padding(
     );
 
 Widget myDrawer(context) => SingleChildScrollView(
-      child: Column(
-        children: [
-          Container(
-            height: 100,
-            width: double.infinity,
-            child: Padding(
-              padding: const EdgeInsetsDirectional.all(25.0),
-              child: Row(
-                children: [
-                  Text(
-                    'Emergency',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 25,
-                      color: defaultColor,
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          children: [
+            Container(
+              height: 100,
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsetsDirectional.all(25.0),
+                child: Row(
+                  children: [
+                    Text(
+                      'Emergency',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 25,
+                        color: defaultColor,
+                      ),
                     ),
-                  ),
-                  Spacer(),
-                  InkWell(
-                    onTap: () {},
-                    child: CircleAvatar(
-                      backgroundImage: NetworkImage(
-                          'https://toppng.com/uploads/preview/instagram-default-profile-picture-11562973083brycehrmyv.png'),
+                    Spacer(),
+                    InkWell(
+                      onTap: () {
+                        navigateTo(context,ProfileScreen());
+                        },
+                      child: CircleAvatar(
+                        backgroundImage: NetworkImage(
+                            '${AppCubit.get(context).userModel?.image}'),
+                        radius: 25,
+
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-          myDevider(),
-          menuItem(
-            itemIcon: Icons.feed_outlined,
-            itemName: 'News',
-            onTap: () {},
-          ),
-          menuItem(
-            itemIcon: Icons.medical_services_outlined,
-            itemName: 'First aid',
-            onTap: () {
-              navigateTo(context, Firstaid());
+            myDevider(),
+            menuItem(
+              itemIcon: Icons.medical_services_outlined,
+              itemName: 'First aid',
+              onTap: () {
+                navigateTo(context, Firstaid());
+                },
+            ),
+            menuItem(
+              itemIcon: Icons.emergency_outlined,
+              itemName: 'Emergency numbers',
+              onTap: () {
+                navigateTo(context, EmergencyNumbersScreen());
+                },
+            ),
+            menuItem(
+              itemIcon: Icons.local_hospital_outlined,
+              itemName: 'Hospitals',
+              onTap: () {},
+            ),
+            menuItem(
+              itemIcon: CupertinoIcons.person_2,
+              itemName: 'Users',
+              onTap: () {},
+            ),
+            menuItem(
+              itemIcon: Icons.settings_outlined,
+              itemName: 'Settings',
+              onTap: () {
+                navigateTo(context, SettingsScreen());
+                },
+            ),
+            menuItem(
+              itemIcon: Icons.logout,
+              itemName: 'Logout',
+              onTap: () {
+                AppCubit.get(context).signOut(context);
               },
-          ),
-          menuItem(
-            itemIcon: Icons.emergency_outlined,
-            itemName: 'Emergency numbers',
-            onTap: () {
-              navigateTo(context, EmergencyNumbersScreen());
-              },
-          ),
-          menuItem(
-            itemIcon: Icons.local_hospital_outlined,
-            itemName: 'Hospitals',
-            onTap: () {},
-          ),
-          menuItem(
-            itemIcon: Icons.bloodtype_outlined,
-            itemName: 'Blood banks',
-            onTap: () {},
-          ),
-          menuItem(
-            itemIcon: CupertinoIcons.person_2,
-            itemName: 'Users',
-            onTap: () {},
-          ),
-          menuItem(
-            itemIcon: Icons.settings_outlined,
-            itemName: 'Settings',
-            onTap: () {
-              navigateTo(context, SettingsScreen());
-              },
-          ),
-          menuItem(
-            itemIcon: Icons.logout,
-            itemName: 'Logout',
-            onTap: () {
-              void signOut() async {
-                // final GoogleSignIn googleSignIn = GoogleSignIn();
-                final FirebaseAuth auth = FirebaseAuth.instance;
-                // await googleSignIn.signOut();
-                await auth.signOut();
-              }
-              navigatAndFinish(context,LoginScreen());
-            },
-          ),
-          myDevider(),
-          menuItem(
-            itemIcon: Icons.info_outline,
-            itemName: 'About us',
-            fontSize: 14,
-            iconSize: 18,
-            onTap: () {},
-          ),
-          menuItem(
-            itemIcon: Icons.help_outline,
-            itemName: 'Help',
-            fontSize: 14,
-            iconSize: 18,
-            onTap: () {},
-          ),
-          menuItem(
-            itemIcon: Icons.feedback_outlined,
-            itemName: 'Feedback',
-            fontSize: 14,
-            iconSize: 18,
-            onTap: () {},
-          ),
-          menuItem(
-            itemIcon: Icons.share_outlined,
-            itemName: 'Share',
-            fontSize: 14,
-            iconSize: 18,
-            onTap: () {},
-          ),
-        ],
+            ),
+            myDevider(),
+            menuItem(
+              itemIcon: Icons.info_outline,
+              itemName: 'About us',
+              fontSize: 14,
+              iconSize: 18,
+              onTap: () {},
+            ),
+            menuItem(
+              itemIcon: Icons.help_outline,
+              itemName: 'Help',
+              fontSize: 14,
+              iconSize: 18,
+              onTap: () {},
+            ),
+            menuItem(
+              itemIcon: Icons.feedback_outlined,
+              itemName: 'Feedback',
+              fontSize: 14,
+              iconSize: 18,
+              onTap: () {
+                navigateTo(context, OthersPage());
+                },
+            ),
+            // menuItem(
+            //   itemIcon: Icons.share_outlined,
+            //   itemName: 'Share',
+            //   fontSize: 14,
+            //   iconSize: 18,
+            //   onTap: () {},
+            // ),
+          ],
+        ),
       ),
     );
 

@@ -97,7 +97,7 @@ class SettingsScreen extends StatelessWidget {
                               value: AppCubit.get(context).isDark,
                               onChanged: (value){
                                 print(value.toString());
-                                AppCubit.get(context).changeAppMode(value);
+                                AppCubit.get(context).changeAppMode(swatchValue: value);
                               },
                             ),
                           ],

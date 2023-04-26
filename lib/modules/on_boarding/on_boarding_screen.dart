@@ -1,9 +1,8 @@
-//import 'dart:js';
-
 import 'package:flutter/material.dart';
 import 'package:graduation_project/modules/login/login_screen.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../shared/components/components.dart';
+import '../../shared/network/local/cache_helper.dart';
 import '../../shared/styles/colors.dart';
 
 
@@ -47,16 +46,15 @@ class OnBoardingScreen extends StatelessWidget {
 
   bool isLast = false;
 
-  // void submit ()
-  // {
-  //   // CacheHelper.saveData(key: 'onBoarding', value:true).then((value){
-  //   //   if(value)
-  //   //     {
-  //   //      navigatAndFinish(context, LoginScreen());
-  //   //     }
-  //   // });
-  //
-  // }
+  void submit (context) {
+    CacheHelper.saveData(key: 'onBoarding', value:true).then((value){
+      if(value)
+        {
+         navigatAndFinish(context, LoginScreen());
+        }
+    });
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,8 +95,7 @@ class OnBoardingScreen extends StatelessWidget {
             padding: const EdgeInsetsDirectional.only(end: 10.0),
             child: TextButton(
                 onPressed: () {
-                  //submit();
-                  navigatAndFinish(context, LoginScreen());
+                  submit(context);
                 },
                 child: Text(
                   'SKIP',
@@ -156,8 +153,7 @@ class OnBoardingScreen extends StatelessWidget {
                     onPressed:() {
                       if(isLast)
                         {
-                          //submit();
-                          navigatAndFinish(context, LoginScreen());
+                          submit(context);
                         }
                       else
                         {

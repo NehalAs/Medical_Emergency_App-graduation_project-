@@ -5,8 +5,10 @@ import 'package:graduation_project/modules/login/cubit/cubit.dart';
 import 'package:graduation_project/modules/login/cubit/states.dart';
 import 'package:graduation_project/modules/register/register_screen.dart';
 import 'package:graduation_project/shared/components/components.dart';
+import 'package:graduation_project/shared/cubit/cubit.dart';
 
 import '../../layout/home_layout.dart';
+import '../../shared/network/local/cache_helper.dart';
 import '../forgot_password/forgot_password_screen.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -22,7 +24,10 @@ class LoginScreen extends StatelessWidget {
         listener: (context, state) {
           if(state is LoginSuccessState)
           {
+            CacheHelper.saveData(key: 'uId', value: state.uId).then((value) {
             navigatAndFinish(context, HomeLayout());
+            AppCubit.get(context).getUserData();
+          });
           }
         },
         builder: (context, state) {
@@ -54,7 +59,7 @@ class LoginScreen extends StatelessWidget {
                           {
                             if(value.isEmpty)
                             {
-                              return 'Email adress must not be empty';
+                              return 'Email address must not be empty';
                             }
                           },
                           label: 'Email',

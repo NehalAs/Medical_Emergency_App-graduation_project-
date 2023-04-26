@@ -48,6 +48,8 @@ dependencies:
   dropdown_textfield: ^1.0.8
   smooth_page_indicator: ^1.1.0
   image_picker: ^0.8.7+3
+  flutter_launcher_icons: ^0.13.1
+  shared_preferences: ^2.1.0
 
 
 
@@ -56,11 +58,18 @@ dependencies:
   firebase_core: ^2.6.1
   firebase_auth: ^4.2.8
   cloud_firestore: ^4.5.1
+  firebase_storage: ^11.1.1
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/emergency1.png"
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

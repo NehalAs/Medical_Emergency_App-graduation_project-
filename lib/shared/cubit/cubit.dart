@@ -2,6 +2,8 @@ import 'dart:collection';
 import 'dart:io';
 import 'package:animated_floating_buttons/widgets/animated_floating_action_button.dart';
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart';
@@ -13,8 +15,14 @@ import 'package:graduation_project/modules/home/home_screen.dart';
 import 'package:graduation_project/shared/components/components.dart';
 import 'package:graduation_project/shared/cubit/states.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../models/user_model.dart';
 import '../../modules/blood/blood_screen.dart';
 import '../../modules/burns/burns_screen.dart';
+import '../../modules/login/login_screen.dart';
+import '../components/conistance.dart';
+import '../network/local/cache_helper.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+
 
 class AppCubit extends Cubit<AppStates> {
   AppCubit() :super (AppInitialState());
@@ -25,6 +33,8 @@ class AppCubit extends Cubit<AppStates> {
   var mySearchMarkers = HashSet<Marker>();
   var customMarker;
   bool isDark = false;
+  late File  image;
+  UserModel? userModel;
 
 
   final GlobalKey<AnimatedFloatingActionButtonState> key = GlobalKey<
@@ -130,6 +140,7 @@ class AppCubit extends Cubit<AppStates> {
     String? infoWindowDescription,
     BitmapDescriptor icon = BitmapDescriptor.defaultMarker,
   }) {
+    mySearchMarkers = HashSet<Marker>();
     mySearchMarkers.add(Marker(
       markerId: MarkerId(markerId),
       position: markerPosition,
@@ -162,10 +173,13 @@ class AppCubit extends Cubit<AppStates> {
 
   getCustomMarker() async {
     customMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration.empty, 'assets/images/location-pin.png');
+        ImageConfiguration.empty,
+        'assets/images/location-pin.png',
+    );
   }
 
   void searchAndNavigate() {
+
     locationFromAddress(searchAddress!).then((result) {
       mapController!.animateCamera(CameraUpdate.newCameraPosition(
           CameraPosition(
@@ -244,15 +258,33 @@ class AppCubit extends Cubit<AppStates> {
   }
 
 
-  void changeAppMode(value) {
-    isDark = value;
-    emit(AppChangeModeState());
+  void changeAppMode({
+    bool? swatchValue,
+    bool? fromShared
+  }) {
+    if(fromShared !=null && swatchValue==null)
+    {
+      isDark=fromShared;
+      emit(AppChangeModeState());
+    }
+    else if(fromShared ==null && swatchValue==null)
+      {
+        isDark=isDark;
+        CacheHelper.saveData(key: 'isDark', value: isDark).then((value)
+        {
+          emit(AppChangeModeState());
+        });
+      }
+    else
+    {
+      isDark=swatchValue!;
+      CacheHelper.saveData(key: 'isDark', value: isDark).then((value)
+      {
+        emit(AppChangeModeState());
+      });
+    }
   }
 
-
-
-
-  late File  image;
 
   void pickImageFromGallery(context){
     ImagePicker().pickImage(source: ImageSource.gallery,).then((value) {
@@ -277,29 +309,162 @@ class AppCubit extends Cubit<AppStates> {
     }
 
 
+  File? profileImage;
+  var picker = ImagePicker();
 
-  // Future<void> pickimagefromgallery() async {
-  //   final imagepicked = await ImagePicker().pickImage(
-  //     source: ImageSource.gallery,
-  //   );
-  //   if (imagepicked != null) {
-  //
-  //       image = File(imagepicked.path);
-  //       emit(AppPickImageFromGallerySuccessState());
-  //
-  //   }
-  // }
+  Future<void> getProfileImage()async {
+    final pickedFile = await picker.pickImage(
+      source: ImageSource.gallery,
+    );
 
-  // Future<void> pickimagefromcamera() async {
-  //   final imagepicked = await ImagePicker().pickImage(source: ImageSource.camera);
-  //   if (imagepicked != null) {
-  //       image = File(imagepicked.path);
-  //       emit(AppPickImageFromCameraSuccessState());
-  //   }
-  //   else{
-  //     emit(AppPickImageFromCameraErrorState());
-  //   }
-  // }
-
-
+    if(pickedFile!=null)
+    {
+      profileImage = File(pickedFile.path);
+      emit(AppProfileImagePickedSuccessState());
+    }else
+    {
+      print('No image selected');
+      emit(AppProfileImagePickedErrorState());
+    }
   }
+
+  File? coverImage;
+
+  Future<void> getCoverImage()async {
+    final pickedFile = await picker.pickImage(
+      source: ImageSource.gallery,
+    );
+
+    if(pickedFile!=null)
+    {
+      coverImage = File(pickedFile.path);
+      emit(AppCoverImagePickedSuccessState());
+    }else
+    {
+      print('No image selected');
+      emit(AppCoverImagePickedErrorState());
+    }
+  }
+
+
+  String profileImageUrl ='';
+  void uploadProfileImage(
+      {
+        required String name,
+        required String phone,
+      })
+  {
+    emit(AppUserUpdateProfileLoadingState());
+    firebase_storage.FirebaseStorage.instance
+        .ref()
+        .child('users/${Uri.file(profileImage!.path).pathSegments.last}')
+        .putFile(profileImage!).then((value){
+      value.ref.getDownloadURL().then((value)
+      {
+        print(value);
+        profileImageUrl=value;
+        updateUser(
+          phone: phone,
+          name: name,
+          image: profileImageUrl,
+        );
+        emit(AppUploadProfileImageSuccessState());
+
+      }).catchError((error)
+      {
+        emit(AppUploadProfileImageErrorState());
+        print(error.toString());
+      });
+    });
+  }
+
+
+  String coverImageUrl ='';
+  void uploadCoverImage(
+      {
+        required String name,
+        required String phone,
+      })
+  {
+    emit(AppUserUpdateCoverLoadingState());
+    firebase_storage.FirebaseStorage.instance
+        .ref()
+        .child('users/${Uri.file(coverImage!.path).pathSegments.last}')
+        .putFile(coverImage!).then((value){
+      value.ref.getDownloadURL().then((value)
+      {
+        print(value);
+        coverImageUrl=value;
+        updateUser(
+          phone: phone,
+          name: name,
+          cover: coverImageUrl,
+        );
+        emit(AppUploadCoverImageSuccessState());
+      }).catchError((error)
+      {
+        emit(AppUploadCoverImageErrorState());
+        print(error.toString());
+      });
+    });
+  }
+
+
+  void getUserData(){
+    emit(AppGetUserLoadingState());
+    FirebaseFirestore.instance.collection('users').doc(uId).get().then((value){
+      print(value.data());
+      userModel=UserModel.fromJson(value.data());
+      emit(AppGetUserSuccessState());
+    }).catchError((error){
+      print(error.toString());
+      emit(AppGetUserErrorState());
+    });
+  }
+
+  void updateUser(
+      {
+        required String name,
+        required String phone,
+        String? image,
+        String? cover,
+      })
+  {
+    var model= UserModel(
+        phone: phone,
+        name: name,
+        image: image??userModel!.image ,
+        cover: cover??userModel!.cover,
+        email: userModel!.email,
+        uId: userModel!.uId,
+    );
+
+    FirebaseFirestore.instance.collection('users').doc(userModel!.uId).update(model.toMap())
+        .then((value)
+    {
+      getUserData();
+      emit(AppUserUpdateSuccessState());
+    }).catchError((error){
+      emit(AppUserUpdateErrorState());
+    });
+  }
+
+
+  void signOut(context) {
+    CacheHelper.removeData('uId',).then((value) {
+      if (value) {
+        uId ='';
+        final FirebaseAuth auth = FirebaseAuth.instance;
+        auth.signOut().then((value){
+          navigatAndFinish(context, LoginScreen());
+          emit(AppSignOutSuccessState());
+        }).catchError((error){
+          print(error.toString());
+          emit(AppSignOutErrorState());
+        });
+
+      }
+    });
+  }
+
+}
