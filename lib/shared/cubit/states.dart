@@ -9,3 +9,8 @@ class AppChangeMapViewState extends AppStates {}
 class AppSearchSuccessState extends AppStates {}
 class AppSearchErrorState extends AppStates {}
 class AppChangeModeState extends AppStates {}
+
+class AppPickImageFromGallerySuccessState extends AppStates {}
+class AppPickImageFromGalleryErrorState extends AppStates {}
+class AppPickImageFromCameraSuccessState extends AppStates {}
+class AppPickImageFromCameraErrorState extends AppStates {}

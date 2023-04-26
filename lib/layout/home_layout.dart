@@ -195,7 +195,7 @@ class HomeLayout extends StatelessWidget {
                         durationAnimation: 300,
                         spaceBetween: -10.0,
                         fabButtons: <Widget>[
-                          AppCubit.get(context).float3(context),AppCubit.get(context).float3(context)
+                          AppCubit.get(context).float3(context),AppCubit.get(context).float4(context)
                         ],
                         key : key,
                         colorStartAnimation: defaultColor??Colors.red,

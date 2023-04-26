@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:io';
 import 'package:animated_floating_buttons/widgets/animated_floating_action_button.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import 'package:graduation_project/modules/burns/Burn_Image.dart';
 import 'package:graduation_project/modules/home/home_screen.dart';
 import 'package:graduation_project/shared/components/components.dart';
 import 'package:graduation_project/shared/cubit/states.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../modules/blood/blood_screen.dart';
 import '../../modules/burns/burns_screen.dart';
 
@@ -23,8 +25,6 @@ class AppCubit extends Cubit<AppStates> {
   var mySearchMarkers = HashSet<Marker>();
   var customMarker;
   bool isDark = false;
-
-
 
 
   final GlobalKey<AnimatedFloatingActionButtonState> key = GlobalKey<
@@ -162,7 +162,7 @@ class AppCubit extends Cubit<AppStates> {
 
   getCustomMarker() async {
     customMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration.empty,'assets/images/location-pin.png');
+        ImageConfiguration.empty, 'assets/images/location-pin.png');
   }
 
   void searchAndNavigate() {
@@ -217,11 +217,23 @@ class AppCubit extends Cubit<AppStates> {
     return Container(
       child: FloatingActionButton(
         onPressed: () {
-          navigateTo(context, Burn_Image());
+          pickImageFromGallery(context);
         },
         heroTag: "btn3",
-        tooltip: 'Burn image Here',
-        child: Icon(Icons.local_fire_department_rounded),
+        tooltip: 'Choose image from gallery',
+        child: Icon(Icons.photo_library_sharp),
+      ),
+    );
+  }
+  Widget float4(context) {
+    return Container(
+      child: FloatingActionButton(
+        onPressed: () {
+          pickImageFromCamera(context);
+        },
+        heroTag: "btn4",
+        tooltip: 'Pick new image',
+        child: Icon(Icons.camera_alt),
       ),
     );
   }
@@ -236,4 +248,58 @@ class AppCubit extends Cubit<AppStates> {
     isDark = value;
     emit(AppChangeModeState());
   }
-}
+
+
+
+
+  late File  image;
+
+  void pickImageFromGallery(context){
+    ImagePicker().pickImage(source: ImageSource.gallery,).then((value) {
+      image = File(value!.path);
+      navigateTo(context, BurnImage(image));
+      emit(AppPickImageFromGallerySuccessState());
+    }).catchError((error){
+      print(error.toString());
+      emit(AppPickImageFromGalleryErrorState());
+    });
+  }
+
+  void pickImageFromCamera(context){
+    ImagePicker().pickImage(source: ImageSource.camera,).then((value) {
+      image = File(value!.path) ;
+      navigateTo(context, BurnImage(image));
+      emit(AppPickImageFromCameraSuccessState());
+    }).catchError((error){
+      print(error.toString());
+      emit(AppPickImageFromCameraErrorState());
+    });
+    }
+
+
+
+  // Future<void> pickimagefromgallery() async {
+  //   final imagepicked = await ImagePicker().pickImage(
+  //     source: ImageSource.gallery,
+  //   );
+  //   if (imagepicked != null) {
+  //
+  //       image = File(imagepicked.path);
+  //       emit(AppPickImageFromGallerySuccessState());
+  //
+  //   }
+  // }
+
+  // Future<void> pickimagefromcamera() async {
+  //   final imagepicked = await ImagePicker().pickImage(source: ImageSource.camera);
+  //   if (imagepicked != null) {
+  //       image = File(imagepicked.path);
+  //       emit(AppPickImageFromCameraSuccessState());
+  //   }
+  //   else{
+  //     emit(AppPickImageFromCameraErrorState());
+  //   }
+  // }
+
+
+  }
