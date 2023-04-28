@@ -55,11 +55,22 @@ class AppCubit extends Cubit<AppStates> {
       icon: Icon(Icons.bloodtype_outlined),
       label: 'Blood',
     ),
+  ];
+  List<BottomNavigationBarItem> bottomItemsWithBurnsItem = [
+    BottomNavigationBarItem(
+      icon: Icon(Icons.home_outlined),
+      label: 'Home',
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.bloodtype_outlined),
+      label: 'Blood',
+    ),
     BottomNavigationBarItem(
       icon: Icon(Icons.local_fire_department_outlined),
       label: 'Burns',
     ),
   ];
+
   List<Widget>screens =
   [
     HomeScreen(),
@@ -410,9 +421,9 @@ class AppCubit extends Cubit<AppStates> {
   }
 
 
-  void getUserData(){
+  void getUserData({uIdfFromState}){
     emit(AppGetUserLoadingState());
-    FirebaseFirestore.instance.collection('users').doc(uId).get().then((value){
+    FirebaseFirestore.instance.collection('users').doc(uIdfFromState??uId).get().then((value){
       print(value.data());
       userModel=UserModel.fromJson(value.data());
       emit(AppGetUserSuccessState());
@@ -426,6 +437,7 @@ class AppCubit extends Cubit<AppStates> {
       {
         required String name,
         required String phone,
+        String? bloodType,
         String? image,
         String? cover,
       })
@@ -433,10 +445,12 @@ class AppCubit extends Cubit<AppStates> {
     var model= UserModel(
         phone: phone,
         name: name,
+        bloodType: bloodType??userModel!.bloodType,
         image: image??userModel!.image ,
         cover: cover??userModel!.cover,
         email: userModel!.email,
         uId: userModel!.uId,
+        userType: userModel!.userType,
     );
 
     FirebaseFirestore.instance.collection('users').doc(userModel!.uId).update(model.toMap())
@@ -445,8 +459,44 @@ class AppCubit extends Cubit<AppStates> {
       getUserData();
       emit(AppUserUpdateSuccessState());
     }).catchError((error){
+      print(error.toString());
       emit(AppUserUpdateErrorState());
     });
+  }
+
+
+  List<UserModel> users =[];
+
+  void getUsers()
+  {
+    if(users.length==0)
+      FirebaseFirestore.instance.collection('users').get().then((value) {
+        value.docs.forEach((element) {
+          if(element.data()['uId']!=userModel?.uId && element.data()['userType']!='Hospital')
+            users.add(UserModel.fromJson(element.data()));
+        });
+        emit(AppGetAllUsersSuccessState());
+      }).catchError((error){
+        print(error.toString());
+        emit(AppGetAllUsersErrorState());
+      });
+  }
+
+  List<UserModel> hospitals =[];
+
+  void getHospitals()
+  {
+    if(users.length==0)
+      FirebaseFirestore.instance.collection('users').get().then((value) {
+        value.docs.forEach((element) {
+          if(element.data()['uId']!=userModel?.uId && element.data()['userType']=='Hospital')
+            hospitals.add(UserModel.fromJson(element.data()));
+        });
+        emit(AppGetAllHospitalsSuccessState());
+      }).catchError((error){
+        print(error.toString());
+        emit(AppGetAllHospitalsErrorState());
+      });
   }
 
 

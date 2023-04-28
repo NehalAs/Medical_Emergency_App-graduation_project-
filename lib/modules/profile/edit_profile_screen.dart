@@ -19,9 +19,7 @@ class EditProfileScreen extends StatelessWidget {
         var coverImage =AppCubit.get(context).coverImage;
         nameController.text=AppCubit.get(context).userModel!.name!;
         phoneController.text=AppCubit.get(context).userModel!.phone!;
-        String _selectedBloodType = 'A+';
-        List<String> _bloodTypes = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
-
+        var selectedBloodType=AppCubit.get(context).userModel!.bloodType;
         return Scaffold(
           appBar: AppBar(
               leading: IconButton(
@@ -40,7 +38,7 @@ class EditProfileScreen extends StatelessWidget {
                       AppCubit.get(context).updateUser(
                           name: nameController.text,
                           phone:phoneController.text,
-                          //bio: bioController.text,
+                          bloodType:selectedBloodType??'null',
                       );
                     },
                     child: Text(
@@ -197,7 +195,7 @@ class EditProfileScreen extends StatelessWidget {
                       controller: nameController,
                       type: TextInputType.name,
                       validate: (value){
-                        if(value.isEnpty) {
+                        if(value.isEmpty) {
                           return 'Name must not be empty';
                         }
                         return null;
@@ -214,7 +212,7 @@ class EditProfileScreen extends StatelessWidget {
                       controller: phoneController,
                       type: TextInputType.phone,
                       validate: (value){
-                        if(value.isEnpty) {
+                        if(value.isEmpty) {
                           return 'Phone must not be empty';
                         }
                         return null;
@@ -228,30 +226,41 @@ class EditProfileScreen extends StatelessWidget {
                   SizedBox(
                     height: 20,
                   ),
+                  if(AppCubit.get(context).userModel!.userType!='Hospital')
                   DropdownButtonFormField<String>(
-                   decoration: InputDecoration(
-                     prefixIcon: Icon(Icons.bloodtype_rounded),
-                     labelText: 'Blood Type',
-                     border: OutlineInputBorder
-                       (
-                       borderSide: BorderSide(
-                         color: Colors.red,
-                         width: 1.0,
-                       ),
-                       borderRadius:BorderRadius.circular(20),
-                     ),
-                   ),
-                  value: _selectedBloodType,
-                  items: _bloodTypes.map((type) {
-                  return DropdownMenuItem(
-                   value: type,
-                   child: Text(type),
-                  );
-                  }).toList(),
-                    onChanged: (selectedType) {
-                   _selectedBloodType = selectedType!; //emit state
-                  },
-                 ),
+                    hint: Text('Choose your blood type'),
+                    value: selectedBloodType,
+                    items: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
+                        .map((e) => DropdownMenuItem<String>(
+                      value: e,
+                      child: Text(e),
+                    )).toList(),
+                    onChanged: (value){
+                      print(value);
+                      selectedBloodType =value!;
+                    },
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      enabledBorder:OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color:  Colors.red,
+                            width: 1.0,
+                          ),
+                          borderRadius: BorderRadius.circular(20.0)) ,
+                          disabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color:  Colors.red,
+                            width: 1.0,
+                          ),
+                          borderRadius: BorderRadius.circular(20.0)),
+                          focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color:  Colors.red,
+                            width: 1.0,
+                          ),
+                          borderRadius: BorderRadius.circular(20.0)),
+                    ),
+                  ),
                 ],
               ),
             ),

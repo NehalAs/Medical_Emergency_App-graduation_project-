@@ -10,6 +10,7 @@ class Firstaid extends StatelessWidget {
     return Scaffold(
 
       body:SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
         child:Padding(
           padding: const EdgeInsets.symmetric(
             vertical: 45.0,

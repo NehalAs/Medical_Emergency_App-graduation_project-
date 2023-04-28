@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget{
   Widget build(BuildContext context){
 
     return BlocProvider(
-      create: (context) => AppCubit()..changeAppMode(fromShared: isDark)..getUserData(),
+      create: (context) => AppCubit()..changeAppMode(fromShared: isDark)..getUserData()..getUsers()..getHospitals(),
       child: BlocConsumer<AppCubit,AppStates>(
         listener: (context, state) {},
         builder:(context, state) {

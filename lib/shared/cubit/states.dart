@@ -38,3 +38,9 @@ class AppProfileImagePickedErrorState extends AppStates{}
 
 class AppCoverImagePickedSuccessState extends AppStates{}
 class AppCoverImagePickedErrorState extends AppStates{}
+
+class AppGetAllUsersSuccessState extends AppStates{}
+class AppGetAllUsersErrorState extends AppStates{}
+
+class AppGetAllHospitalsSuccessState extends AppStates{}
+class AppGetAllHospitalsErrorState extends AppStates{}

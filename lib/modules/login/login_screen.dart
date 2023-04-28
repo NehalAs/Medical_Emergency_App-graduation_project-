@@ -24,10 +24,13 @@ class LoginScreen extends StatelessWidget {
         listener: (context, state) {
           if(state is LoginSuccessState)
           {
+            AppCubit.get(context).getUserData(uIdfFromState: state.uId);
             CacheHelper.saveData(key: 'uId', value: state.uId).then((value) {
-            navigatAndFinish(context, HomeLayout());
-            AppCubit.get(context).getUserData();
-          });
+              navigatAndFinish(context, HomeLayout());
+              AppCubit.get(context).getUsers();
+              AppCubit.get(context).getHospitals();
+
+            });
           }
         },
         builder: (context, state) {

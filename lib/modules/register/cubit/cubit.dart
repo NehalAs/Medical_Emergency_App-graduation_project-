@@ -11,7 +11,8 @@ class RegisterCubit extends Cubit<RegisterStates>{
   RegisterCubit() : super(RegisterInitialState());
   static RegisterCubit get(context)=> BlocProvider.of(context);
   bool outLineBorder = true;
-  var selectedItem;
+  var selectedUserType;
+  var selectedBloodType;
 
   IconData suffix =  Icons.visibility;
   bool isPassword = true;
@@ -21,6 +22,8 @@ class RegisterCubit extends Cubit<RegisterStates>{
         required String name,
         required String password,
         required String phone,
+        required bloodType,
+        required userType,
 
       }
       )
@@ -37,6 +40,8 @@ class RegisterCubit extends Cubit<RegisterStates>{
         email: email,
         name: name,
         phone: phone,
+        bloodType:bloodType,
+        userType:userType,
       );
       emit(RegisterSuccessState());
     }).catchError((error){
@@ -52,6 +57,8 @@ class RegisterCubit extends Cubit<RegisterStates>{
         required String name,
         required String phone,
         required String uId,
+        required bloodType,
+        required userType,
 
       })
   {
@@ -60,6 +67,8 @@ class RegisterCubit extends Cubit<RegisterStates>{
       phone: phone,
       name: name,
       uId: uId,
+      bloodType:bloodType,
+      userType:userType,
       cover:'https://img.freepik.com/free-vector/happy-world-blood-donor-day-red-grey-yellow-background-social-media-design-banner-free-vector_1340-21612.jpg?w=1380&t=st=1682539234~exp=1682539834~hmac=4b6f5ae67a351fa620d0491ac6b8f932ce454780b5471e643c930294ba08079d',
       image: 'https://toppng.com/uploads/preview/instagram-default-profile-picture-11562973083brycehrmyv.png',
     );
@@ -77,6 +86,11 @@ class RegisterCubit extends Cubit<RegisterStates>{
     isPassword=!isPassword;
     isPassword? suffix =  Icons.visibility : suffix = Icons.visibility_off;
     emit(ChangeRegisterPasswordVisibilityState());
+  }
+  void changeUserType(value)
+  {
+    selectedUserType = value;
+    emit(changeUserTypeState());
   }
 
 }

@@ -1,144 +1,3 @@
-
-// class ProfileScreen extends StatefulWidget {
-//   @override
-//   _ProfileScreenState createState() => _ProfileScreenState();
-// }
-//
-// class _ProfileScreenState extends State<ProfileScreen> {
-//   File? _imageFile;
-//   final picker = ImagePicker();
-//   TextEditingController _nameController = TextEditingController();
-//   TextEditingController _ageController = TextEditingController();
-//   String _selectedBloodType = 'A+';
-//   List<String> _bloodTypes = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
-//   bool _isDonorAvailable = false;
-//   bool _doSmoke = false;
-//
-//
-//   Future getImage() async {
-//     final pickedFile = await picker.getImage(source: ImageSource.gallery);
-//     if (pickedFile == null) return;
-//     setState(() {
-//       _imageFile = File(pickedFile.path);
-//     });
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Profile'),
-//         centerTitle: true,
-//       ),
-//       body: SingleChildScrollView(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.start,
-//           crossAxisAlignment: CrossAxisAlignment.center,
-//           children: [
-//             SizedBox(height: 10,),
-//             GestureDetector(
-//               onTap: () {
-//                 getImage();
-//               },
-//               child: CircleAvatar(
-//                 radius: 60,
-//                 backgroundImage: _imageFile != null ? FileImage(_imageFile!) : null,
-//                 child: _imageFile == null
-//                     ? Icon(Icons.photo_camera_back_outlined, size:20)
-//                     : null,
-//               ),
-//             ),
-//             SizedBox(height: 40),
-//             SizedBox(
-//               width: double.infinity,
-//               child: TextFormField(
-//                 textAlign: TextAlign.center,
-//                 controller: _nameController,
-//                 decoration: InputDecoration(
-//                   labelText: 'Name',
-//                   hintText: 'Enter your name',
-//                   border: OutlineInputBorder(),
-//                   prefixIcon: Icon(Icons.drive_file_rename_outline),
-//                 ),
-//               ),
-//             ),
-//             SizedBox(height: 40),
-//             SizedBox(
-//               width: double.infinity ,
-//               child: TextFormField(
-//                 textAlign: TextAlign.center,
-//                 controller: _ageController,
-//                 keyboardType: TextInputType.number,
-//                 decoration: InputDecoration(
-//                   labelText: 'Age',
-//                   hintText: 'Enter your age',
-//                   border: OutlineInputBorder(),
-//                   prefixIcon: Icon(Icons.person),
-//                 ),
-//               ),
-//             ),
-//             SizedBox(height: 40),
-//             SizedBox(
-//               width: double.infinity,
-//               child: DropdownButtonFormField<String>(
-//                 decoration: InputDecoration(
-//                   prefixIcon: Icon(Icons.bloodtype_rounded),
-//                   labelText: 'Blood Type',
-//                   border: OutlineInputBorder(),
-//                 ),
-//                 value: _selectedBloodType,
-//                 items: _bloodTypes.map((type) {
-//                   return DropdownMenuItem(
-//                     value: type,
-//                     child: Text(type),
-//                   );
-//                 }).toList(),
-//                 onChanged: (selectedType) {
-//                   setState(() {
-//                     _selectedBloodType = selectedType!;
-//                   });
-//                 },
-//               ),
-//             ),
-//             SizedBox(height: 40),
-//             Column(
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children: [
-//                 Text('Available to donate?'),
-//                 SizedBox(width: 10),
-//                 Switch(
-//                   value: _isDonorAvailable,
-//                   onChanged: (value) {
-//                     setState(() {
-//                       _isDonorAvailable = value;
-//                     });
-//                   },
-//                 ),
-//                 SizedBox(height:25 ,),
-//                 Column(
-//                   mainAxisAlignment: MainAxisAlignment.center,
-//                   children: [
-//                     Text('Do you smoke?'),
-//                     Switch(
-//                       value: _doSmoke,
-//                       onChanged: (newValue) {
-//                         setState(() {
-//                           _doSmoke = newValue;
-//                         });
-//                       },
-//                     ),
-//                   ],
-//                 ),
-//
-//               ],
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../shared/components/components.dart';
@@ -213,7 +72,8 @@ class ProfileScreen extends StatelessWidget {
                     fontSize: 20,
                   ),
                 ),
-                Padding(
+                if(AppCubit.get(context).userModel!.userType!='Hospital')
+                  Padding(
                   padding: const EdgeInsets.symmetric(
                     vertical: 10,
                   ),
@@ -224,7 +84,7 @@ class ProfileScreen extends StatelessWidget {
                           child: Column(
                             children: [
                               Text(
-                                ' Blood Type  A+',
+                                ' Blood Type ${AppCubit.get(context).userModel!.bloodType}',
                               ),
                               // Text(
                               //   'Blood Type',

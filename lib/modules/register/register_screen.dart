@@ -6,6 +6,7 @@ import 'package:graduation_project/modules/login/login_screen.dart';
 import 'package:graduation_project/modules/register/cubit/cubit.dart';
 import 'package:graduation_project/modules/register/cubit/states.dart';
 import 'package:graduation_project/shared/components/components.dart';
+import 'package:graduation_project/shared/cubit/cubit.dart';
 import 'package:graduation_project/shared/styles/colors.dart';
 
 class RegisterScreen extends StatelessWidget {
@@ -30,13 +31,14 @@ class RegisterScreen extends StatelessWidget {
         builder: (context, state) {
           return Scaffold(
             backgroundColor: Colors.white,
-            appBar: AppBar(
-              backgroundColor: Colors.white,
-              elevation: 0,
-              iconTheme: IconThemeData(color: Colors.red[800]),
-            ),
+            // appBar: AppBar(
+            //   backgroundColor: Colors.white,
+            //   elevation: 0,
+            //   iconTheme: IconThemeData(color: Colors.red[800]),
+            // ),
             body: Center(
               child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
                 scrollDirection: Axis.vertical,
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
@@ -44,6 +46,18 @@ class RegisterScreen extends StatelessWidget {
                     key: formKey,
                     child: Column(
                       children:[
+                        Row(
+                          children: [
+                            IconButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                icon: Icon(
+                                  Icons.arrow_back_ios,
+                                  color:defaultColor,
+                                )),
+                          ],
+                        ),
                         CircleAvatar(
                           radius: 80.0,
                           backgroundImage: NetworkImage('https://calchamberalert.com/wp-content/uploads/emergency.png'),
@@ -132,16 +146,24 @@ class RegisterScreen extends StatelessWidget {
                         SizedBox(
                           height: 20.0,
                         ),
-
                         DropdownButtonFormField<String>(
-                          value: RegisterCubit.get(context).selectedItem,
+                          hint: Text('Who are you ?'),
+                          value: RegisterCubit.get(context).selectedUserType,
+                          validator: (value)
+                          {
+                            if(value!.isEmpty)
+                            {
+                              return 'This field must not be empty';
+                            }
+                          },
                           items: ['User', 'Hospital']
                               .map((e) => DropdownMenuItem<String>(
                             value: e,
                             child: Text(e),
                           )).toList(),
                           onChanged: (value){
-                            RegisterCubit.get(context).selectedItem =value!;
+                            print(value);
+                            RegisterCubit.get(context).changeUserType(value);
                           },
                           decoration: InputDecoration(
                             border: RegisterCubit.get(context).outLineBorder ? OutlineInputBorder() : null,
@@ -169,8 +191,55 @@ class RegisterScreen extends StatelessWidget {
                                 : null,
                           ),
                         ),
-
-
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        if(RegisterCubit.get(context).selectedUserType!='Hospital')
+                          DropdownButtonFormField<String>(
+                            hint: Text('Select your blood type'),
+                            value: RegisterCubit.get(context).selectedBloodType,
+                            validator: (value)
+                            {
+                              if(value!.isEmpty)
+                              {
+                                return 'This field must not be empty';
+                              }
+                            },
+                            items: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
+                                .map((e) => DropdownMenuItem<String>(
+                              value: e,
+                              child: Text(e),
+                            )).toList(),
+                            onChanged: (value){
+                              print(value);
+                              RegisterCubit.get(context).selectedBloodType =value!;
+                            },
+                            decoration: InputDecoration(
+                              border: RegisterCubit.get(context).outLineBorder ? OutlineInputBorder() : null,
+                              enabledBorder: RegisterCubit.get(context).outLineBorder  ? OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color:  Colors.red,
+                                    width: 1.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(20.0)) : null,
+                              disabledBorder: RegisterCubit.get(context).outLineBorder
+                                  ? OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color:  Colors.red,
+                                    width: 1.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(20.0))
+                                  : null,
+                              focusedBorder: RegisterCubit.get(context).outLineBorder
+                                  ? OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color:  Colors.red,
+                                    width: 1.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(20.0))
+                                  : null,
+                            ),
+                          ),
                         SizedBox(
                           height: 20.0,
                         ),
@@ -185,6 +254,9 @@ class RegisterScreen extends StatelessWidget {
                                     name: nameController.text,
                                     password: passwordController.text,
                                     phone: phoneController.text,
+                                    bloodType:RegisterCubit.get(context).selectedBloodType,
+                                    userType:RegisterCubit.get(context).selectedUserType,
+
                                   );
                                 }
                               },
