@@ -4,8 +4,10 @@ import 'package:animated_floating_buttons/widgets/animated_floating_action_butto
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:graduation_project/modules/blood/Donate.dart';
@@ -15,6 +17,7 @@ import 'package:graduation_project/modules/home/home_screen.dart';
 import 'package:graduation_project/shared/components/components.dart';
 import 'package:graduation_project/shared/cubit/states.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../main.dart';
 import '../../models/user_model.dart';
 import '../../modules/blood/blood_screen.dart';
 import '../../modules/burns/burns_screen.dart';
@@ -22,6 +25,8 @@ import '../../modules/login/login_screen.dart';
 import '../components/conistance.dart';
 import '../network/local/cache_helper.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 
 class AppCubit extends Cubit<AppStates> {
@@ -515,6 +520,59 @@ class AppCubit extends Cubit<AppStates> {
 
       }
     });
+  }
+
+
+  Future<void> sendPushNotification(String deviceToken) async {
+    final serverKey = 'AAAAvEJYR7o:APA91bEOOktF9zM6rcHtCkAfD0H3LFPsvv0MkOlr3djqgw5Mg-YNp1nkL66vniZt4mk0BPFT1BU72A9KJ0t6-Lb4_qwa8bcYcs68b2gHoChA-BR7GtCX1BL2pmrt3GA-NSBzfwV9QZQv';
+    final url = 'https://fcm.googleapis.com/fcm/send';
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'key=$serverKey',
+    };
+
+    final body = jsonEncode({
+      'to': deviceToken,
+      'notification': {
+        'title': 'New Notification ',
+        'body': 'You have a new notification',
+      },
+      "android":{
+        "priority":"HIGH",
+        "notification":{
+          "notification_priority":"PRIORITY_MAX",
+          "sound": "default",
+          "default_sound": true,
+          "defalut_vibrate_tinings":true,
+          "default_light_settings":true,
+        }
+      },
+      'data': {
+        'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+      },
+    });
+    final response = await http.post(
+      Uri.parse(url),
+      headers: headers,
+      body: body,
+    );
+
+    if (response.statusCode == 200) {
+      print('Push notification sent successfully');
+    } else {
+      print('Error sending push notification: ${response.statusCode}');
+    }
+  }
+
+  Future<void> showNotification(String? title, String body) async {
+    const androidPlatformChannelSpecifics = AndroidNotificationDetails(
+        'channel_name', 'channel_description',
+        importance: Importance.high, priority: Priority.high);
+    const notificationDetails =
+    NotificationDetails(android: androidPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+        0, title, body, notificationDetails);
   }
 
 }

@@ -42,13 +42,6 @@ class LoginCubit extends Cubit<LoginStates>
     emit(ChangePasswordVisibilityState());
   }
 
-  void signOut() async {
-  //  final GoogleSignIn googleSignIn = GoogleSignIn();
-    final FirebaseAuth auth = FirebaseAuth.instance;
-   // await googleSignIn.signOut();
-    await auth.signOut();
-  }
-
 
 
 }

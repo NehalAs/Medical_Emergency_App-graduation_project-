@@ -1,9 +1,16 @@
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation_project/shared/components/components.dart';
+import 'package:graduation_project/shared/components/conistance.dart';
 import 'package:graduation_project/shared/cubit/cubit.dart';
 import 'package:graduation_project/shared/cubit/states.dart';
 import 'package:graduation_project/shared/styles/colors.dart';
+
+
+import '../../main.dart';
 
 class Donate extends StatelessWidget {
 
@@ -13,6 +20,7 @@ class Donate extends StatelessWidget {
   var ageController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         notificationPredicate: defaultScrollNotificationPredicate,
@@ -102,7 +110,14 @@ class Donate extends StatelessWidget {
                 height: 60,
                 width: double.infinity,
 
-                child: TextButton(onPressed: (){
+                child: ElevatedButton(onPressed: () async {
+                  var token = await FirebaseMessaging.instance.getToken();
+                  String? deviceToken = token;
+                  var username= AppCubit.get(context).userModel?.name;
+                  AppCubit.get(context).sendPushNotification(deviceToken!);
+                  AppCubit.get(context).showNotification(
+                      username,
+                      " $username request Blood ");
 
                 }, child: Text(
                   'Request',
@@ -112,7 +127,9 @@ class Donate extends StatelessWidget {
                     color: Colors.white,
                   ),
                 )),
+
               ),
+
 
             ],
           ),
