@@ -6,6 +6,7 @@ import '../../models/user_model.dart';
 import '../../shared/components/components.dart';
 import '../../shared/cubit/cubit.dart';
 import '../../shared/cubit/states.dart';
+import '../blood/requests_screen.dart';
 
 class UsersScreen extends StatelessWidget {
 
@@ -43,6 +44,8 @@ class UsersScreen extends StatelessWidget {
   Widget buildUserItem(UserModel model,context)=> InkWell(
     onTap: (){
       //navigateTo(context, UserDetailsScreen(userModel: model,));
+      //AppCubit.get(context).getRequests(model.uId!);
+      navigateTo(context,Requests(userModel: model,));
     },
     child: Padding(
       padding: const EdgeInsets.all(20.0),

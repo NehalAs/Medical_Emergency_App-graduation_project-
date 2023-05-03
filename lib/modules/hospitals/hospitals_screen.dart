@@ -6,6 +6,7 @@ import '../../models/user_model.dart';
 import '../../shared/components/components.dart';
 import '../../shared/cubit/cubit.dart';
 import '../../shared/cubit/states.dart';
+import '../blood/requests_screen.dart';
 
 class HospitalsScreen extends StatelessWidget {
 
@@ -42,7 +43,7 @@ class HospitalsScreen extends StatelessWidget {
 
   Widget buildHospitalItem(UserModel model,context)=> InkWell(
     onTap: (){
-      //navigateTo(context, UserDetailsScreen(userModel: model,));
+      navigateTo(context,Requests(userModel: model,));
     },
     child: Padding(
       padding: const EdgeInsets.all(20.0),

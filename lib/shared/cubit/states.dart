@@ -30,6 +30,9 @@ class AppUploadCoverImageErrorState extends AppStates{}
 class AppUserUpdateSuccessState extends AppStates {}
 class AppUserUpdateErrorState extends AppStates {}
 
+class AppRequestUpdateSuccessState extends AppStates {}
+class AppRequestUpdateErrorState extends AppStates {}
+
 class AppUserUpdateProfileLoadingState extends AppStates{}
 class AppUserUpdateCoverLoadingState extends AppStates{}
 
@@ -44,3 +47,13 @@ class AppGetAllUsersErrorState extends AppStates{}
 
 class AppGetAllHospitalsSuccessState extends AppStates{}
 class AppGetAllHospitalsErrorState extends AppStates{}
+
+class AppGetRequestsLoadingState extends AppStates{}
+class AppGetRequestsSuccessState extends AppStates{}
+class AppGetRequestsErrorState extends AppStates{}
+
+class AppGetConnectionsSuccessState extends AppStates{}
+class AppGetConnectionsErrorState extends AppStates{}
+
+class AppSendRequestSuccessState extends AppStates{}
+class AppSendRequestErrorState extends AppStates{}

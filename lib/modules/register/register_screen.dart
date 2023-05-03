@@ -256,7 +256,6 @@ class RegisterScreen extends StatelessWidget {
                                     phone: phoneController.text,
                                     bloodType:RegisterCubit.get(context).selectedBloodType,
                                     userType:RegisterCubit.get(context).selectedUserType,
-
                                   );
                                 }
                               },

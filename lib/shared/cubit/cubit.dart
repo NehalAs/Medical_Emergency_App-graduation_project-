@@ -9,12 +9,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:graduation_project/modules/blood/Donate.dart';
-import 'package:graduation_project/modules/blood/List_Requests.dart';
+import 'package:graduation_project/modules/blood/requests_screen.dart';
 import 'package:graduation_project/modules/burns/Burn_Image.dart';
 import 'package:graduation_project/modules/home/home_screen.dart';
+import 'package:graduation_project/modules/hospitals/hospitals_screen.dart';
+import 'package:graduation_project/modules/users/users_screen.dart';
 import 'package:graduation_project/shared/components/components.dart';
 import 'package:graduation_project/shared/cubit/states.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../models/request_model.dart';
 import '../../models/user_model.dart';
 import '../../modules/blood/blood_screen.dart';
 import '../../modules/burns/burns_screen.dart';
@@ -229,7 +232,15 @@ class AppCubit extends Cubit<AppStates> {
     return Container(
       child: FloatingActionButton(
         onPressed: () {
-          navigateTo(context, listrequest());
+          if(userModel!.userType!='Hospital') {
+            getHospitals();
+            navigateTo(context, HospitalsScreen());
+          }
+          else
+            {
+              getUsers();
+              navigateTo(context,UsersScreen());
+            }
         },
         heroTag: "btn2",
         tooltip: 'List Request ',
@@ -469,7 +480,7 @@ class AppCubit extends Cubit<AppStates> {
 
   void getUsers()
   {
-    if(users.length==0)
+      users =[];
       FirebaseFirestore.instance.collection('users').get().then((value) {
         value.docs.forEach((element) {
           if(element.data()['uId']!=userModel?.uId && element.data()['userType']!='Hospital')
@@ -486,7 +497,7 @@ class AppCubit extends Cubit<AppStates> {
 
   void getHospitals()
   {
-    if(users.length==0)
+    hospitals =[];
       FirebaseFirestore.instance.collection('users').get().then((value) {
         value.docs.forEach((element) {
           if(element.data()['uId']!=userModel?.uId && element.data()['userType']=='Hospital')
@@ -499,6 +510,108 @@ class AppCubit extends Cubit<AppStates> {
       });
   }
 
+
+  void sendRequest(
+      {
+        required String bloodType,
+        required String receiverId,
+        required String dateTime,
+        String? text,
+      }
+      ){
+    RequestModel model = RequestModel(
+      bloodType:bloodType,
+      dateTime: dateTime,
+      receiverId:receiverId,
+      senderId: uId,
+      isAccepted: null,
+      text:text
+
+    );
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(uId)
+        .collection('connections')
+        .doc(receiverId)
+        .collection('requests')
+        .add(model.toMap())
+        .then((value) {
+          print(value.id);
+      emit(AppSendRequestSuccessState());
+    }).catchError((error){
+      print(error.toString());
+      emit(AppSendRequestErrorState());
+    });
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(receiverId)
+        .collection('connections')
+        .doc(uId)
+        .collection('requests')
+        .add(model.toMap())
+        .then((value) {
+         print(value.id);
+      emit(AppSendRequestSuccessState());
+    }).catchError((error){
+      print(error.toString());
+      emit(AppSendRequestErrorState());
+    });
+  }
+
+
+  List<RequestModel> requests =[];
+  List<String> requestsIds =[];
+  void getRequests(String receiverId,)
+  {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(userModel!.uId)
+        .collection('connections')
+        .doc(receiverId)
+        .collection('requests')
+        .orderBy('dateTime')
+        .snapshots()
+        .listen((event) {
+      requests=[];
+      requestsIds =[];
+      event.docs.forEach((element) {
+        print(element.id);
+        requestsIds.add(element.id);
+        requests.add(RequestModel.fromJson(element.data()));
+      });
+      emit(AppGetRequestsSuccessState());
+    });
+  }
+
+  void updateRequestStatus(
+      {
+        required String receiverId,
+        required String dateTime,
+        required String bloodType,
+        required bool isAccepted,
+        required String senderId,
+        required String requestId,
+      })
+  {
+    var model= RequestModel(
+      receiverId:receiverId ,
+      dateTime: dateTime ,
+      bloodType:bloodType,
+      isAccepted:isAccepted,
+      senderId:senderId,
+
+    );
+    FirebaseFirestore.instance.collection('users').doc(uId).collection('connections').doc(senderId).collection('requests').doc(requestId).update(model.toMap())
+        .then((value)
+    {
+      emit(AppRequestUpdateSuccessState());
+    }).catchError((error){
+      print(error.toString());
+      emit(AppRequestUpdateErrorState());
+    });
+  }
 
   void signOut(context) {
     CacheHelper.removeData('uId',).then((value) {

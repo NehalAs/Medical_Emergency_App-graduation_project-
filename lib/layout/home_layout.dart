@@ -267,6 +267,7 @@ class HomeLayout extends StatelessWidget {
             itemIcon: CupertinoIcons.person_2,
             itemName: 'Users',
             onTap: () {
+              AppCubit.get(context).getUsers();
               navigateTo(context, UsersScreen());
             },
           ),

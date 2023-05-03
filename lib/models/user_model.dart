@@ -6,6 +6,7 @@ class UserModel
   String? uId;
   String? image;
   String? cover;
+  String? location;
   String? bloodType;
   String? userType;
 
@@ -16,6 +17,7 @@ class UserModel
     this.uId,
     this.image,
     this.cover,
+    this.location,
     this.bloodType,
     this.userType,
   });
@@ -28,6 +30,7 @@ class UserModel
     uId= json['uId'];
     image= json['image'];
     cover= json['cover'];
+    location= json['location'];
     bloodType= json['bloodType'];
     userType= json['userType'];
   }
@@ -41,6 +44,7 @@ class UserModel
       'uId':uId,
       'image':image,
       'cover':cover,
+      'location':location,
       'bloodType':bloodType,
       'userType':userType,
     };
