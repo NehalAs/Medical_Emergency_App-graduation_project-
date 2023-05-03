@@ -4,7 +4,6 @@ import 'package:animated_floating_buttons/widgets/animated_floating_action_butto
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -28,6 +27,12 @@ import '../../modules/login/login_screen.dart';
 import '../components/conistance.dart';
 import '../network/local/cache_helper.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+
 
 
 class AppCubit extends Cubit<AppStates> {
@@ -235,8 +240,15 @@ class AppCubit extends Cubit<AppStates> {
     return Container(
       child: FloatingActionButton(
         onPressed: () {
-          navigateTo(context, listrequest());
-        },
+          if(userModel!.userType!='Hospital') {
+            getHospitals();
+            navigateTo(context, HospitalsScreen());
+          }
+          else
+          {
+            getUsers();
+            navigateTo(context,UsersScreen());
+          }        },
         heroTag: "btn2",
         tooltip: 'List Request ',
         child: Icon(Icons.list_alt_outlined),
@@ -505,6 +517,107 @@ class AppCubit extends Cubit<AppStates> {
       });
   }
 
+  void sendRequest(
+      {
+        required String bloodType,
+        required String receiverId,
+        required String dateTime,
+        String? text,
+      }
+      ){
+    RequestModel model = RequestModel(
+        bloodType:bloodType,
+        dateTime: dateTime,
+        receiverId:receiverId,
+        senderId: uId,
+        isAccepted: null,
+        text:text
+
+    );
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(uId)
+        .collection('connections')
+        .doc(receiverId)
+        .collection('requests')
+        .add(model.toMap())
+        .then((value) {
+      print(value.id);
+      emit(AppSendRequestSuccessState());
+    }).catchError((error){
+      print(error.toString());
+      emit(AppSendRequestErrorState());
+    });
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(receiverId)
+        .collection('connections')
+        .doc(uId)
+        .collection('requests')
+        .add(model.toMap())
+        .then((value) {
+      print(value.id);
+      emit(AppSendRequestSuccessState());
+    }).catchError((error){
+      print(error.toString());
+      emit(AppSendRequestErrorState());
+    });
+  }
+
+
+  List<RequestModel> requests =[];
+  List<String> requestsIds =[];
+  void getRequests(String receiverId,)
+  {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(userModel!.uId)
+        .collection('connections')
+        .doc(receiverId)
+        .collection('requests')
+        .orderBy('dateTime')
+        .snapshots()
+        .listen((event) {
+      requests=[];
+      requestsIds =[];
+      event.docs.forEach((element) {
+        print(element.id);
+        requestsIds.add(element.id);
+        requests.add(RequestModel.fromJson(element.data()));
+      });
+      emit(AppGetRequestsSuccessState());
+    });
+  }
+
+  void updateRequestStatus(
+      {
+        required String receiverId,
+        required String dateTime,
+        required String bloodType,
+        required bool isAccepted,
+        required String senderId,
+        required String requestId,
+      })
+  {
+    var model= RequestModel(
+      receiverId:receiverId ,
+      dateTime: dateTime ,
+      bloodType:bloodType,
+      isAccepted:isAccepted,
+      senderId:senderId,
+
+    );
+    FirebaseFirestore.instance.collection('users').doc(uId).collection('connections').doc(senderId).collection('requests').doc(requestId).update(model.toMap())
+        .then((value)
+    {
+      emit(AppRequestUpdateSuccessState());
+    }).catchError((error){
+      print(error.toString());
+      emit(AppRequestUpdateErrorState());
+    });
+  }
 
   void signOut(context) {
     CacheHelper.removeData('uId',).then((value) {
@@ -522,5 +635,61 @@ class AppCubit extends Cubit<AppStates> {
       }
     });
   }
+
+
+  Future<void> sendPushNotification(String deviceToken) async {
+    final serverKey = 'AAAAvEJYR7o:APA91bEOOktF9zM6rcHtCkAfD0H3LFPsvv0MkOlr3djqgw5Mg-YNp1nkL66vniZt4mk0BPFT1BU72A9KJ0t6-Lb4_qwa8bcYcs68b2gHoChA-BR7GtCX1BL2pmrt3GA-NSBzfwV9QZQv';
+    final url = 'https://fcm.googleapis.com/fcm/send';
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'key=$serverKey',
+    };
+
+    final body = jsonEncode({
+      'to': deviceToken,
+      'notification': {
+        'title': 'New Notification ',
+        'body': 'You have a new notification',
+      },
+      "android":{
+        "priority":"HIGH",
+        "notification":{
+          "notification_priority":"PRIORITY_MAX",
+          "sound": "default",
+          "default_sound": true,
+          "defalut_vibrate_tinings":true,
+          "default_light_settings":true,
+        }
+      },
+      'data': {
+        'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+      },
+    });
+    final response = await http.post(
+      Uri.parse(url),
+      headers: headers,
+      body: body,
+    );
+
+    if (response.statusCode == 200) {
+      print('Push notification sent successfully');
+    } else {
+      print('Error sending push notification: ${response.statusCode}');
+    }
+  }
+
+  Future<void> showNotification(String? title, String body) async {
+    const androidPlatformChannelSpecifics = AndroidNotificationDetails(
+        'channel_name', 'channel_description',
+        importance: Importance.high, priority: Priority.high);
+    const notificationDetails =
+    NotificationDetails(android: androidPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+        0, title, body, notificationDetails);
+  }
+
+
+
 
 }
