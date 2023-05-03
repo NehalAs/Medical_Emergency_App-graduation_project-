@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -7,9 +5,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:graduation_project/layout/home_layout.dart';
 import 'package:graduation_project/modules/burns/Burn_Image.dart';
 import 'package:graduation_project/modules/login/cubit/cubit.dart';
@@ -31,13 +26,19 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("ON a background message");
 }
 
+Future<void> onSelectNotification(String? payload) async {
+  if (payload != null) {
+    debugPrint('Notification payload: $payload');
+  }
+  // Handle notification tap
+}
+
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 FlutterLocalNotificationsPlugin();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
   var token = await FirebaseMessaging.instance.getToken();
   print(token);
 
@@ -61,6 +62,7 @@ Future<void> main() async {
   firebaseMessaging.requestPermission();
 
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+
 
 
   Bloc.observer = MyBlocObserver();
