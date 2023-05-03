@@ -8,8 +8,8 @@ import 'package:graduation_project/shared/cubit/cubit.dart';
 import 'package:graduation_project/shared/cubit/states.dart';
 import 'package:graduation_project/shared/styles/colors.dart';
 
-
 import '../../main.dart';
+
 
 class Donate extends StatelessWidget {
 
@@ -20,6 +20,7 @@ class Donate extends StatelessWidget {
   var formKey = GlobalKey<FormState>();
 
   @override
+
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit,AppStates>(
       listener: (context, state) {},
