@@ -4,19 +4,22 @@ import 'package:animated_floating_buttons/widgets/animated_floating_action_butto
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:graduation_project/modules/blood/Donate.dart';
-import 'package:graduation_project/modules/blood/List_Requests.dart';
+import 'package:graduation_project/modules/blood/requests_screen.dart';
 import 'package:graduation_project/modules/burns/Burn_Image.dart';
 import 'package:graduation_project/modules/home/home_screen.dart';
+import 'package:graduation_project/modules/hospitals/hospitals_screen.dart';
+import 'package:graduation_project/modules/users/users_screen.dart';
 import 'package:graduation_project/shared/components/components.dart';
 import 'package:graduation_project/shared/cubit/states.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../models/request_model.dart';
 import '../../main.dart';
 import '../../models/user_model.dart';
 import '../../modules/blood/blood_screen.dart';
@@ -25,8 +28,12 @@ import '../../modules/login/login_screen.dart';
 import '../components/conistance.dart';
 import '../network/local/cache_helper.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+
 
 
 class AppCubit extends Cubit<AppStates> {
@@ -234,8 +241,15 @@ class AppCubit extends Cubit<AppStates> {
     return Container(
       child: FloatingActionButton(
         onPressed: () {
-          navigateTo(context, listrequest());
-        },
+          if(userModel!.userType!='Hospital') {
+            getHospitals();
+            navigateTo(context, HospitalsScreen());
+          }
+          else
+          {
+            getUsers();
+            navigateTo(context,UsersScreen());
+          }        },
         heroTag: "btn2",
         tooltip: 'List Request ',
         child: Icon(Icons.list_alt_outlined),
@@ -504,6 +518,107 @@ class AppCubit extends Cubit<AppStates> {
       });
   }
 
+  void sendRequest(
+      {
+        required String bloodType,
+        required String receiverId,
+        required String dateTime,
+        String? text,
+      }
+      ){
+    RequestModel model = RequestModel(
+        bloodType:bloodType,
+        dateTime: dateTime,
+        receiverId:receiverId,
+        senderId: uId,
+        isAccepted: null,
+        text:text
+
+    );
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(uId)
+        .collection('connections')
+        .doc(receiverId)
+        .collection('requests')
+        .add(model.toMap())
+        .then((value) {
+      print(value.id);
+      emit(AppSendRequestSuccessState());
+    }).catchError((error){
+      print(error.toString());
+      emit(AppSendRequestErrorState());
+    });
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(receiverId)
+        .collection('connections')
+        .doc(uId)
+        .collection('requests')
+        .add(model.toMap())
+        .then((value) {
+      print(value.id);
+      emit(AppSendRequestSuccessState());
+    }).catchError((error){
+      print(error.toString());
+      emit(AppSendRequestErrorState());
+    });
+  }
+
+
+  List<RequestModel> requests =[];
+  List<String> requestsIds =[];
+  void getRequests(String receiverId,)
+  {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(userModel!.uId)
+        .collection('connections')
+        .doc(receiverId)
+        .collection('requests')
+        .orderBy('dateTime')
+        .snapshots()
+        .listen((event) {
+      requests=[];
+      requestsIds =[];
+      event.docs.forEach((element) {
+        print(element.id);
+        requestsIds.add(element.id);
+        requests.add(RequestModel.fromJson(element.data()));
+      });
+      emit(AppGetRequestsSuccessState());
+    });
+  }
+
+  void updateRequestStatus(
+      {
+        required String receiverId,
+        required String dateTime,
+        required String bloodType,
+        required bool isAccepted,
+        required String senderId,
+        required String requestId,
+      })
+  {
+    var model= RequestModel(
+      receiverId:receiverId ,
+      dateTime: dateTime ,
+      bloodType:bloodType,
+      isAccepted:isAccepted,
+      senderId:senderId,
+
+    );
+    FirebaseFirestore.instance.collection('users').doc(uId).collection('connections').doc(senderId).collection('requests').doc(requestId).update(model.toMap())
+        .then((value)
+    {
+      emit(AppRequestUpdateSuccessState());
+    }).catchError((error){
+      print(error.toString());
+      emit(AppRequestUpdateErrorState());
+    });
+  }
 
   void signOut(context) {
     CacheHelper.removeData('uId',).then((value) {
@@ -574,5 +689,42 @@ class AppCubit extends Cubit<AppStates> {
     await flutterLocalNotificationsPlugin.show(
         0, title, body, notificationDetails);
   }
+
+
+
+  Future<Position> getCurrentLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Check if location services are enabled
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Location services are not enabled, prompt the user to enable them
+      return Future.error('Location services are disabled.');
+    }
+
+    // Check if the app has permission to access the user's location
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      // The app does not have permission to access the user's location, prompt the user to grant permission
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // The user denied the request for location permissions
+        return Future.error('Location permissions are denied.');
+      }
+    }
+
+    // Get the user's current location
+    return await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.best,
+      forceAndroidLocationManager: true,
+
+    );
+
+
+
+  }
+
+
 
 }
