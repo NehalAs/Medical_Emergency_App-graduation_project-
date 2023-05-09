@@ -26,12 +26,7 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("ON a background message");
 }
 
-Future<void> onSelectNotification(String? payload) async {
-  if (payload != null) {
-    debugPrint('Notification payload: $payload');
-  }
-  // Handle notification tap
-}
+
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 FlutterLocalNotificationsPlugin();

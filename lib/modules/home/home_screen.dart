@@ -3,9 +3,7 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:graduation_project/main.dart';
 import 'package:graduation_project/shared/components/components.dart';
-import '../../layout/home_layout.dart';
 import '../../shared/cubit/cubit.dart';
 import '../../shared/cubit/states.dart';
 import '../../shared/styles/themes.dart';
@@ -15,21 +13,11 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return SafeArea(child: Stack(
-    ));
+    return Stack();
   }
 }
-
-
 void addHomeMarkers(context)
 {
-  AppCubit.get(context).addHomeMarker(
-      markerId: 'marker',
-      markerPosition: const LatLng(30.05160665975826, 31.21054654046658),
-      infoWindowTitle:'المركز القومى لنقل الدم',
-      infoWindowDescription: 'العجوزة، حي العجوزة، الجيزة 3753530'
-  );
-
 
   AppCubit.get(context).addHomeMarker(
       markerId: '1',
