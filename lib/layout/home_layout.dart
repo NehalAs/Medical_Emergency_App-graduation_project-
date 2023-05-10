@@ -4,8 +4,6 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:graduation_project/modules/blood/blood_screen.dart';
 import 'package:graduation_project/modules/burns/burns_screen.dart';
@@ -15,17 +13,16 @@ import 'package:graduation_project/shared/cubit/cubit.dart';
 import 'package:graduation_project/shared/cubit/states.dart';
 import 'package:graduation_project/shared/styles/colors.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:location/location.dart';
 
 import '../modules/First_Aid/First_Aid.dart';
 import '../modules/about_us/about_us_screen.dart';
 import '../modules/emergency_numbers/emergency_numbers_screen.dart';
+import '../modules/feedback/feedback.dart';
 import '../modules/hospitals/hospitals_screen.dart';
 import '../modules/profile/profile_screen.dart';
 import '../modules/settings/settings_screen.dart';
 import '../modules/users/users_screen.dart';
 import '../shared/styles/themes.dart';
-
 
 class HomeLayout extends StatelessWidget {
   var scaffoldKey = GlobalKey<ScaffoldState>();
@@ -35,11 +32,9 @@ class HomeLayout extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return BlocConsumer<AppCubit,AppStates>(
-      listener: (context, state) async {
-      },
+      listener: (context, state) {},
       builder: (context, state) {
         AppCubit.get(context).getCustomMarker();
-
         return ConditionalBuilder(
             condition: state is AppGetUserLoadingState,
             builder: (context) => Center(child: CircularProgressIndicator()),
@@ -49,7 +44,7 @@ class HomeLayout extends StatelessWidget {
                 children: [
                   //AppCubit.get(context).screens[AppCubit.get(context).currentIndex],
                   GoogleMap(
-                initialCameraPosition: CameraPosition(
+                    initialCameraPosition: CameraPosition(
                         target: LatLng(30.033333, 31.233334),
                         zoom: 10
                     ),
@@ -57,10 +52,12 @@ class HomeLayout extends StatelessWidget {
 
                     onMapCreated: (GoogleMapController googleMapController) {
 
+
                       //GoogleMapController.init(googleMapController.mapId,CameraPosition(target:LatLng(30.033333, 31.233334)), AppCubit.get(context).isDark? googleMapDarkTheme(googleMapController):null,);
 
                       // for search function
                       AppCubit.get(context).onMapCreated(googleMapController);
+                      AppCubit.get(context).getCurrentLocation();
 
                       // darkMapTheme
                       if(state is AppChangeModeState && AppCubit.get(context).isDark)
@@ -78,9 +75,13 @@ class HomeLayout extends StatelessWidget {
 
 
                     },
-                    zoomControlsEnabled: false,
-                    myLocationEnabled: true,
+                    buildingsEnabled: true,
+                    trafficEnabled: true,
+                    mapToolbarEnabled: true,
+                    compassEnabled: true,
+                    zoomControlsEnabled: true,
                     myLocationButtonEnabled: true,
+                    myLocationEnabled: true,
                     markers: state is AppSearchSuccessState?AppCubit.get(context).mySearchMarkers: AppCubit.get(context).currentIndex==0 && state is !AppSearchSuccessState? AppCubit.get(context).myHomeMarkers :AppCubit.get(context).currentIndex==1 && state is !AppSearchSuccessState?AppCubit.get(context).myBloodMarkers:AppCubit.get(context).myBurnsMarkers,
                   ),
                   Padding(
@@ -180,6 +181,7 @@ class HomeLayout extends StatelessWidget {
                           animatedIconData: AnimatedIcons.menu_close //To principal button
                       ),
                     ),
+
                 ],
               ),
               drawer: Drawer(
@@ -200,8 +202,8 @@ class HomeLayout extends StatelessWidget {
                 },
                 items:  AppCubit.get(context).userModel!.userType!='Hospital'?AppCubit.get(context).bottomItemsWithBurnsItem :AppCubit.get(context).bottomItem,
               ),
-           //   floatingActionButtonLocation: FloatingActionButtonLocation.centerTop,
-          //    floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
+
+
             ),
         );
       },
@@ -305,7 +307,8 @@ class HomeLayout extends StatelessWidget {
             itemName: 'Help',
             fontSize: 14,
             iconSize: 18,
-            onTap: () {},
+            onTap: () {
+            },
           ),
           menuItem(
             itemIcon: Icons.feedback_outlined,
@@ -313,7 +316,7 @@ class HomeLayout extends StatelessWidget {
             fontSize: 14,
             iconSize: 18,
             onTap: () {
-              navigateTo(context, OthersPage());
+              navigateTo(context, FeedBack());
             },
           ),
           // menuItem(
@@ -328,3 +331,4 @@ class HomeLayout extends StatelessWidget {
     ),
   );
 }
+
