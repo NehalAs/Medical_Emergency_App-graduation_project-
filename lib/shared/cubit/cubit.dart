@@ -19,6 +19,7 @@ import 'package:graduation_project/modules/users/users_screen.dart';
 import 'package:graduation_project/shared/components/components.dart';
 import 'package:graduation_project/shared/cubit/states.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../models/hospital_model.dart';
 import '../../models/request_model.dart';
 import '../../main.dart';
 import '../../models/user_model.dart';
@@ -46,7 +47,7 @@ class AppCubit extends Cubit<AppStates> {
   var customMarker;
   bool isDark = false;
   late File  image;
-  UserModel? userModel;
+  var userModel;
 
 
   final GlobalKey<AnimatedFloatingActionButtonState> key = GlobalKey<
@@ -382,6 +383,14 @@ class AppCubit extends Cubit<AppStates> {
       {
         required String name,
         required String phone,
+        int? APos,
+        int? ANag,
+        int? BPos,
+        int? BNag,
+        int? OPos,
+        int? ONag,
+        int? ABPos,
+        int? ABNag,
       })
   {
     emit(AppUserUpdateProfileLoadingState());
@@ -393,11 +402,30 @@ class AppCubit extends Cubit<AppStates> {
       {
         print(value);
         profileImageUrl=value;
-        updateUser(
-          phone: phone,
-          name: name,
-          image: profileImageUrl,
-        );
+        if(userModel!.userType!='Hospital')
+          {
+            updateUser(
+              phone: phone,
+              name: name,
+              image: profileImageUrl,
+            );
+          }
+        else
+          {
+            updateHospital(
+              phone: phone,
+              name: name,
+              image: profileImageUrl,
+              APos:APos,
+              ANag:ANag,
+              BPos:BPos,
+              BNag:BNag,
+              OPos:OPos,
+              ONag:ONag,
+              ABPos:ABPos,
+              ABNag:ABNag,
+            );
+          }
         emit(AppUploadProfileImageSuccessState());
 
       }).catchError((error)
@@ -414,6 +442,14 @@ class AppCubit extends Cubit<AppStates> {
       {
         required String name,
         required String phone,
+        int? APos,
+        int? ANag,
+        int? BPos,
+        int? BNag,
+        int? OPos,
+        int? ONag,
+        int? ABPos,
+        int? ABNag,
       })
   {
     emit(AppUserUpdateCoverLoadingState());
@@ -425,11 +461,30 @@ class AppCubit extends Cubit<AppStates> {
       {
         print(value);
         coverImageUrl=value;
-        updateUser(
-          phone: phone,
-          name: name,
-          cover: coverImageUrl,
-        );
+        if(userModel!.userType!='Hospital')
+        {
+          updateUser(
+            phone: phone,
+            name: name,
+            cover: coverImageUrl,
+          );
+        }
+        else
+        {
+          updateHospital(
+            phone: phone,
+            name: name,
+            cover:coverImageUrl,
+            APos:APos,
+            ANag:ANag,
+            BPos:BPos,
+            BNag:BNag,
+            OPos:OPos,
+            ONag:ONag,
+            ABPos:ABPos,
+            ABNag:ABNag,
+          );
+        }
         emit(AppUploadCoverImageSuccessState());
       }).catchError((error)
       {
@@ -449,6 +504,18 @@ class AppCubit extends Cubit<AppStates> {
     }).catchError((error){
       print(error.toString());
       emit(AppGetUserErrorState());
+    });
+  }
+
+  void getHospitalData({uIdfFromState}){
+    emit(AppGetHospitalLoadingState());
+    FirebaseFirestore.instance.collection('hospitals').doc(uIdfFromState??uId).get().then((value){
+      print(value.data());
+      userModel=HospitalModel.fromJson(value.data());
+      emit(AppGetHospitalSuccessState());
+    }).catchError((error){
+      print(error.toString());
+      emit(AppGetHospitalErrorState());
     });
   }
 
@@ -483,12 +550,58 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
+  void updateHospital(
+      {
+        String? name,
+        String? phone,
+        String? image,
+        String? cover,
+        int? APos,
+        int? ANag,
+        int? BPos,
+        int? BNag,
+        int? ABPos,
+        int? ABNag,
+        int? OPos,
+        int? ONag,
+      })
+  {
+    var model= HospitalModel(
+        phone: phone??userModel.phone,
+        name: name??userModel.name,
+        image: image??userModel!.image ,
+        cover: cover??userModel!.cover,
+        email: userModel!.email,
+        uId: userModel!.uId,
+        userType: userModel!.userType,
+        location: userModel!.location,
+        OPos:OPos??userModel!.OPos,
+        ONag:ONag??userModel!.ONag ,
+        BPos:BPos??userModel!.BPos ,
+        BNag:BNag??userModel!.BNag ,
+        APos:APos??userModel!.APos ,
+        ANag:ANag??userModel!.ANag ,
+        ABPos:ABPos??userModel!.ABPos ,
+        ABNag:ABNag??userModel!.ABNag ,
+    );
+
+    FirebaseFirestore.instance.collection('hospitals').doc(userModel!.uId).update(model.toMap())
+        .then((value)
+    {
+      getHospitalData();
+      emit(AppHospitalUpdateSuccessState());
+    }).catchError((error){
+      print(error.toString());
+      emit(AppHospitalUpdateErrorState());
+    });
+  }
+
 
   List<UserModel> users =[];
 
   void getUsers()
   {
-    if(users.length==0)
+    users =[];
       FirebaseFirestore.instance.collection('users').get().then((value) {
         value.docs.forEach((element) {
           if(element.data()['uId']!=userModel?.uId && element.data()['userType']!='Hospital')
@@ -501,15 +614,15 @@ class AppCubit extends Cubit<AppStates> {
       });
   }
 
-  List<UserModel> hospitals =[];
+  List<HospitalModel> hospitals =[];
 
   void getHospitals()
   {
-    if(users.length==0)
-      FirebaseFirestore.instance.collection('users').get().then((value) {
+    hospitals =[];
+      FirebaseFirestore.instance.collection('hospitals').get().then((value) {
         value.docs.forEach((element) {
-          if(element.data()['uId']!=userModel?.uId && element.data()['userType']=='Hospital')
-            hospitals.add(UserModel.fromJson(element.data()));
+          if(element.data()['uId']!=userModel!.uId)
+            hospitals.add(HospitalModel.fromJson(element.data()));
         });
         emit(AppGetAllHospitalsSuccessState());
       }).catchError((error){
@@ -536,35 +649,72 @@ class AppCubit extends Cubit<AppStates> {
 
     );
 
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(uId)
-        .collection('connections')
-        .doc(receiverId)
-        .collection('requests')
-        .add(model.toMap())
-        .then((value) {
-      print(value.id);
-      emit(AppSendRequestSuccessState());
-    }).catchError((error){
-      print(error.toString());
-      emit(AppSendRequestErrorState());
-    });
+    if(userModel.userType!='Hospital')
+      {
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(userModel.uId)
+            .collection('connections')
+            .doc(receiverId)
+            .collection('requests')
+            .add(model.toMap())
+            .then((value) {
+          print(value.id);
+          emit(AppSendRequestSuccessState());
+        }).catchError((error){
+          print(error.toString());
+          emit(AppSendRequestErrorState());
+        });
 
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(receiverId)
-        .collection('connections')
-        .doc(uId)
-        .collection('requests')
-        .add(model.toMap())
-        .then((value) {
-      print(value.id);
-      emit(AppSendRequestSuccessState());
-    }).catchError((error){
-      print(error.toString());
-      emit(AppSendRequestErrorState());
-    });
+        FirebaseFirestore.instance
+            .collection('hospitals')
+            .doc(receiverId)
+            .collection('connections')
+            .doc(userModel.uId)
+            .collection('requests')
+            .add(model.toMap())
+            .then((value) {
+          print(value.id);
+          emit(AppSendRequestSuccessState());
+        }).catchError((error){
+          print(error.toString());
+          emit(AppSendRequestErrorState());
+        });
+
+     }
+    else
+      {
+        FirebaseFirestore.instance
+            .collection('hospitals')
+            .doc(uId)
+            .collection('connections')
+            .doc(receiverId)
+            .collection('requests')
+            .add(model.toMap())
+            .then((value) {
+          print(value.id);
+          emit(AppSendRequestSuccessState());
+        }).catchError((error){
+          print(error.toString());
+          emit(AppSendRequestErrorState());
+        });
+
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(receiverId)
+            .collection('connections')
+            .doc(uId)
+            .collection('requests')
+            .add(model.toMap())
+            .then((value) {
+          print(value.id);
+          emit(AppSendRequestSuccessState());
+        }).catchError((error){
+          print(error.toString());
+          emit(AppSendRequestErrorState());
+        });
+      }
+
   }
 
 
@@ -572,24 +722,49 @@ class AppCubit extends Cubit<AppStates> {
   List<String> requestsIds =[];
   void getRequests(String receiverId,)
   {
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(userModel!.uId)
-        .collection('connections')
-        .doc(receiverId)
-        .collection('requests')
-        .orderBy('dateTime')
-        .snapshots()
-        .listen((event) {
-      requests=[];
-      requestsIds =[];
-      event.docs.forEach((element) {
-        print(element.id);
-        requestsIds.add(element.id);
-        requests.add(RequestModel.fromJson(element.data()));
-      });
-      emit(AppGetRequestsSuccessState());
-    });
+    print(userModel.userType);
+    if(userModel.userType!='Hospital')
+      {
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(userModel!.uId)
+            .collection('connections')
+            .doc(receiverId)
+            .collection('requests')
+            .orderBy('dateTime')
+            .snapshots()
+            .listen((event) {
+          requests=[];
+          requestsIds =[];
+          event.docs.forEach((element) {
+            print(element.id);
+            requestsIds.add(element.id);
+            requests.add(RequestModel.fromJson(element.data()));
+          });
+          emit(AppGetRequestsSuccessState());
+        });
+      }
+    else
+      {
+        FirebaseFirestore.instance
+            .collection('hospitals')
+            .doc(userModel!.uId)
+            .collection('connections')
+            .doc(receiverId)
+            .collection('requests')
+            .orderBy('dateTime')
+            .snapshots()
+            .listen((event) {
+          requests=[];
+          requestsIds =[];
+          event.docs.forEach((element) {
+            print(element.id);
+            requestsIds.add(element.id);
+            requests.add(RequestModel.fromJson(element.data()));
+          });
+          emit(AppGetRequestsSuccessState());
+        });
+      }
   }
 
   void updateRequestStatus(
@@ -610,14 +785,29 @@ class AppCubit extends Cubit<AppStates> {
       senderId:senderId,
 
     );
-    FirebaseFirestore.instance.collection('users').doc(uId).collection('connections').doc(senderId).collection('requests').doc(requestId).update(model.toMap())
-        .then((value)
-    {
-      emit(AppRequestUpdateSuccessState());
-    }).catchError((error){
-      print(error.toString());
-      emit(AppRequestUpdateErrorState());
-    });
+    if(userModel.userType!='Hospital')
+      {
+        FirebaseFirestore.instance.collection('users').doc(userModel.uId).collection('connections').doc(senderId).collection('requests').doc(requestId).update(model.toMap())
+            .then((value)
+        {
+          emit(AppRequestUpdateSuccessState());
+        }).catchError((error){
+          print(error.toString());
+          emit(AppRequestUpdateErrorState());
+        });
+      }
+    else
+      {
+        FirebaseFirestore.instance.collection('hospitals').doc(userModel.uId).collection('connections').doc(senderId).collection('requests').doc(requestId).update(model.toMap())
+            .then((value)
+        {
+          emit(AppRequestUpdateSuccessState());
+        }).catchError((error){
+          print(error.toString());
+          emit(AppRequestUpdateErrorState());
+        });
+      }
+
   }
 
   void signOut(context) {
@@ -636,7 +826,6 @@ class AppCubit extends Cubit<AppStates> {
       }
     });
   }
-
 
   Future<void> sendPushNotification(String deviceToken) async {
     final serverKey = 'AAAAvEJYR7o:APA91bEOOktF9zM6rcHtCkAfD0H3LFPsvv0MkOlr3djqgw5Mg-YNp1nkL66vniZt4mk0BPFT1BU72A9KJ0t6-Lb4_qwa8bcYcs68b2gHoChA-BR7GtCX1BL2pmrt3GA-NSBzfwV9QZQv';
@@ -689,8 +878,6 @@ class AppCubit extends Cubit<AppStates> {
     await flutterLocalNotificationsPlugin.show(
         0, title, body, notificationDetails);
   }
-
-
 
   Future<Position> getCurrentLocation() async {
     bool serviceEnabled;

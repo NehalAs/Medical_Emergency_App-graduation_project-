@@ -5,7 +5,9 @@ import 'package:graduation_project/modules/login/cubit/cubit.dart';
 import 'package:graduation_project/modules/login/cubit/states.dart';
 import 'package:graduation_project/modules/register/register_screen.dart';
 import 'package:graduation_project/shared/components/components.dart';
+import 'package:graduation_project/shared/components/conistance.dart';
 import 'package:graduation_project/shared/cubit/cubit.dart';
+import 'package:graduation_project/shared/cubit/states.dart';
 
 import '../../layout/home_layout.dart';
 import '../../shared/network/local/cache_helper.dart';
@@ -24,14 +26,19 @@ class LoginScreen extends StatelessWidget {
         listener: (context, state) {
           if(state is LoginSuccessState)
           {
-            AppCubit.get(context).getUserData(uIdfFromState: state.uId);
-            CacheHelper.saveData(key: 'uId', value: state.uId).then((value) {
-              navigatAndFinish(context, HomeLayout());
-              AppCubit.get(context).getUsers();
-              AppCubit.get(context).getHospitals();
-
-            });
-          }
+            if(LoginCubit.get(context).checkBoxValue){
+              AppCubit.get(context).getHospitalData(uIdfFromState: state.uId);
+            }
+            else {
+              AppCubit.get(context).getUserData(uIdfFromState: state.uId);
+            }
+            CacheHelper.saveData(key:'uId', value: state.uId).then((value) {
+                uId=state.uId;
+                navigatAndFinish(context, HomeLayout());
+                AppCubit.get(context).getUsers();
+                AppCubit.get(context).getHospitals();
+              });
+            }
         },
         builder: (context, state) {
           return  Scaffold(
@@ -89,7 +96,19 @@ class LoginScreen extends StatelessWidget {
                           ),
                           obsecure: LoginCubit.get(context).isPassword,
                         ),
-                        const SizedBox(height: 30,),
+                        const SizedBox(height: 10,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Checkbox(value:LoginCubit.get(context).checkBoxValue,
+                                activeColor: Colors.green,
+                                onChanged:(value){
+                                  LoginCubit.get(context).changeCheckBoxValue(value);
+                                },),
+                            Text('Hospital mail ?'),
+                          ]
+                        ),
+                        const SizedBox(height: 10,),
                         ConditionalBuilder(
                             condition: state is! LoginLoadingState,
                             builder: (context) =>  defaultButton(
@@ -139,19 +158,19 @@ class LoginScreen extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            GestureDetector(
-                              onTap: (){
-                                Navigator.of(context).push(MaterialPageRoute(builder: (context){
-                                  return ForgotPasswordScreen();
-                                }));
-                              },
-                              child: Text('Forgot password? ',style: TextStyle(
-                                color: Colors.red[800],
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                              ),),
-
-                            ),
+                            // GestureDetector(
+                            //   onTap: (){
+                            //     Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                            //       return ForgotPasswordScreen();
+                            //     }));
+                            //   },
+                            //   child: Text('Forgot password? ',style: TextStyle(
+                            //     color: Colors.red[800],
+                            //     fontSize: 15,
+                            //     fontWeight: FontWeight.bold,
+                            //   ),),
+                            //
+                            // ),
                           ],
                         ),
                       ],

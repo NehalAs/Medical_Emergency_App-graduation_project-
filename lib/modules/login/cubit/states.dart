@@ -10,3 +10,4 @@ class LoginErrorState extends LoginStates {
   LoginErrorState(this.error);
 }
 class ChangePasswordVisibilityState extends LoginStates {}
+class ChangeCheckBoxValueState extends LoginStates {}

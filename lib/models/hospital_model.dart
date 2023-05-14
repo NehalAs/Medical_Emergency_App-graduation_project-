@@ -7,14 +7,15 @@ class HospitalModel
   String? image;
   String? cover;
   String? userType;
-  String? APos;
-  String? ANag;
-  String? BPos;
-  String? BNag;
-  String? ABPos;
-  String? ABNag;
-  String? OPos;
-  String? ONag;
+  String? location;
+  int? APos;
+  int? ANag;
+  int? BPos;
+  int? BNag;
+  int? ABPos;
+  int? ABNag;
+  int? OPos;
+  int? ONag;
 
 
   HospitalModel({
@@ -25,6 +26,7 @@ class HospitalModel
     this.image,
     this.cover,
     this.userType,
+    this.location,
     this.APos,
     this.ANag,
     this.BPos,
@@ -44,6 +46,7 @@ class HospitalModel
     image= json['image'];
     cover= json['cover'];
     userType= json['userType'];
+    location= json['location'];
     APos= json!['A+'];
     ANag= json!['A-'];
     BPos= json!['B+'];
@@ -64,6 +67,7 @@ class HospitalModel
       'image':image,
       'cover':cover,
       'userType':userType,
+      'location':location,
       'A+':APos,
       'A-': ANag,
       'B+':BPos,

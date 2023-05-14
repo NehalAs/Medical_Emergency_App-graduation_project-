@@ -48,7 +48,7 @@ class SettingsScreen extends StatelessWidget {
                       ),
                     ),
                     Text(
-                        'User name ',
+                        '${AppCubit.get(context).userModel!.name}',
                       style: TextStyle(
                         color: Colors.white54,
                         fontSize: 18,

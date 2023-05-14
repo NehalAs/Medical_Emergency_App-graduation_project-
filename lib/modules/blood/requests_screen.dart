@@ -4,15 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation_project/shared/components/components.dart';
 import 'package:graduation_project/shared/cubit/cubit.dart';
 import 'package:graduation_project/shared/cubit/states.dart';
-
 import '../../models/request_model.dart';
 import '../../models/user_model.dart';
 import '../../shared/styles/colors.dart';
 
 class Requests extends StatelessWidget {
-
-  UserModel userModel;
-  AppCubit cubit=AppCubit();
+  var userModel;
   Requests({required this.userModel});
 
   @override
@@ -21,12 +18,7 @@ class Requests extends StatelessWidget {
       builder: (context) {
         AppCubit.get(context).getRequests(userModel.uId!);
         return BlocConsumer<AppCubit,AppStates>(
-          listener: (context, state) {
-            // if(state is SendRequestSuccessState)
-            // {
-            //   requestController.text='';
-            // }
-          },
+          listener: (context, state) {},
           builder: (context, state) {
             return Scaffold(
               appBar: AppBar(
@@ -67,7 +59,7 @@ class Requests extends StatelessWidget {
                           else
                           {
                             if(request.text==null)
-                              return buildRequest(request,AppCubit.get(context).requestsIds[index]);
+                              return buildRequest(request,AppCubit.get(context).requestsIds[index],AppCubit.get(context));
                             else
                               return buildMessage(request);
                           }
@@ -142,7 +134,7 @@ class Requests extends StatelessWidget {
     );
   }
 
-  Widget buildRequest (RequestModel model,requestId) => Align(
+  Widget buildRequest (RequestModel model,requestId,AppCubit cubit) => Align(
     alignment: AlignmentDirectional.centerStart,
     child: Padding(
       padding: const EdgeInsets.all(8.0),

@@ -36,7 +36,7 @@ class HomeLayout extends StatelessWidget {
       builder: (context, state) {
         AppCubit.get(context).getCustomMarker();
         return ConditionalBuilder(
-            condition: state is AppGetUserLoadingState,
+            condition: state is AppGetUserLoadingState|| state is AppGetHospitalLoadingState,
             builder: (context) => Center(child: CircularProgressIndicator()),
             fallback: (context) => Scaffold(
               key: scaffoldKey,

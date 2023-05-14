@@ -9,6 +9,14 @@ class EditProfileScreen extends StatelessWidget {
 
   var nameController = TextEditingController();
   var phoneController = TextEditingController();
+  var APosController = TextEditingController();
+  var ANagController = TextEditingController();
+  var BPosController = TextEditingController();
+  var BNagController = TextEditingController();
+  var OPosController = TextEditingController();
+  var ONagController = TextEditingController();
+  var ABPosController = TextEditingController();
+  var ABNagController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit,AppStates>(
@@ -19,7 +27,15 @@ class EditProfileScreen extends StatelessWidget {
         var coverImage =AppCubit.get(context).coverImage;
         nameController.text=AppCubit.get(context).userModel!.name!;
         phoneController.text=AppCubit.get(context).userModel!.phone!;
-        var selectedBloodType=AppCubit.get(context).userModel!.bloodType;
+        APosController.text=AppCubit.get(context).userModel.APos.toString()??'';
+        ANagController.text=AppCubit.get(context).userModel.ANag.toString()??'';
+        BPosController.text=AppCubit.get(context).userModel.BPos.toString()??'';
+        BNagController.text=AppCubit.get(context).userModel.BNag.toString()??'';
+        OPosController.text=AppCubit.get(context).userModel.OPos.toString()??'';
+        ONagController.text=AppCubit.get(context).userModel.ONag.toString()??'';
+        ABPosController.text=AppCubit.get(context).userModel.ABPos.toString()??'';
+        ABNagController.text=AppCubit.get(context).userModel.ABNag.toString()??'';
+        var selectedBloodType=AppCubit.get(context).userModel!.userType !='Hospital'? AppCubit.get(context).userModel!.bloodType :null;
         return Scaffold(
           appBar: AppBar(
               leading: IconButton(
@@ -35,11 +51,31 @@ class EditProfileScreen extends StatelessWidget {
                   padding: const EdgeInsetsDirectional.only(end:15),
                   child: TextButton(
                     onPressed: (){
-                      AppCubit.get(context).updateUser(
-                          name: nameController.text,
-                          phone:phoneController.text,
-                          bloodType:selectedBloodType??'null',
-                      );
+                      if(AppCubit.get(context).userModel.userType!='Hospital')
+                        {
+                          AppCubit.get(context).updateUser(
+                            name: nameController.text,
+                            phone:phoneController.text,
+                            bloodType:selectedBloodType??'null',
+                          );
+                        }
+                      else
+                        {
+                          AppCubit.get(context).updateHospital(
+                            name: nameController.text,
+                            phone:phoneController.text,
+                            APos: int.parse(APosController.text),
+                            ANag: int.parse(ANagController.text),
+                            BPos: int.parse(BPosController.text),
+                            BNag: int.parse(BNagController.text),
+                            OPos: int.parse(OPosController.text),
+                            ONag: int.parse(ONagController.text),
+                            ABPos:int.parse(ABPosController.text),
+                            ABNag:int.parse(ABNagController.text),
+
+                          );
+                        }
+
                     },
                     child: Text(
                           'Update',
@@ -143,10 +179,29 @@ class EditProfileScreen extends StatelessWidget {
                         child: Column(
                           children: [
                             defaultButton(function: (){
-                              AppCubit.get(context).uploadCoverImage(
-                                  name: nameController.text,
-                                  phone: phoneController.text,
-                              );
+                              if(AppCubit.get(context).userModel!.userType!='Hospital')
+                                {
+                                  AppCubit.get(context).uploadCoverImage(
+                                    name: nameController.text,
+                                    phone: phoneController.text,
+                                  );
+                                }
+                              else
+                                {
+                                  AppCubit.get(context).uploadCoverImage(
+                                    name: nameController.text,
+                                    phone: phoneController.text,
+                                    APos: int.parse(APosController.text),
+                                    ANag: int.parse(ANagController.text),
+                                    BPos: int.parse(BPosController.text),
+                                    BNag: int.parse(BNagController.text),
+                                    OPos: int.parse(OPosController.text),
+                                    ONag: int.parse(ONagController.text),
+                                    ABPos:int.parse(ABPosController.text),
+                                    ABNag:int.parse(ABNagController.text),
+                                  );
+                                }
+
                             },
                               text: 'Upload cover',
                               isUppercase: false,
@@ -168,10 +223,29 @@ class EditProfileScreen extends StatelessWidget {
                         child: Column(
                           children: [
                             defaultButton(function: (){
-                              AppCubit.get(context).uploadProfileImage(
-                                  name: nameController.text,
-                                  phone: phoneController.text,
-                              );
+                              if(AppCubit.get(context).userModel!.userType!='Hospital')
+                                {
+                                  AppCubit.get(context).uploadProfileImage(
+                                    name: nameController.text,
+                                    phone: phoneController.text,
+                                  );
+                                }
+                              else
+                                {
+                                  AppCubit.get(context).uploadProfileImage(
+                                    name: nameController.text,
+                                    phone: phoneController.text,
+                                    APos: int.parse(APosController.text),
+                                    ANag: int.parse(ANagController.text),
+                                    BPos: int.parse(BPosController.text),
+                                    BNag: int.parse(BNagController.text),
+                                    OPos: int.parse(OPosController.text),
+                                    ONag: int.parse(ONagController.text),
+                                    ABPos:int.parse(ABPosController.text),
+                                    ABNag:int.parse(ABNagController.text),
+                                  );
+                                }
+
                             },
                               text: 'Upload profile',
                               isUppercase: false,
@@ -222,7 +296,6 @@ class EditProfileScreen extends StatelessWidget {
                         Icons.call,
                       )
                   ),
-
                   SizedBox(
                     height: 20,
                   ),
@@ -261,6 +334,145 @@ class EditProfileScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20.0)),
                     ),
                   ),
+                  if(AppCubit.get(context).userModel.userType=='Hospital')
+                    Column(
+                      children: [
+                        defaultFormField(
+                            controller: APosController,
+                            type: TextInputType.number,
+                            validate: (value){
+                              if(value.isEmpty) {
+                                return 'This field must not be empty';
+                              }
+                              return null;
+                            },
+                            label: 'A+',
+                            prefix: Icon(
+                              Icons.bloodtype_outlined,
+                            )
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        defaultFormField(
+                            controller: ANagController,
+                            type: TextInputType.number,
+                            validate: (value){
+                              if(value.isEmpty) {
+                                return 'This field must not be empty';
+                              }
+                              return null;
+                            },
+                            label: 'A-',
+                            prefix: Icon(
+                              Icons.bloodtype_outlined,
+                            )
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        defaultFormField(
+                            controller: BPosController,
+                            type: TextInputType.number,
+                            validate: (value){
+                              if(value.isEmpty) {
+                                return 'This field must not be empty';
+                              }
+                              return null;
+                            },
+                            label: 'B+',
+                            prefix: Icon(
+                              Icons.bloodtype_outlined,
+                            )
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        defaultFormField(
+                            controller: BNagController,
+                            type: TextInputType.number,
+                            validate: (value){
+                              if(value.isEmpty) {
+                                return 'This field must not be empty';
+                              }
+                              return null;
+                            },
+                            label: 'B-',
+                            prefix: Icon(
+                              Icons.bloodtype_outlined,
+                            )
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        defaultFormField(
+                            controller: OPosController,
+                            type: TextInputType.number,
+                            validate: (value){
+                              if(value.isEmpty) {
+                                return 'This field must not be empty';
+                              }
+                              return null;
+                            },
+                            label: 'O+',
+                            prefix: Icon(
+                              Icons.bloodtype_outlined,
+                            )
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        defaultFormField(
+                            controller: ONagController,
+                            type: TextInputType.number,
+                            validate: (value){
+                              if(value.isEmpty) {
+                                return 'This field must not be empty';
+                              }
+                              return null;
+                            },
+                            label: 'O-',
+                            prefix: Icon(
+                              Icons.bloodtype_outlined,
+                            )
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        defaultFormField(
+                            controller: ABPosController,
+                            type: TextInputType.number,
+                            validate: (value){
+                              if(value.isEmpty) {
+                                return 'This field must not be empty';
+                              }
+                              return null;
+                            },
+                            label: 'AB+',
+                            prefix: Icon(
+                              Icons.bloodtype_outlined,
+                            )
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        defaultFormField(
+                            controller: ABNagController,
+                            type: TextInputType.number,
+                            validate: (value){
+                              if(value.isEmpty) {
+                                return 'This field must not be empty';
+                              }
+                              return null;
+                            },
+                            label: 'AB-',
+                            prefix: Icon(
+                              Icons.bloodtype_outlined,
+                            )
+                        ),
+                      ],
+                    ),
+
                 ],
               ),
             ),

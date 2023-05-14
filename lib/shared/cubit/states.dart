@@ -18,6 +18,11 @@ class AppPickImageFromCameraErrorState extends AppStates {}
 class AppGetUserLoadingState extends AppStates {}
 class AppGetUserSuccessState extends AppStates {}
 class AppGetUserErrorState extends AppStates {}
+
+class AppGetHospitalLoadingState extends AppStates {}
+class AppGetHospitalSuccessState extends AppStates {}
+class AppGetHospitalErrorState extends AppStates {}
+
 class AppSignOutSuccessState extends AppStates {}
 class AppSignOutErrorState extends AppStates {}
 
@@ -29,6 +34,9 @@ class AppUploadCoverImageErrorState extends AppStates{}
 
 class AppUserUpdateSuccessState extends AppStates {}
 class AppUserUpdateErrorState extends AppStates {}
+
+class AppHospitalUpdateSuccessState extends AppStates {}
+class AppHospitalUpdateErrorState extends AppStates {}
 
 class AppRequestUpdateSuccessState extends AppStates {}
 class AppRequestUpdateErrorState extends AppStates {}

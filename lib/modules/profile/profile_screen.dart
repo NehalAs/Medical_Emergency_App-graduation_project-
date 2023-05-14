@@ -26,148 +26,316 @@ class ProfileScreen extends StatelessWidget {
           ),
           body: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                Container(
-                  height: 190,
-                  child: Stack(
-                    alignment: AlignmentDirectional.bottomCenter,
-                    children: [
-                      Align(
-                        alignment: AlignmentDirectional.topCenter,
-                        child: Container(
-                          height: 140,
-                          width:double.infinity,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(4),
-                                topRight: Radius.circular(4)
-                            ),
-                            image:DecorationImage(image: NetworkImage(
-                              userModel!.cover??'',
-                            ),
-                              fit: BoxFit.cover,
+            child:SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              child: Column(
+                children: [
+                  Container(
+                    height: 190,
+                    child: Stack(
+                      alignment: AlignmentDirectional.bottomCenter,
+                      children: [
+                        Align(
+                          alignment: AlignmentDirectional.topCenter,
+                          child: Container(
+                            height: 140,
+                            width:double.infinity,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(4),
+                                  topRight: Radius.circular(4)
+                              ),
+                              image:DecorationImage(image: NetworkImage(
+                                userModel!.cover??'',
+                              ),
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      CircleAvatar(
-                        radius: 64,
-                        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                        child: CircleAvatar(
-                          backgroundImage: NetworkImage(userModel.image??''),
-                          radius: 60,
+                        CircleAvatar(
+                          radius: 64,
+                          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                          child: CircleAvatar(
+                            backgroundImage: NetworkImage(userModel.image??''),
+                            radius: 60,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Text(
-                  userModel.name??'',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 20,
+                  SizedBox(
+                    height: 5,
                   ),
-                ),
-                if(AppCubit.get(context).userModel!.userType!='Hospital')
-                  Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 10,
+                  Text(
+                    userModel.name??'',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 20,
+                    ),
                   ),
-                  child: Row(
+                  if(AppCubit.get(context).userModel!.userType!='Hospital')
+                    Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10,
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: InkWell(
+                            child: Column(
+                              children: [
+                                Text(
+                                  ' Blood Type ${AppCubit.get(context).userModel!.bloodType}',
+                                ),
+                              ],
+                            ),
+                            onTap: (){},
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
                     children: [
                       Expanded(
-                        child: InkWell(
-                          child: Column(
-                            children: [
-                              Text(
-                                ' Blood Type ${AppCubit.get(context).userModel!.bloodType}',
-                              ),
-                              // Text(
-                              //   'Blood Type',
-                              // ),
-                            ],
+                        child:OutlinedButton(
+                          onPressed: (){},
+                          child: Text(
+                            'Request',
                           ),
-                          onTap: (){},
                         ),
                       ),
-                      // Expanded(
-                      //   child: InkWell(
-                      //     child: Column(
-                      //       children: [
-                      //         Text(
-                      //           '265',
-                      //         ),
-                      //         Text(
-                      //           'photos',
-                      //         ),
-                      //       ],
-                      //     ),
-                      //     onTap: (){},
-                      //   ),
-                      // ),
-                      // Expanded(
-                      //   child: InkWell(
-                      //     child: Column(
-                      //       children: [
-                      //         Text(
-                      //           '10K',
-                      //         ),
-                      //         Text(
-                      //           'Followings',
-                      //         ),
-                      //       ],
-                      //     ),
-                      //     onTap: (){},
-                      //   ),
-                      // ),
-                      // Expanded(
-                      //   child: InkWell(
-                      //     child: Column(
-                      //       children: [
-                      //         Text(
-                      //           '100',
-                      //         ),
-                      //         Text(
-                      //           'Followers',
-                      //         ),
-                      //       ],
-                      //     ),
-                      //     onTap: (){},
-                      //   ),
-                      // ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      OutlinedButton(
+                        onPressed: (){
+                          navigateTo(context, EditProfileScreen(),);
+                        },
+                        child: Icon(
+                          Icons.edit,
+                          size: 16,
+                        ),
+
+                      ),
                     ],
                   ),
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child:OutlinedButton(
-                        onPressed: (){},
-                        child: Text(
-                          'Request',
+                  if(AppCubit.get(context).userModel.userType=='Hospital')
+                    Column(
+                      children: [
+                        SizedBox(
+                          height: 10,
                         ),
-                      ),
+                        InkWell(
+                          onTap: () {},
+                          child: Row(
+                            children: [
+                              Image(image:AssetImage('assets/images/blood-type (4).png')),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Expanded(
+                                child: Text(
+                                  '${AppCubit.get(context).userModel.APos??'Not uploaded yet'}',
+                                  maxLines: 1,
+                                  textAlign: TextAlign.start,
+                                  overflow:TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        InkWell(
+                          onTap: () {},
+                          child: Row(
+                            children: [
+                              Image(image:AssetImage('assets/images/blood-type (8).png')),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Expanded(
+                                child: Text(
+                                  '${AppCubit.get(context).userModel.ANag??'Not uploaded yet'}',
+                                  maxLines: 1,
+                                  textAlign: TextAlign.start,
+                                  overflow:TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        InkWell(
+                          onTap: () {},
+                          child: Row(
+                            children: [
+                              Image(image:AssetImage('assets/images/blood-type (5).png')),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Expanded(
+                                child: Text(
+                                  '${AppCubit.get(context).userModel.BPos??'Not uploaded yet'}',
+                                  maxLines: 1,
+                                  textAlign: TextAlign.start,
+                                  overflow:TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        InkWell(
+                          onTap: () {},
+                          child: Row(
+                            children: [
+                              Image(image:AssetImage('assets/images/blood-type (7).png')),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Expanded(
+                                child: Text(
+                                  '${AppCubit.get(context).userModel.BNag??'Not uploaded yet'}',
+                                  maxLines: 1,
+                                  textAlign: TextAlign.start,
+                                  overflow:TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        InkWell(
+                          onTap: () {},
+                          child: Row(
+                            children: [
+                              Image(image:AssetImage('assets/images/blood-type (3).png')),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Expanded(
+                                child: Text(
+                                  '${AppCubit.get(context).userModel.OPos??'Not uploaded yet'}',
+                                  maxLines: 1,
+                                  textAlign: TextAlign.start,
+                                  overflow:TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        InkWell(
+                          onTap: () {},
+                          child: Row(
+                            children: [
+                              Image(image:AssetImage('assets/images/blood-type (10).png')),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Expanded(
+                                child: Text(
+                                  '${AppCubit.get(context).userModel.ONag??'Not uploaded yet'}',
+                                  maxLines: 1,
+                                  textAlign: TextAlign.start,
+                                  overflow:TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        InkWell(
+                          onTap: () {},
+                          child: Row(
+                            children: [
+                              Image(image:AssetImage('assets/images/blood-type (6).png')),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Expanded(
+                                child: Text(
+                                  '${AppCubit.get(context).userModel.ABPos??'Not uploaded yet'}',
+                                  maxLines: 1,
+                                  textAlign: TextAlign.start,
+                                  overflow:TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        InkWell(
+                          onTap: () {},
+                          child: Row(
+                            children: [
+                              Image(image:AssetImage('assets/images/blood-type (9).png')),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Expanded(
+                                child: Text(
+                                  '${AppCubit.get(context).userModel.ABNag??'Not uploaded yet'}',
+                                  maxLines: 1,
+                                  textAlign: TextAlign.start,
+                                  overflow:TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    OutlinedButton(
-                      onPressed: (){
-                        navigateTo(context, EditProfileScreen(),);
-                      },
-                      child: Icon(
-                        Icons.edit,
-                        size: 16,
-                      ),
-
-                    ),
-                  ],
-                ),
-              ],),
+                ],),
+            ),
           ),
         );
       },

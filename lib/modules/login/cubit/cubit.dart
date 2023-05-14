@@ -13,6 +13,7 @@ class LoginCubit extends Cubit<LoginStates>
   static LoginCubit get(context)=> BlocProvider.of(context);
   IconData suffix =  Icons.visibility;
   bool isPassword = true;
+  bool checkBoxValue =false;
 
   void userLogin (
   {
@@ -40,6 +41,12 @@ class LoginCubit extends Cubit<LoginStates>
     isPassword=!isPassword;
     isPassword? suffix=Icons.visibility: suffix=Icons.visibility_off;
     emit(ChangePasswordVisibilityState());
+  }
+
+  void changeCheckBoxValue (value)
+  {
+    checkBoxValue=value;
+    emit(ChangeCheckBoxValueState());
   }
 
 

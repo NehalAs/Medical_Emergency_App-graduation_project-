@@ -2,6 +2,7 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:graduation_project/models/hospital_model.dart';
 import '../../models/user_model.dart';
 import '../../shared/components/components.dart';
 import '../../shared/cubit/cubit.dart';
@@ -41,7 +42,7 @@ class HospitalsScreen extends StatelessWidget {
     );
   }
 
-  Widget buildHospitalItem(UserModel model,context)=> InkWell(
+  Widget buildHospitalItem(HospitalModel model,context)=> InkWell(
     onTap: (){
       navigateTo(context,Requests(userModel: model,));
     },
