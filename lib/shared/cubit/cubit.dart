@@ -33,6 +33,12 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:path/path.dart';
+import 'package:async/async.dart';
+
+
+
+
 
 
 
@@ -320,7 +326,11 @@ class AppCubit extends Cubit<AppStates> {
   void pickImageFromGallery(context){
     ImagePicker().pickImage(source: ImageSource.gallery,).then((value) {
       image = File(value!.path);
-      navigateTo(context, BurnImage(image));
+      //navigateTo(context, BurnImage(image));
+      makeHttpRequest(image).then((value) {
+        if(mlResult!=null)
+          navigateTo(context, BurnImage(image),);
+      });
       emit(AppPickImageFromGallerySuccessState());
     }).catchError((error){
       print(error.toString());
@@ -331,7 +341,11 @@ class AppCubit extends Cubit<AppStates> {
   void pickImageFromCamera(context){
     ImagePicker().pickImage(source: ImageSource.camera,).then((value) {
       image = File(value!.path) ;
-      navigateTo(context, BurnImage(image));
+      //navigateTo(context, BurnImage(image));
+      makeHttpRequest(image).then((value) {
+        if(mlResult!=null)
+          navigateTo(context, BurnImage(image),);
+      });
       emit(AppPickImageFromCameraSuccessState());
     }).catchError((error){
       print(error.toString());
@@ -912,6 +926,38 @@ class AppCubit extends Cubit<AppStates> {
 
   }
 
+  late var mlResult;
+Future<void> makeHttpRequest(File imageFile)
+async{
+  var stream =new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
+// get file length
+  var length = await imageFile.length();
 
+// string to uri
+  var uri = Uri.parse("https://ffd4-156-213-113-123.ngrok-free.app");
+
+// create multipart request
+  var request = new http.MultipartRequest("POST", uri);
+
+// multipart that takes file
+  var multipartFile = new http.MultipartFile('file', stream, length, filename: basename(imageFile.path));
+
+  request.headers.addAll({"ngrok-skip-browser-warning": "0"});
+  request.files.add(multipartFile);
+  // send
+  mlResult='The result will appear soon, please wait... ';
+  request.send().then((value){
+    print('request success');
+    print(value.statusCode);
+    value.stream.transform(utf8.decoder).listen((value){
+      print(value);
+      mlResult=value;
+      emit(AppSendHttpRequestSuccessState());
+    });
+  }).catchError((error){
+    print(error.toString());
+    emit(AppSendHttpRequestErrorState());
+  });
+}
 
 }

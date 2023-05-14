@@ -1,5 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:graduation_project/shared/cubit/cubit.dart';
+import 'package:graduation_project/shared/cubit/states.dart';
 
 class BurnImage extends StatelessWidget {
   File? image;
@@ -9,8 +12,21 @@ class BurnImage extends StatelessWidget {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body:Image.file(image!,)
-      ,);
+    return BlocConsumer<AppCubit,AppStates>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        return Scaffold(
+          body:SingleChildScrollView(
+            physics:BouncingScrollPhysics(),
+            child: Column(
+              children: [
+                Image.file(image!,),
+                Text(AppCubit.get(context).mlResult),
+              ],
+            ),
+          )
+          ,);
+      },
+    );
   }
 }

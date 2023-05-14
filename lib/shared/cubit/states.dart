@@ -65,3 +65,6 @@ class AppGetConnectionsErrorState extends AppStates{}
 
 class AppSendRequestSuccessState extends AppStates{}
 class AppSendRequestErrorState extends AppStates{}
+
+class AppSendHttpRequestSuccessState extends AppStates{}
+class AppSendHttpRequestErrorState extends AppStates{}
