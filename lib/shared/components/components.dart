@@ -7,7 +7,7 @@ import 'package:graduation_project/modules/settings/settings_screen.dart';
 import 'package:graduation_project/shared/cubit/cubit.dart';
 import 'package:graduation_project/shared/styles/colors.dart';
 
-import '../../modules/about_us/about_us_screen.dart';
+import '../../modules/about_us/about_screen.dart';
 import '../../modules/emergency_numbers/emergency_numbers_screen.dart';
 import '../../modules/profile/profile_screen.dart';
 

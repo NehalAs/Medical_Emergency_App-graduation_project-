@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:graduation_project/modules/about/about_screen.dart';
 import 'package:graduation_project/modules/blood/blood_screen.dart';
 import 'package:graduation_project/modules/burns/burns_screen.dart';
 import 'package:graduation_project/modules/home/home_screen.dart';
@@ -15,7 +16,6 @@ import 'package:graduation_project/shared/styles/colors.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 import '../modules/First_Aid/First_Aid.dart';
-import '../modules/about_us/about_us_screen.dart';
 import '../modules/emergency_numbers/emergency_numbers_screen.dart';
 import '../modules/feedback/feedback.dart';
 import '../modules/hospitals/hospitals_screen.dart';
@@ -297,17 +297,11 @@ class HomeLayout extends StatelessWidget {
           myDevider(),
           menuItem(
             itemIcon: Icons.info_outline,
-            itemName: 'About us',
-            fontSize: 14,
-            iconSize: 18,
-            onTap: () {},
-          ),
-          menuItem(
-            itemIcon: Icons.help_outline,
-            itemName: 'Help',
+            itemName: 'About',
             fontSize: 14,
             iconSize: 18,
             onTap: () {
+              navigateTo(context, AboutScreen());
             },
           ),
           menuItem(
@@ -319,13 +313,6 @@ class HomeLayout extends StatelessWidget {
               navigateTo(context, FeedBack());
             },
           ),
-          // menuItem(
-          //   itemIcon: Icons.share_outlined,
-          //   itemName: 'Share',
-          //   fontSize: 14,
-          //   iconSize: 18,
-          //   onTap: () {},
-          // ),
         ],
       ),
     ),
