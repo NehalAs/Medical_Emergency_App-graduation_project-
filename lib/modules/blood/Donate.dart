@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -65,6 +66,7 @@ class Donate extends StatelessWidget {
                   SizedBox(
                   height: 40,
                 ),
+                    /*
                     Container(
                     color: defaultColor,
                     margin: EdgeInsets.symmetric(
@@ -93,6 +95,8 @@ class Donate extends StatelessWidget {
                     )),
 
                   ),
+
+                    */
                     DropdownButtonFormField<String>(
                       hint: Text('Choose your needed blood type'),
                       value: selectedBloodType,
@@ -192,7 +196,7 @@ class Donate extends StatelessWidget {
                     // ),
                     SizedBox(height: 20,),
                     defaultButton(
-                      function: (){
+                      function: ()async{
                        if(formKey.currentState!.validate())
                          {
                            if(AppCubit.get(context).userModel!.userType=='Hospital')
@@ -407,6 +411,20 @@ class Donate extends StatelessWidget {
                                  }
                              }
                          }
+
+                     //  var token = await FirebaseMessaging.instance.getToken();
+                     //  String? deviceToken = token;
+                    //   var username= AppCubit.get(context).userModel?.name;
+                     //  AppCubit.get(context).sendPushNotification(deviceToken!);
+                     //  AppCubit.get(context).showNotification(
+                     //      username,
+                      //     " $username request Blood ");
+                     AppCubit.get(context).sendNotificationToAllUsers("First time ", " heeeeeeeeeeeeeeeeeehe");
+                       var username= AppCubit.get(context).userModel?.name;
+                       DocumentSnapshot snap = await FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser?.uid).get();
+                       String token = snap['token'];
+                     print(token);
+                   //    sendPushMessage("$username","Your Request is sent",token);
                       },
                       text: 'Request',
                       isUppercase: false,

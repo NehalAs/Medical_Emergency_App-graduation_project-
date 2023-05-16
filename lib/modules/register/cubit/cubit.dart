@@ -45,6 +45,7 @@ class RegisterCubit extends Cubit<RegisterStates>{
           bloodType: bloodType,
           userType: userType,
         );
+
       }
       else{
         hospitalCreate(
