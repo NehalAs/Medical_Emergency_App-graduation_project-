@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../shared/components/components.dart';
 import '../../shared/cubit/cubit.dart';
 import '../../shared/cubit/states.dart';
+import '../blood/Donate.dart';
 import 'edit_profile_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -100,7 +101,9 @@ class ProfileScreen extends StatelessWidget {
                     children: [
                       Expanded(
                         child:OutlinedButton(
-                          onPressed: (){},
+                          onPressed: (){
+                            navigateTo(context, Donate(),);
+                          },
                           child: Text(
                             'Request',
                           ),

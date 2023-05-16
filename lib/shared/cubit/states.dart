@@ -68,3 +68,5 @@ class AppSendRequestErrorState extends AppStates{}
 
 class AppSendHttpRequestSuccessState extends AppStates{}
 class AppSendHttpRequestErrorState extends AppStates{}
+
+class AppChangeWidgetVisibilityState extends AppStates{}

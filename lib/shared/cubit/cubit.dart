@@ -307,7 +307,7 @@ class AppCubit extends Cubit<AppStates> {
     else if(fromShared ==null && swatchValue==null)
       {
         isDark=isDark;
-        CacheHelper.saveData(key: 'isDark', value: isDark).then((value)
+        CacheHelper.saveData(key:'isDark', value: isDark).then((value)
         {
           emit(AppChangeModeState());
         });
@@ -927,6 +927,8 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   late var mlResult;
+  String? link;
+
 Future<void> makeHttpRequest(File imageFile)
 async{
   var stream =new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
@@ -934,7 +936,7 @@ async{
   var length = await imageFile.length();
 
 // string to uri
-  var uri = Uri.parse("https://ffd4-156-213-113-123.ngrok-free.app");
+  var uri = Uri.parse("$link");
 
 // create multipart request
   var request = new http.MultipartRequest("POST", uri);
@@ -958,6 +960,47 @@ async{
     print(error.toString());
     emit(AppSendHttpRequestErrorState());
   });
+}
+
+  bool isBurnAidVisible = false;
+  bool isBleedingAidVisible = false;
+  bool isPoisoningAidVisible = false;
+  bool isResuscitationAidVisible = false;
+  bool isAsthmaAidVisible = false;
+void changeWidgetVisibility({
+    bool? burn,
+    bool? bleeding,
+    bool? poisoning,
+    bool? Resuscitation,
+    bool? Asthma,
+})
+{
+  if(burn??false)
+    {
+      isBurnAidVisible=!isBurnAidVisible;
+      emit(AppChangeWidgetVisibilityState());
+    }
+  else if (bleeding??false)
+    {
+      isBleedingAidVisible=!isBleedingAidVisible;
+      emit(AppChangeWidgetVisibilityState());
+    }
+  else if (poisoning??false)
+    {
+      isPoisoningAidVisible=!isPoisoningAidVisible;
+      emit(AppChangeWidgetVisibilityState());
+    }
+  else if (Resuscitation??false)
+    {
+      isResuscitationAidVisible=!isResuscitationAidVisible;
+      emit(AppChangeWidgetVisibilityState());
+    }
+  else if (Asthma??false)
+    {
+      isAsthmaAidVisible=!isAsthmaAidVisible;
+      emit(AppChangeWidgetVisibilityState());
+    }
+
 }
 
 }

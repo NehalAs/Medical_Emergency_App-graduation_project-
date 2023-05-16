@@ -27,14 +27,17 @@ class EditProfileScreen extends StatelessWidget {
         var coverImage =AppCubit.get(context).coverImage;
         nameController.text=AppCubit.get(context).userModel!.name!;
         phoneController.text=AppCubit.get(context).userModel!.phone!;
-        APosController.text=AppCubit.get(context).userModel.APos.toString()??'';
-        ANagController.text=AppCubit.get(context).userModel.ANag.toString()??'';
-        BPosController.text=AppCubit.get(context).userModel.BPos.toString()??'';
-        BNagController.text=AppCubit.get(context).userModel.BNag.toString()??'';
-        OPosController.text=AppCubit.get(context).userModel.OPos.toString()??'';
-        ONagController.text=AppCubit.get(context).userModel.ONag.toString()??'';
-        ABPosController.text=AppCubit.get(context).userModel.ABPos.toString()??'';
-        ABNagController.text=AppCubit.get(context).userModel.ABNag.toString()??'';
+        if(AppCubit.get(context).userModel!.userType =='Hospital') {
+          APosController.text = AppCubit.get(context).userModel.APos.toString() ?? '';
+          ANagController.text = AppCubit.get(context).userModel.ANag.toString() ?? '';
+          BPosController.text = AppCubit.get(context).userModel.BPos.toString() ?? '';
+          BNagController.text = AppCubit.get(context).userModel.BNag.toString() ?? '';
+          OPosController.text = AppCubit.get(context).userModel.OPos.toString() ?? '';
+          ONagController.text = AppCubit.get(context).userModel.ONag.toString() ?? '';
+          ABPosController.text = AppCubit.get(context).userModel.ABPos.toString() ?? '';
+          ABNagController.text = AppCubit.get(context).userModel.ABNag.toString() ?? '';
+        }
+
         var selectedBloodType=AppCubit.get(context).userModel!.userType !='Hospital'? AppCubit.get(context).userModel!.bloodType :null;
         return Scaffold(
           appBar: AppBar(

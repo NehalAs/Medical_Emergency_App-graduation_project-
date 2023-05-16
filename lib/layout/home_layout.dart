@@ -18,6 +18,7 @@ import 'package:hexcolor/hexcolor.dart';
 import '../modules/First_Aid/First_Aid.dart';
 import '../modules/emergency_numbers/emergency_numbers_screen.dart';
 import '../modules/feedback/feedback.dart';
+import '../modules/forgot_password/forgot_password_screen.dart';
 import '../modules/hospitals/hospitals_screen.dart';
 import '../modules/profile/profile_screen.dart';
 import '../modules/settings/settings_screen.dart';
@@ -311,6 +312,15 @@ class HomeLayout extends StatelessWidget {
             iconSize: 18,
             onTap: () {
               navigateTo(context, FeedBack());
+            },
+          ),
+          menuItem(
+            itemIcon: Icons.feedback_outlined,
+            itemName: 'api link',
+            fontSize: 14,
+            iconSize: 18,
+            onTap: () {
+              navigateTo(context, ForgotPasswordScreen());
             },
           ),
         ],

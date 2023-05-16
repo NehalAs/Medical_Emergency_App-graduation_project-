@@ -21,6 +21,7 @@ class BurnImage extends StatelessWidget {
             child: Column(
               children: [
                 Image.file(image!,),
+                //Image(image:AssetImage('assets/images/first-aid-kit.gif')),
                 Text(AppCubit.get(context).mlResult),
               ],
             ),
