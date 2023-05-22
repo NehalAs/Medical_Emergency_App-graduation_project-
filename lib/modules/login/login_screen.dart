@@ -37,7 +37,6 @@ class LoginScreen extends StatelessWidget {
                 navigatAndFinish(context, HomeLayout());
                 AppCubit.get(context).getUsers();
                 AppCubit.get(context).getHospitals();
-                AppCubit.get(context).getAllTokens();
               });
             }
         },

@@ -18,6 +18,7 @@ import 'package:hexcolor/hexcolor.dart';
 import '../modules/First_Aid/First_Aid.dart';
 import '../modules/emergency_numbers/emergency_numbers_screen.dart';
 import '../modules/feedback/feedback.dart';
+import '../modules/forgot_password/forgot_password_screen.dart';
 import '../modules/hospitals/hospitals_screen.dart';
 import '../modules/profile/profile_screen.dart';
 import '../modules/settings/settings_screen.dart';
@@ -75,6 +76,7 @@ class HomeLayout extends StatelessWidget {
 
 
                     },
+
                     buildingsEnabled: true,
                     trafficEnabled: true,
                     mapToolbarEnabled: true,
@@ -148,37 +150,43 @@ class HomeLayout extends StatelessWidget {
                     ),
                   ),
                   if(AppCubit.get(context).currentIndex==1)
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: AnimatedFloatingActionButton(
-                        //Fab list
-                          curve: Curves.bounceInOut,
-                          durationAnimation: 300,
-                          spaceBetween: -10.0,
-                          fabButtons: <Widget>[
-                            AppCubit.get(context).float1(context),AppCubit.get(context).float2(context)
-                          ],
-                          key : key,
-                          colorStartAnimation: defaultColor??Colors.red,
-                          colorEndAnimation: defaultColor??Colors.red,
-                          animatedIconData: AnimatedIcons.menu_close //To principal button
+                    Positioned(
+                      bottom: 15,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: AnimatedFloatingActionButton(
+                          //Fab list
+                            curve: Curves.bounceInOut,
+                            durationAnimation: 300,
+                            spaceBetween: -10.0,
+                            fabButtons: <Widget>[
+                              AppCubit.get(context).float1(context),AppCubit.get(context).float2(context)
+                            ],
+                            key : key,
+                            colorStartAnimation: defaultColor??Colors.red,
+                            colorEndAnimation: defaultColor??Colors.red,
+                            animatedIconData: AnimatedIcons.menu_close //To principal button
+                        ),
                       ),
                     ),
                   if(AppCubit.get(context).currentIndex==2)
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: AnimatedFloatingActionButton(
-                        //Fab list
-                          curve: Curves.bounceInOut,
-                          durationAnimation: 300,
-                          spaceBetween: -10.0,
-                          fabButtons: <Widget>[
-                            AppCubit.get(context).float3(context),AppCubit.get(context).float4(context)
-                          ],
-                          key : key,
-                          colorStartAnimation: defaultColor??Colors.red,
-                          colorEndAnimation: defaultColor??Colors.red,
-                          animatedIconData: AnimatedIcons.menu_close //To principal button
+                    Positioned(
+                      bottom: 15,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: AnimatedFloatingActionButton(
+                          //Fab list
+                            curve: Curves.bounceInOut,
+                            durationAnimation: 300,
+                            spaceBetween: -10.0,
+                            fabButtons: <Widget>[
+                              AppCubit.get(context).float3(context),AppCubit.get(context).float4(context)
+                            ],
+                            key : key,
+                            colorStartAnimation: defaultColor??Colors.red,
+                            colorEndAnimation: defaultColor??Colors.red,
+                            animatedIconData: AnimatedIcons.menu_close //To principal button
+                        ),
                       ),
                     ),
 
@@ -311,6 +319,15 @@ class HomeLayout extends StatelessWidget {
             iconSize: 18,
             onTap: () {
               navigateTo(context, FeedBack());
+            },
+          ),
+          menuItem(
+            itemIcon: Icons.feedback_outlined,
+            itemName: 'api link',
+            fontSize: 14,
+            iconSize: 18,
+            onTap: () {
+              navigateTo(context, ForgotPasswordScreen());
             },
           ),
         ],

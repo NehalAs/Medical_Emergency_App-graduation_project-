@@ -6,6 +6,8 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:graduation_project/shared/styles/colors.dart';
 
 import '../../shared/cubit/cubit.dart';
+
+
 class FeedBack extends StatelessWidget {
   FeedBack({Key? key}) : super(key: key);
   final Color firstColor = const Color.fromRGBO(160, 0, 0, 1);
@@ -181,7 +183,7 @@ class FeedBack extends StatelessWidget {
                         child: MaterialButton(
                           onPressed: (){
                             if(formKey.currentState!.validate()) {
-                              sendEmail(feedBack.text, 'Feedback message ', 'ma422008@gmail.com');
+                              sendEmail(feedBack.text, 'Feedback message ', 'ma422008@gmail.com,alyehab2011@gmail.com,adamdontcarewest@gmail.com,nehadahmed115@gmail.com,Nehalashraf104@gmail.com,Mohamedhendy146@gmail.com');
                             }
                           },
                           child: Text('Send Now',style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold,),),

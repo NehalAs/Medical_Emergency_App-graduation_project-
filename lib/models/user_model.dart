@@ -9,7 +9,6 @@ class UserModel
   String? location;
   String? bloodType;
   String? userType;
-  String? token;
 
   UserModel({
     this.email,
@@ -21,7 +20,6 @@ class UserModel
     this.location,
     this.bloodType,
     this.userType,
-    this.token,
   });
 
   UserModel.fromJson(Map<String,dynamic>? json)
@@ -35,7 +33,6 @@ class UserModel
     location= json['location'];
     bloodType= json['bloodType'];
     userType= json['userType'];
-    token= json['token'];
   }
 
   Map<String,dynamic> toMap()
@@ -50,7 +47,6 @@ class UserModel
       'location':location,
       'bloodType':bloodType,
       'userType':userType,
-      'token':token,
     };
   }
 }
