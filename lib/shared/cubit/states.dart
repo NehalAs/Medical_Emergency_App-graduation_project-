@@ -63,10 +63,17 @@ class AppGetRequestsErrorState extends AppStates{}
 class AppGetConnectionsSuccessState extends AppStates{}
 class AppGetConnectionsErrorState extends AppStates{}
 
+
+class AppSendRequestLoadingState extends AppStates{}
 class AppSendRequestSuccessState extends AppStates{}
-class AppSendRequestErrorState extends AppStates{}
+class AppSendRequestErrorState extends AppStates{
+  late String error;
+  AppSendRequestErrorState(this.error);
+}
 
 class AppSendHttpRequestSuccessState extends AppStates{}
 class AppSendHttpRequestErrorState extends AppStates{}
 
 class AppChangeWidgetVisibilityState extends AppStates{}
+
+class AppGetCurrentLocationSuccessState extends AppStates{}

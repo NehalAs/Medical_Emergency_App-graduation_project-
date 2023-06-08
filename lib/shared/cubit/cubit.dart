@@ -13,7 +13,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:graduation_project/modules/blood/Donate.dart';
 import 'package:graduation_project/modules/blood/requests_screen.dart';
 import 'package:graduation_project/modules/burns/Burn_Image.dart';
-import 'package:graduation_project/modules/home/home_screen.dart';
 import 'package:graduation_project/modules/hospitals/hospitals_screen.dart';
 import 'package:graduation_project/modules/users/users_screen.dart';
 import 'package:graduation_project/shared/components/components.dart';
@@ -23,8 +22,6 @@ import '../../models/hospital_model.dart';
 import '../../models/request_model.dart';
 import '../../main.dart';
 import '../../models/user_model.dart';
-import '../../modules/blood/blood_screen.dart';
-import '../../modules/burns/burns_screen.dart';
 import '../../modules/login/login_screen.dart';
 import '../components/conistance.dart';
 import '../network/local/cache_helper.dart';
@@ -54,6 +51,8 @@ class AppCubit extends Cubit<AppStates> {
   bool isDark = false;
   late File  image;
   var userModel;
+  late Position position;
+
 
 
   final GlobalKey<AnimatedFloatingActionButtonState> key = GlobalKey<
@@ -90,12 +89,7 @@ class AppCubit extends Cubit<AppStates> {
     ),
   ];
 
-  List<Widget>screens =
-  [
-    HomeScreen(),
-    BloodScreen(),
-    BurnsScreen(),
-  ];
+
 
   static AppCubit get(context) => BlocProvider.of(context);
 
@@ -535,22 +529,29 @@ class AppCubit extends Cubit<AppStates> {
 
   void updateUser(
       {
-        required String name,
-        required String phone,
+        String? name,
+        String? phone,
         String? bloodType,
         String? image,
         String? cover,
+        String? location,
+        int? lat,
+        int? long,
+
       })
   {
     var model= UserModel(
-        phone: phone,
-        name: name,
+        phone: phone??userModel.phone,
+        name: name??userModel.name,
         bloodType: bloodType??userModel!.bloodType,
         image: image??userModel!.image ,
         cover: cover??userModel!.cover,
         email: userModel!.email,
         uId: userModel!.uId,
         userType: userModel!.userType,
+        location:location??userModel.location,
+        lat:lat??userModel!.lat,
+        long:long??userModel!.long,
     );
 
     FirebaseFirestore.instance.collection('users').doc(userModel!.uId).update(model.toMap())
@@ -568,6 +569,9 @@ class AppCubit extends Cubit<AppStates> {
       {
         String? name,
         String? phone,
+        String? location,
+        int? lat,
+        int? long,
         String? image,
         String? cover,
         int? APos,
@@ -588,7 +592,9 @@ class AppCubit extends Cubit<AppStates> {
         email: userModel!.email,
         uId: userModel!.uId,
         userType: userModel!.userType,
-        location: userModel!.location,
+        location:location??userModel!.location,
+        lat:lat??userModel!.lat,
+        long:long??userModel!.long,
         OPos:OPos??userModel!.OPos,
         ONag:ONag??userModel!.ONag ,
         BPos:BPos??userModel!.BPos ,
@@ -662,6 +668,7 @@ class AppCubit extends Cubit<AppStates> {
         text:text
 
     );
+    emit(AppSendRequestLoadingState());
 
     if(userModel.userType!='Hospital')
       {
@@ -677,7 +684,7 @@ class AppCubit extends Cubit<AppStates> {
           emit(AppSendRequestSuccessState());
         }).catchError((error){
           print(error.toString());
-          emit(AppSendRequestErrorState());
+          emit(AppSendRequestErrorState(error.toString()));
         });
 
         FirebaseFirestore.instance
@@ -692,7 +699,7 @@ class AppCubit extends Cubit<AppStates> {
           emit(AppSendRequestSuccessState());
         }).catchError((error){
           print(error.toString());
-          emit(AppSendRequestErrorState());
+          emit(AppSendRequestErrorState(error.toString()));
         });
 
      }
@@ -710,7 +717,7 @@ class AppCubit extends Cubit<AppStates> {
           emit(AppSendRequestSuccessState());
         }).catchError((error){
           print(error.toString());
-          emit(AppSendRequestErrorState());
+          emit(AppSendRequestErrorState(error.toString()));
         });
 
         FirebaseFirestore.instance
@@ -725,7 +732,7 @@ class AppCubit extends Cubit<AppStates> {
           emit(AppSendRequestSuccessState());
         }).catchError((error){
           print(error.toString());
-          emit(AppSendRequestErrorState());
+          emit(AppSendRequestErrorState(error.toString()));
         });
       }
 
@@ -896,7 +903,7 @@ class AppCubit extends Cubit<AppStates> {
   Future<Position> getCurrentLocation() async {
     bool serviceEnabled;
     LocationPermission permission;
-
+    emit(AppGetCurrentLocationSuccessState());
     // Check if location services are enabled
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
@@ -919,12 +926,53 @@ class AppCubit extends Cubit<AppStates> {
     return await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.bestForNavigation,
       forceAndroidLocationManager: true,
-
     );
+  }
+  Future<void> saveMyLocation()
+   async {
+    position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    GetAddressFromLatLong(position);
+    //getShortestDistance();
+    print(position.latitude);
+    print(position.longitude);
+    print(position.toString());
+  }
 
+  Future<void> GetAddressFromLatLong(position)
+  async {
+    List<Placemark> placeMark = await placemarkFromCoordinates(position.latitude, position.longitude);
+    print(placeMark);
+    print('${placeMark[0].street},${placeMark[1].street},${placeMark[2].street}');
 
+    if(userModel.userType!='Hospital')
+      updateUser(
+        location:'${placeMark[0].street},${placeMark[1].street},${placeMark[2].street}',
+        // lat:position.latitude.toInt(),
+        // long:position.longitude.toInt(),
+      );
+    else
+      updateHospital(
+          location:'${placeMark[0].street},${placeMark[1].street},${placeMark[2].street}',
+          // lat:position.latitude.toInt(),
+          // long:position.longitude.toInt(),
+      );
 
   }
+
+  // List<UserModel> sortedUsers=[];
+  // Future<void> getShortestDistance()
+  // async {
+  //  var minimum=await Geolocator.distanceBetween(position.longitude ,position.longitude,users[0].lat!.toDouble(),users[0].long!.toDouble());
+  //  users.forEach((element) {
+  //    if(Geolocator.distanceBetween(position.longitude ,position.longitude, element.lat!.toDouble(),element.long!.toDouble())<minimum)
+  //      {
+  //        minimum=Geolocator.distanceBetween(position.longitude ,position.longitude, 31.418715,73.079109);
+  //      }
+  //  });
+  //
+  //  //print('heeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee$minimum');
+  // }
 
   late var mlResult;
   String? link;
@@ -1002,5 +1050,6 @@ void changeWidgetVisibility({
     }
 
 }
+
 
 }

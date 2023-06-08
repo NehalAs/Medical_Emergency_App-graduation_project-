@@ -52,7 +52,7 @@ class EmergencyNumbersScreen extends StatelessWidget {
                                   padding: const EdgeInsets.all(8.0),
                                   child: Column(
                                     children: [
-                                      Image(image:NetworkImage('https://cdn-icons-png.flaticon.com/512/2955/2955666.png')),
+                                      Image(image:AssetImage('assets/images/ambulance.png')),//Image(image:NetworkImage('https://cdn-icons-png.flaticon.com/512/2955/2955666.png')),
                                       SizedBox(
                                         height: 20,
                                       ),
@@ -87,7 +87,7 @@ class EmergencyNumbersScreen extends StatelessWidget {
                                   padding: const EdgeInsets.all(8.0),
                                   child: Column(
                                     children: [
-                                      Image(image:NetworkImage('https://cdn-icons-png.flaticon.com/512/4325/4325959.png')),
+                                      Image(image:AssetImage('assets/images/firetruck.png')),//Image(image:NetworkImage('https://cdn-icons-png.flaticon.com/512/4325/4325959.png')),
                                       SizedBox(
                                         height: 20,
                                       ),
@@ -127,7 +127,7 @@ class EmergencyNumbersScreen extends StatelessWidget {
                                   padding: const EdgeInsets.all(8.0),
                                   child: Column(
                                     children: [
-                                      Image(image:NetworkImage('https://cdn-icons-png.flaticon.com/512/1048/1048342.png')),
+                                      Image(image:AssetImage('assets/images/police.png')),//Image(image:NetworkImage('https://cdn-icons-png.flaticon.com/512/1048/1048342.png')),
                                       SizedBox(
                                         height: 20,
                                       ),
@@ -163,7 +163,7 @@ class EmergencyNumbersScreen extends StatelessWidget {
                                   padding: const EdgeInsets.all(8.0),
                                   child: Column(
                                     children: [
-                                      Image(image:NetworkImage('https://cdn-icons-png.flaticon.com/512/3097/3097969.png')),
+                                      Image(image:AssetImage('assets/images/electricity.png')),//Image(image:NetworkImage('https://cdn-icons-png.flaticon.com/512/3097/3097969.png')),
                                       SizedBox(
                                         height: 20,
                                       ),
@@ -204,7 +204,7 @@ class EmergencyNumbersScreen extends StatelessWidget {
                                   padding: const EdgeInsets.all(8.0),
                                   child: Column(
                                     children: [
-                                      Image(image:NetworkImage('https://cdn-icons-png.flaticon.com/512/3144/3144737.png')),
+                                      Image(image:AssetImage('assets/images/gas.png')),//Image(image:NetworkImage('https://cdn-icons-png.flaticon.com/512/3144/3144737.png')),
                                       SizedBox(
                                         height: 20,
                                       ),
@@ -239,7 +239,7 @@ class EmergencyNumbersScreen extends StatelessWidget {
                                   padding: const EdgeInsets.all(8.0),
                                   child: Column(
                                     children: [
-                                      Image(image:NetworkImage('https://cdn-icons-png.flaticon.com/512/2043/2043115.png')),
+                                      Image(image:AssetImage('assets/images/traffic.png')),//Image(image:NetworkImage('https://cdn-icons-png.flaticon.com/512/2043/2043115.png')),
                                       SizedBox(
                                         height: 20,
                                       ),

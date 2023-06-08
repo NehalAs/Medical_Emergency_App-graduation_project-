@@ -24,6 +24,13 @@ class LoginScreen extends StatelessWidget {
       create: (context) => LoginCubit(),
       child: BlocConsumer<LoginCubit,LoginStates>(
         listener: (context, state) {
+          if(state is LoginErrorState)
+          {
+            showToast(message:
+            state.error,
+                state:ToastStates.ERROR
+            );
+          }
           if(state is LoginSuccessState)
           {
             if(LoginCubit.get(context).checkBoxValue){

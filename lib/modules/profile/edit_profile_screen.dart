@@ -9,6 +9,7 @@ class EditProfileScreen extends StatelessWidget {
 
   var nameController = TextEditingController();
   var phoneController = TextEditingController();
+  var locationController = TextEditingController();
   var APosController = TextEditingController();
   var ANagController = TextEditingController();
   var BPosController = TextEditingController();
@@ -27,6 +28,7 @@ class EditProfileScreen extends StatelessWidget {
         var coverImage =AppCubit.get(context).coverImage;
         nameController.text=AppCubit.get(context).userModel!.name!;
         phoneController.text=AppCubit.get(context).userModel!.phone!;
+        locationController.text=AppCubit.get(context).userModel!.location??'';
         if(AppCubit.get(context).userModel!.userType =='Hospital') {
           APosController.text = AppCubit.get(context).userModel.APos.toString() ?? '';
           ANagController.text = AppCubit.get(context).userModel.ANag.toString() ?? '';
@@ -59,6 +61,7 @@ class EditProfileScreen extends StatelessWidget {
                           AppCubit.get(context).updateUser(
                             name: nameController.text,
                             phone:phoneController.text,
+                            location:locationController.text,
                             bloodType:selectedBloodType??'null',
                           );
                         }
@@ -67,6 +70,7 @@ class EditProfileScreen extends StatelessWidget {
                           AppCubit.get(context).updateHospital(
                             name: nameController.text,
                             phone:phoneController.text,
+                            location:locationController.text,
                             APos: int.parse(APosController.text),
                             ANag: int.parse(ANagController.text),
                             BPos: int.parse(BPosController.text),
@@ -297,6 +301,22 @@ class EditProfileScreen extends StatelessWidget {
                       label: 'Phone',
                       prefix: Icon(
                         Icons.call,
+                      )
+                  ),   SizedBox(
+                    height: 15,
+                  ),
+                  defaultFormField(
+                      controller: locationController,
+                      type: TextInputType.text,
+                      validate: (value){
+                        if(value.isEmpty) {
+                          return 'Location must not be empty';
+                        }
+                        return null;
+                      },
+                      label: 'Location',
+                      prefix: Icon(
+                        Icons.location_on,
                       )
                   ),
                   SizedBox(

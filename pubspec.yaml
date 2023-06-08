@@ -54,8 +54,7 @@ dependencies:
   flutter_email_sender: ^5.2.0
   flutter_rating_bar: ^4.0.1
   http: ^0.13.4
-
-
+  fluttertoast: ^8.0.9
 
 
 

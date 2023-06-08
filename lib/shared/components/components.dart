@@ -1,13 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:graduation_project/modules/First_Aid/First_Aid.dart';
-import 'package:graduation_project/modules/login/login_screen.dart';
-import 'package:graduation_project/modules/settings/settings_screen.dart';
-import 'package:graduation_project/shared/cubit/cubit.dart';
 import 'package:graduation_project/shared/styles/colors.dart';
-import '../../modules/emergency_numbers/emergency_numbers_screen.dart';
-import '../../modules/profile/profile_screen.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 Widget defaultButton({
   double width = double.infinity,
@@ -155,3 +149,35 @@ enum popupMenuValues {
   normalView,
   terrainnView,
 }
+
+void showToast(
+{
+required String message,
+required ToastStates state,
+
+}
+)=>  Fluttertoast.showToast(
+msg:message,
+backgroundColor: chooseToastColor(state),
+gravity: ToastGravity.BOTTOM,
+fontSize: 16.0,
+textColor: Colors.white,
+timeInSecForIosWeb: 5,
+toastLength: Toast.LENGTH_LONG,
+);
+enum ToastStates {SUCCESS,WARNING,ERROR}
+Color chooseToastColor(ToastStates state){
+switch(state)
+{
+case ToastStates.SUCCESS :
+return Colors.green;
+break;
+case ToastStates.WARNING :
+return Colors.amber;
+break;
+case ToastStates.ERROR :
+return Colors.red;
+break;
+}
+}
+

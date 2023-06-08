@@ -35,9 +35,10 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   var token = await FirebaseMessaging.instance.getToken();
-  print(token);
+  print('token:$token');
 
-    const initializationSettingsAndroid =
+
+  const initializationSettingsAndroid =
     AndroidInitializationSettings('@mipmap/ic_launcher');
     final initializationSettings =
     InitializationSettings(android: initializationSettingsAndroid);

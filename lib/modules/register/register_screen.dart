@@ -1,6 +1,7 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:graduation_project/layout/home_layout.dart';
 import 'package:graduation_project/modules/login/login_screen.dart';
 import 'package:graduation_project/modules/register/cubit/cubit.dart';
@@ -23,6 +24,13 @@ class RegisterScreen extends StatelessWidget {
       create: (context) => RegisterCubit(),
       child: BlocConsumer<RegisterCubit,RegisterStates>(
         listener: (context, state) {
+          if(state is RegisterErrorState)
+          {
+            showToast(
+                message: state.error,
+                state:ToastStates.ERROR
+            );
+          }
           if(state is RegisterSuccessState)
           {
             navigatAndFinish(context, LoginScreen());

@@ -36,9 +36,9 @@ class OnBoardingScreen extends StatelessWidget {
         body: 'Detect your skin burn degree'
     ),
     BoardingModel(
-        image:'assets/images/human-blood-donate.jpg' ,
-        title: 'On Board 3 Title',
-        body: 'On Board 3 Body'
+        image:'assets/images/firstAid.jpg',
+        title: 'First Aid',
+        body: 'Full Guide for first aid'
     ),
   ];
 

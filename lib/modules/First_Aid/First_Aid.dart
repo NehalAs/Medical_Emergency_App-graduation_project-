@@ -296,6 +296,9 @@ class Firstaid extends StatelessWidget {
                       ),
                     ),
                   ),
+                  SizedBox(
+                    height: 20,
+                  ),
                   Row(
                     children: [
                       Image(image:AssetImage('assets/images/blood.png')),//wound
@@ -518,6 +521,9 @@ class Firstaid extends StatelessWidget {
                         ),
                       ),
                     ),
+                  SizedBox(
+                    height: 20,
+                  ),
                   Row(
                     children: [
                       Image(image:AssetImage('assets/images/poison.png')),
@@ -698,6 +704,9 @@ class Firstaid extends StatelessWidget {
                         ),
                       ),
                     ),
+                  SizedBox(
+                    height: 20,
+                  ),
                   Row(
                     children: [
                       Image(image:AssetImage('assets/images/heart-beats.png')),
@@ -878,6 +887,9 @@ class Firstaid extends StatelessWidget {
                         ),
                       ),
                     ),
+                  SizedBox(
+                    height: 20,
+                  ),
                   Row(
                     children: [
                       Image(image:AssetImage('assets/images/asthma.png')),
