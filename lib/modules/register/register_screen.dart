@@ -68,7 +68,7 @@ class RegisterScreen extends StatelessWidget {
                         ),
                         CircleAvatar(
                           radius: 80.0,
-                          backgroundImage: NetworkImage('https://calchamberalert.com/wp-content/uploads/emergency.png'),
+                          backgroundImage:AssetImage('assets/images/emergency1.png'),
                         ),
                         SizedBox(
                           height: 20.0,

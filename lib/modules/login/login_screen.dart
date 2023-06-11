@@ -58,7 +58,7 @@ class LoginScreen extends StatelessWidget {
                     child: Column(
                       children: <Widget> [
                         CircleAvatar(
-                          backgroundImage: NetworkImage('https://calchamberalert.com/wp-content/uploads/emergency.png'),
+                          backgroundImage:AssetImage('assets/images/emergency1.png'),
                           radius: 80.0,
                         ),
                         const SizedBox(height: 20,),

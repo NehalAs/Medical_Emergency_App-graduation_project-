@@ -10,6 +10,9 @@ class EditProfileScreen extends StatelessWidget {
   var nameController = TextEditingController();
   var phoneController = TextEditingController();
   var locationController = TextEditingController();
+  var countryController = TextEditingController();
+  var cityController = TextEditingController();
+  var governorateController = TextEditingController();
   var APosController = TextEditingController();
   var ANagController = TextEditingController();
   var BPosController = TextEditingController();
@@ -29,6 +32,9 @@ class EditProfileScreen extends StatelessWidget {
         nameController.text=AppCubit.get(context).userModel!.name!;
         phoneController.text=AppCubit.get(context).userModel!.phone!;
         locationController.text=AppCubit.get(context).userModel!.location??'';
+        countryController.text=AppCubit.get(context).userModel!.country??'';
+        cityController.text=AppCubit.get(context).userModel!.city??'';
+        governorateController.text=AppCubit.get(context).userModel!.governorate??'';
         if(AppCubit.get(context).userModel!.userType =='Hospital') {
           APosController.text = AppCubit.get(context).userModel.APos.toString() ?? '';
           ANagController.text = AppCubit.get(context).userModel.ANag.toString() ?? '';
@@ -63,6 +69,10 @@ class EditProfileScreen extends StatelessWidget {
                             phone:phoneController.text,
                             location:locationController.text,
                             bloodType:selectedBloodType??'null',
+                            country: countryController.text,
+                            city: cityController.text,
+                            governorate: governorateController.text,
+
                           );
                         }
                       else
@@ -71,6 +81,9 @@ class EditProfileScreen extends StatelessWidget {
                             name: nameController.text,
                             phone:phoneController.text,
                             location:locationController.text,
+                            country: countryController.text,
+                            city: cityController.text,
+                            governorate: governorateController.text,
                             APos: int.parse(APosController.text),
                             ANag: int.parse(ANagController.text),
                             BPos: int.parse(BPosController.text),
@@ -302,7 +315,8 @@ class EditProfileScreen extends StatelessWidget {
                       prefix: Icon(
                         Icons.call,
                       )
-                  ),   SizedBox(
+                  ),
+                  SizedBox(
                     height: 15,
                   ),
                   defaultFormField(
@@ -317,6 +331,57 @@ class EditProfileScreen extends StatelessWidget {
                       label: 'Location',
                       prefix: Icon(
                         Icons.location_on,
+                      )
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  defaultFormField(
+                      controller: cityController,
+                      type: TextInputType.text,
+                      validate: (value){
+                        if(value.isEmpty) {
+                          return 'City must not be empty';
+                        }
+                        return null;
+                      },
+                      label: 'City',
+                      prefix: Icon(
+                        Icons.location_city,
+                      )
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  defaultFormField(
+                      controller: governorateController,
+                      type: TextInputType.text,
+                      validate: (value){
+                        if(value.isEmpty) {
+                          return 'Governorate must not be empty';
+                        }
+                        return null;
+                      },
+                      label: 'Governorate',
+                      prefix: Icon(
+                        Icons.location_city,
+                      )
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  defaultFormField(
+                      controller: countryController,
+                      type: TextInputType.text,
+                      validate: (value){
+                        if(value.isEmpty) {
+                          return 'Country must not be empty';
+                        }
+                        return null;
+                      },
+                      label: 'Country',
+                      prefix: Icon(
+                        Icons.location_city,
                       )
                   ),
                   SizedBox(

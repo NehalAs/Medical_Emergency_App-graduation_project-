@@ -7,8 +7,9 @@ class UserModel
   String? image;
   String? cover;
   String? location;
-  int? lat;
-  int? long;
+  String? country;
+  String? city;
+  String? governorate;
   String? bloodType;
   String? userType;
 
@@ -20,8 +21,9 @@ class UserModel
     this.image,
     this.cover,
     this.location,
-    this.lat,
-    this.long,
+    this.country,
+    this.city,
+    this.governorate,
     this.bloodType,
     this.userType,
   });
@@ -35,8 +37,9 @@ class UserModel
     image= json['image'];
     cover= json['cover'];
     location= json['location'];
-    lat= json['lat'];
-    long= json['long'];
+    country= json['country'];
+    city= json['city'];
+    governorate= json['governorate'];
     bloodType= json['bloodType'];
     userType= json['userType'];
   }
@@ -51,8 +54,9 @@ class UserModel
       'image':image,
       'cover':cover,
       'location':location,
-      'lat':lat,
-      'long':long,
+      'country':country,
+      'city':city,
+      'governorate':governorate,
       'bloodType':bloodType,
       'userType':userType,
     };

@@ -12,7 +12,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:graduation_project/modules/blood/Donate.dart';
 import 'package:graduation_project/modules/blood/requests_screen.dart';
-import 'package:graduation_project/modules/burns/Burn_Image.dart';
+import 'package:graduation_project/modules/burns/burn_result.dart';
 import 'package:graduation_project/modules/hospitals/hospitals_screen.dart';
 import 'package:graduation_project/modules/users/users_screen.dart';
 import 'package:graduation_project/shared/components/components.dart';
@@ -323,7 +323,7 @@ class AppCubit extends Cubit<AppStates> {
       //navigateTo(context, BurnImage(image));
       makeHttpRequest(image).then((value) {
         if(mlResult!=null)
-          navigateTo(context, BurnImage(image),);
+          navigateTo(context, BurnsResult(image),);
       });
       emit(AppPickImageFromGallerySuccessState());
     }).catchError((error){
@@ -338,7 +338,7 @@ class AppCubit extends Cubit<AppStates> {
       //navigateTo(context, BurnImage(image));
       makeHttpRequest(image).then((value) {
         if(mlResult!=null)
-          navigateTo(context, BurnImage(image),);
+          navigateTo(context, BurnsResult(image),);
       });
       emit(AppPickImageFromCameraSuccessState());
     }).catchError((error){
@@ -535,8 +535,10 @@ class AppCubit extends Cubit<AppStates> {
         String? image,
         String? cover,
         String? location,
-        int? lat,
-        int? long,
+        String? country,
+        String? city,
+        String? governorate,
+
 
       })
   {
@@ -550,8 +552,9 @@ class AppCubit extends Cubit<AppStates> {
         uId: userModel!.uId,
         userType: userModel!.userType,
         location:location??userModel.location,
-        lat:lat??userModel!.lat,
-        long:long??userModel!.long,
+        country:country??userModel!.country,
+        city:city??userModel!.city,
+        governorate:governorate??userModel!.governorate,
     );
 
     FirebaseFirestore.instance.collection('users').doc(userModel!.uId).update(model.toMap())
@@ -570,8 +573,9 @@ class AppCubit extends Cubit<AppStates> {
         String? name,
         String? phone,
         String? location,
-        int? lat,
-        int? long,
+        String? country,
+        String? city,
+        String? governorate,
         String? image,
         String? cover,
         int? APos,
@@ -593,8 +597,9 @@ class AppCubit extends Cubit<AppStates> {
         uId: userModel!.uId,
         userType: userModel!.userType,
         location:location??userModel!.location,
-        lat:lat??userModel!.lat,
-        long:long??userModel!.long,
+        country:country??userModel!.country,
+        city:city??userModel!.city,
+        governorate:governorate??userModel!.governorate,
         OPos:OPos??userModel!.OPos,
         ONag:ONag??userModel!.ONag ,
         BPos:BPos??userModel!.BPos ,
@@ -931,31 +936,32 @@ class AppCubit extends Cubit<AppStates> {
   Future<void> saveMyLocation()
    async {
     position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+    desiredAccuracy: LocationAccuracy.high);
     GetAddressFromLatLong(position);
-    //getShortestDistance();
-    print(position.latitude);
-    print(position.longitude);
     print(position.toString());
+
   }
 
   Future<void> GetAddressFromLatLong(position)
   async {
     List<Placemark> placeMark = await placemarkFromCoordinates(position.latitude, position.longitude);
     print(placeMark);
-    print('${placeMark[0].street},${placeMark[1].street},${placeMark[2].street}');
+    print('${placeMark[1].street},${placeMark[1].locality},${placeMark[1].administrativeArea},${placeMark[1].country}');
 
     if(userModel.userType!='Hospital')
       updateUser(
-        location:'${placeMark[0].street},${placeMark[1].street},${placeMark[2].street}',
-        // lat:position.latitude.toInt(),
-        // long:position.longitude.toInt(),
+        location:'${placeMark[1].street},${placeMark[1].locality},${placeMark[1].administrativeArea},${placeMark[1].country}',
+        city:userModel.city??placeMark[1].locality,
+        governorate:userModel.governorate??placeMark[1].administrativeArea,
+        country:userModel.country??placeMark[1].country,
       );
     else
       updateHospital(
-          location:'${placeMark[0].street},${placeMark[1].street},${placeMark[2].street}',
-          // lat:position.latitude.toInt(),
-          // long:position.longitude.toInt(),
+        location:'${placeMark[1].street},${placeMark[1].locality},${placeMark[1].administrativeArea},${placeMark[1].country}',
+        city:userModel.city??placeMark[1].locality,
+        governorate:userModel.governorate??placeMark[1].administrativeArea,
+        country:userModel.country??placeMark[1].country,
+
       );
 
   }

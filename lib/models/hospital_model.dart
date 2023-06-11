@@ -8,8 +8,9 @@ class HospitalModel
   String? cover;
   String? userType;
   String? location;
-  int? lat;
-  int? long;
+  String? country;
+  String? city;
+  String? governorate;
   int? APos;
   int? ANag;
   int? BPos;
@@ -29,8 +30,9 @@ class HospitalModel
     this.cover,
     this.userType,
     this.location,
-    this.lat,
-    this.long,
+    this.country,
+    this.city,
+    this.governorate,
     this.APos,
     this.ANag,
     this.BPos,
@@ -51,8 +53,9 @@ class HospitalModel
     cover= json['cover'];
     userType= json['userType'];
     location= json['location'];
-    lat= json['lat'];
-    long= json['long'];
+    country= json['country'];
+    city= json['city'];
+    governorate= json['governorate'];
     APos= json!['A+'];
     ANag= json!['A-'];
     BPos= json!['B+'];
@@ -74,8 +77,9 @@ class HospitalModel
       'cover':cover,
       'userType':userType,
       'location':location,
-      'lat':lat,
-      'long':long,
+      'country':country,
+      'city':city,
+      'governorate':governorate,
       'A+':APos,
       'A-': ANag,
       'B+':BPos,

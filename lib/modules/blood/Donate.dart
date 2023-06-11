@@ -16,10 +16,6 @@ import '../hospitals/hospitals_screen.dart';
 
 class Donate extends StatelessWidget {
 
-  var bloodGroupController = TextEditingController();
-  var diseaseController = TextEditingController();
-  var lasttimeController = TextEditingController();
-  var ageController = TextEditingController();
   var formKey = GlobalKey<FormState>();
 
   @override
@@ -43,6 +39,7 @@ class Donate extends StatelessWidget {
       },
       builder: (context, state) {
         var selectedBloodType;
+        var selectedScope;
         if(AppCubit.get(context).userModel!.userType!='Hospital')
           selectedBloodType=AppCubit.get(context).userModel!.bloodType;
         return Scaffold(
@@ -61,25 +58,6 @@ class Donate extends StatelessWidget {
                 key: formKey,
                 child: Column(
                   children:[
-                    // const SizedBox(
-                    //   height: 30,
-                    // ),
-                    // defaultFormField(
-                    //   controller: ageController,
-                    //   type: TextInputType.number,
-                    //   validate: (value)
-                    //   {
-                    //     if(value.isEmpty)
-                    //     {
-                    //       return 'Age must not be empty';
-                    //     }
-                    //   },
-                    //   label: 'العمر',
-                    //   prefix: Icon(Icons.opacity),
-                    // ),
-                    // const SizedBox(
-                    //   height: 30,
-                    // ),
                   SizedBox(
                   height: 40,
                 ),
@@ -126,61 +104,49 @@ class Donate extends StatelessWidget {
                             borderRadius: BorderRadius.circular(20.0)),
                       ),
                     ),
-                    // SizedBox(
-                    //   height: 30,
-                    // ),
-                    // defaultFormField(
-                    //   controller: diseaseController,
-                    //   type: TextInputType.text,
-                    //   validate: (value)
-                    //   {
-                    //     if(value.isEmpty)
-                    //     {
-                    //       return 'Disease must not be empty';
-                    //     }
-                    //   },
-                    //   label: 'الامراض ',
-                    //   prefix: Icon(Icons.health_and_safety),
-                    // ),
-                    // SizedBox(
-                    //   height: 30,
-                    // ),
-                    // defaultFormField(
-                    //   controller: lasttimeController,
-                    //   type: TextInputType.datetime,
-                    //   validate: (value)
-                    //   {
-                    //     if(value.isEmpty)
-                    //     {
-                    //       return 'Last Time must not be empty';
-                    //     }
-                    //   },
-                    //   label: 'اخر مرة اتبرعت ',
-                    //   prefix: Icon(Icons.hourglass_top),
-                    // ),
-                    // SizedBox(
-                    //   height: 40,
-                    // ),
-                    // Container(
-                    //   color: defaultColor,
-                    //   margin: EdgeInsets.symmetric(
-                    //     horizontal: 10,
-                    //     vertical: 5,
-                    //   ),
-                    //   height: 60,
-                    //   width: double.infinity,
-                    //
-                    //   child: TextButton(onPressed: (){
-                    //
-                    //   }, child: Text(
-                    //     'Request',
-                    //     style: TextStyle(
-                    //       fontWeight: FontWeight.bold,
-                    //       fontSize: 19,
-                    //       color: Colors.white,
-                    //     ),
-                    //   )),
-                    // ),
+                    SizedBox(height: 20,),
+                    DropdownButtonFormField<String>(
+                      hint: Text('Choose scope to send requests'),
+                      value: selectedScope,
+                      validator: (value)
+                      {
+                        if(value!.isEmpty)
+                        {
+                          return 'This field must not be empty';
+                        }
+                      },
+                      items: ['City', 'Governorate', 'Country']
+                          .map((e) => DropdownMenuItem<String>(
+                        value: e,
+                        child: Text(e),
+                      )).toList(),
+                      onChanged: (value){
+                        print(value);
+                        selectedScope =value!;
+                      },
+
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        enabledBorder:OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color:  Colors.red,
+                              width: 1.0,
+                            ),
+                            borderRadius: BorderRadius.circular(20.0)) ,
+                        disabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color:  Colors.red,
+                              width: 1.0,
+                            ),
+                            borderRadius: BorderRadius.circular(20.0)),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color:  Colors.red,
+                              width: 1.0,
+                            ),
+                            borderRadius: BorderRadius.circular(20.0)),
+                      ),
+                    ),
                     SizedBox(height: 20,),
                     ConditionalBuilder(
                         condition: state is AppSendRequestLoadingState ,
@@ -191,10 +157,10 @@ class Donate extends StatelessWidget {
                             {
                               if(AppCubit.get(context).userModel!.userType=='Hospital')
                               {
-                                if(selectedBloodType=='A+')
+                                if(selectedBloodType=='A+' && selectedScope=='City')
                                 {
                                   AppCubit.get(context).users.forEach((element) {
-                                    if(element.bloodType=='A+' || element.bloodType=='A-'|| element.bloodType=='O+' || element.bloodType=='O-')
+                                    if((element.bloodType=='A+' || element.bloodType=='A-'|| element.bloodType=='O+' || element.bloodType=='O-') && element.city==AppCubit.get(context).userModel.city)
                                     {
                                       AppCubit.get(context).sendRequest(
                                         bloodType:selectedBloodType!,
@@ -204,10 +170,10 @@ class Donate extends StatelessWidget {
                                     }
                                   });
                                 }
-                                else if(selectedBloodType=='A-')
+                                else if(selectedBloodType=='A+' && selectedScope=='Country')
                                 {
                                   AppCubit.get(context).users.forEach((element) {
-                                    if(element.bloodType=='A-' || element.bloodType=='O-')
+                                    if((element.bloodType=='A+' || element.bloodType=='A-'|| element.bloodType=='O+' || element.bloodType=='O-' )&& element.country==AppCubit.get(context).userModel.country)
                                     {
                                       AppCubit.get(context).sendRequest(
                                         bloodType:selectedBloodType!,
@@ -217,10 +183,10 @@ class Donate extends StatelessWidget {
                                     }
                                   });
                                 }
-                                else if(selectedBloodType=='B+')
+                                else if(selectedBloodType=='A+' && selectedScope=='Governorate')
                                 {
                                   AppCubit.get(context).users.forEach((element) {
-                                    if(element.bloodType=='B+' || element.bloodType=='B-'|| element.bloodType=='O+' || element.bloodType=='O-')
+                                    if((element.bloodType=='A+' || element.bloodType=='A-'|| element.bloodType=='O+' || element.bloodType=='O-') && element.governorate==AppCubit.get(context).userModel.governorate)
                                     {
                                       AppCubit.get(context).sendRequest(
                                         bloodType:selectedBloodType!,
@@ -230,10 +196,10 @@ class Donate extends StatelessWidget {
                                     }
                                   });
                                 }
-                                else if(selectedBloodType=='B-')
+                                else if(selectedBloodType=='A-'&& selectedScope=='City')
                                 {
                                   AppCubit.get(context).users.forEach((element) {
-                                    if(element.bloodType=='B-'|| element.bloodType=='O-')
+                                    if((element.bloodType=='A-'|| element.bloodType=='O-')&& element.city==AppCubit.get(context).userModel.city)
                                     {
                                       AppCubit.get(context).sendRequest(
                                         bloodType:selectedBloodType!,
@@ -243,10 +209,10 @@ class Donate extends StatelessWidget {
                                     }
                                   });
                                 }
-                                else if(selectedBloodType=='O+')
+                                else if(selectedBloodType=='A-'&& selectedScope=='Country')
                                 {
                                   AppCubit.get(context).users.forEach((element) {
-                                    if(element.bloodType=='O+'|| element.bloodType=='O-')
+                                    if((element.bloodType=='A-' || element.bloodType=='O-') && element.country==AppCubit.get(context).userModel.country)
                                     {
                                       AppCubit.get(context).sendRequest(
                                         bloodType:selectedBloodType!,
@@ -256,10 +222,10 @@ class Donate extends StatelessWidget {
                                     }
                                   });
                                 }
-                                else if(selectedBloodType=='O-')
+                                else if(selectedBloodType=='A-'&& selectedScope=='Governorate')
                                 {
                                   AppCubit.get(context).users.forEach((element) {
-                                    if(element.bloodType=='O-')
+                                    if((element.bloodType=='A-' || element.bloodType=='O-') && element.governorate==AppCubit.get(context).userModel.governorate)
                                     {
                                       AppCubit.get(context).sendRequest(
                                         bloodType:selectedBloodType!,
@@ -269,20 +235,231 @@ class Donate extends StatelessWidget {
                                     }
                                   });
                                 }
-                                else if(selectedBloodType=='AB+')
+                                else if(selectedBloodType=='B+'&& selectedScope=='City')
                                 {
                                   AppCubit.get(context).users.forEach((element) {
-                                    AppCubit.get(context).sendRequest(
-                                      bloodType:selectedBloodType!,
-                                      dateTime: DateTime.now().toString(),
-                                      receiverId: element.uId!,
-                                    );
+                                    if((element.bloodType=='B+' || element.bloodType=='B-'|| element.bloodType=='O+' || element.bloodType=='O-')&& element.city==AppCubit.get(context).userModel.city)
+                                    {
+                                      AppCubit.get(context).sendRequest(
+                                        bloodType:selectedBloodType!,
+                                        dateTime: DateTime.now().toString(),
+                                        receiverId: element.uId!,
+                                      );
+                                    }
                                   });
                                 }
-                                else if(selectedBloodType=='AB-')
+                                else if(selectedBloodType=='B+'&& selectedScope=='Country')
                                 {
                                   AppCubit.get(context).users.forEach((element) {
-                                    if(element.bloodType=='AB-' || element.bloodType=='A-' || element.bloodType=='B-' || element.bloodType=='O-')
+                                    if((element.bloodType=='B+' || element.bloodType=='B-'|| element.bloodType=='O+' || element.bloodType=='O-')&& element.country==AppCubit.get(context).userModel.country)
+                                    {
+                                      AppCubit.get(context).sendRequest(
+                                        bloodType:selectedBloodType!,
+                                        dateTime: DateTime.now().toString(),
+                                        receiverId: element.uId!,
+                                      );
+                                    }
+                                  });
+                                }
+                                else if(selectedBloodType=='B+'&& selectedScope=='Governorate')
+                                {
+                                  AppCubit.get(context).users.forEach((element) {
+                                    if((element.bloodType=='B+' || element.bloodType=='B-'|| element.bloodType=='O+' || element.bloodType=='O-')&& element.governorate==AppCubit.get(context).userModel.governorate)
+                                    {
+                                      AppCubit.get(context).sendRequest(
+                                        bloodType:selectedBloodType!,
+                                        dateTime: DateTime.now().toString(),
+                                        receiverId: element.uId!,
+                                      );
+                                    }
+                                  });
+                                }
+                                else if(selectedBloodType=='B-'&& selectedScope=='City')
+                                {
+                                  AppCubit.get(context).users.forEach((element) {
+                                    if((element.bloodType=='B-'|| element.bloodType=='O-')&& element.city==AppCubit.get(context).userModel.city)
+                                    {
+                                      AppCubit.get(context).sendRequest(
+                                        bloodType:selectedBloodType!,
+                                        dateTime: DateTime.now().toString(),
+                                        receiverId: element.uId!,
+                                      );
+                                    }
+                                  });
+                                }
+                                else if(selectedBloodType=='B-'&& selectedScope=='Country')
+                                {
+                                  AppCubit.get(context).users.forEach((element) {
+                                    if((element.bloodType=='B-'|| element.bloodType=='O-')&& element.country==AppCubit.get(context).userModel.country)
+                                    {
+                                      AppCubit.get(context).sendRequest(
+                                        bloodType:selectedBloodType!,
+                                        dateTime: DateTime.now().toString(),
+                                        receiverId: element.uId!,
+                                      );
+                                    }
+                                  });
+                                }
+                                else if(selectedBloodType=='B-'&& selectedScope=='Governorate')
+                                {
+                                  AppCubit.get(context).users.forEach((element) {
+                                    if((element.bloodType=='B-'|| element.bloodType=='O-') && element.governorate==AppCubit.get(context).userModel.governorate)
+                                    {
+                                      AppCubit.get(context).sendRequest(
+                                        bloodType:selectedBloodType!,
+                                        dateTime: DateTime.now().toString(),
+                                        receiverId: element.uId!,
+                                      );
+                                    }
+                                  });
+                                }
+                                else if(selectedBloodType=='O+'&& selectedScope=='City')
+                                {
+                                  AppCubit.get(context).users.forEach((element) {
+                                    if((element.bloodType=='O+'|| element.bloodType=='O-')&& element.city==AppCubit.get(context).userModel.city)
+                                    {
+                                      AppCubit.get(context).sendRequest(
+                                        bloodType:selectedBloodType!,
+                                        dateTime: DateTime.now().toString(),
+                                        receiverId: element.uId!,
+                                      );
+                                    }
+                                  });
+                                }
+                                else if(selectedBloodType=='O+'&& selectedScope=='Country')
+                                {
+                                  AppCubit.get(context).users.forEach((element) {
+                                    if((element.bloodType=='O+'|| element.bloodType=='O-')&& element.country==AppCubit.get(context).userModel.country)
+                                    {
+                                      AppCubit.get(context).sendRequest(
+                                        bloodType:selectedBloodType!,
+                                        dateTime: DateTime.now().toString(),
+                                        receiverId: element.uId!,
+                                      );
+                                    }
+                                  });
+                                }
+                                else if(selectedBloodType=='O+'&& selectedScope=='Governorate')
+                                {
+                                  AppCubit.get(context).users.forEach((element) {
+                                    if((element.bloodType=='O+'|| element.bloodType=='O-') && element.governorate==AppCubit.get(context).userModel.governorate)
+                                    {
+                                      AppCubit.get(context).sendRequest(
+                                        bloodType:selectedBloodType!,
+                                        dateTime: DateTime.now().toString(),
+                                        receiverId: element.uId!,
+                                      );
+                                    }
+                                  });
+                                }
+                                else if(selectedBloodType=='O-'&& selectedScope=='City')
+                                {
+                                  AppCubit.get(context).users.forEach((element) {
+                                    if(element.bloodType=='O-'&& element.city==AppCubit.get(context).userModel.city)
+                                    {
+                                      AppCubit.get(context).sendRequest(
+                                        bloodType:selectedBloodType!,
+                                        dateTime: DateTime.now().toString(),
+                                        receiverId: element.uId!,
+                                      );
+                                    }
+                                  });
+                                }
+                                else if(selectedBloodType=='O-'&& selectedScope=='Country')
+                                {
+                                  AppCubit.get(context).users.forEach((element) {
+                                    if(element.bloodType=='O-' && element.country==AppCubit.get(context).userModel.country)
+                                    {
+                                      AppCubit.get(context).sendRequest(
+                                        bloodType:selectedBloodType!,
+                                        dateTime: DateTime.now().toString(),
+                                        receiverId: element.uId!,
+                                      );
+                                    }
+                                  });
+                                }
+                                else if(selectedBloodType=='O-'&& selectedScope=='Governorate')
+                                {
+                                  AppCubit.get(context).users.forEach((element) {
+                                    if(element.bloodType=='O-' && element.governorate==AppCubit.get(context).userModel.governorate)
+                                    {
+                                      AppCubit.get(context).sendRequest(
+                                        bloodType:selectedBloodType!,
+                                        dateTime: DateTime.now().toString(),
+                                        receiverId: element.uId!,
+                                      );
+                                    }
+                                  });
+                                }
+                                else if(selectedBloodType=='AB+'&& selectedScope=='City')
+                                {
+                                  AppCubit.get(context).users.forEach((element) {
+                                    if(element.city==AppCubit.get(context).userModel.city)
+                                      {
+                                        AppCubit.get(context).sendRequest(
+                                          bloodType:selectedBloodType!,
+                                          dateTime: DateTime.now().toString(),
+                                          receiverId: element.uId!,
+                                        );
+                                      }
+                                  });
+                                }
+                                else if(selectedBloodType=='AB+'&& selectedScope=='Country')
+                                {
+                                  AppCubit.get(context).users.forEach((element) {
+                                    if(element.country==AppCubit.get(context).userModel.country)
+                                      {
+                                        AppCubit.get(context).sendRequest(
+                                          bloodType:selectedBloodType!,
+                                          dateTime: DateTime.now().toString(),
+                                          receiverId: element.uId!,
+                                        );
+                                      }
+                                  });
+                                }
+                                else if(selectedBloodType=='AB+'&& selectedScope=='Governorate')
+                                {
+                                  AppCubit.get(context).users.forEach((element) {
+                                    if(element.governorate==AppCubit.get(context).userModel.governorate)
+                                      {
+                                        AppCubit.get(context).sendRequest(
+                                          bloodType:selectedBloodType!,
+                                          dateTime: DateTime.now().toString(),
+                                          receiverId: element.uId!,
+                                        );
+                                      }
+                                  });
+                                }
+                                else if(selectedBloodType=='AB-'&& selectedScope=='City')
+                                {
+                                  AppCubit.get(context).users.forEach((element) {
+                                    if((element.bloodType=='AB-' || element.bloodType=='A-' || element.bloodType=='B-' || element.bloodType=='O-')&& element.city==AppCubit.get(context).userModel.city)
+                                    {
+                                      AppCubit.get(context).sendRequest(
+                                        bloodType:selectedBloodType!,
+                                        dateTime: DateTime.now().toString(),
+                                        receiverId: element.uId!,
+                                      );
+                                    }
+                                  });
+                                }
+                                else if(selectedBloodType=='AB-'&& selectedScope=='Country')
+                                {
+                                  AppCubit.get(context).users.forEach((element) {
+                                    if((element.bloodType=='AB-' || element.bloodType=='A-' || element.bloodType=='B-' || element.bloodType=='O-')&& element.country==AppCubit.get(context).userModel.country)
+                                    {
+                                      AppCubit.get(context).sendRequest(
+                                        bloodType:selectedBloodType!,
+                                        dateTime: DateTime.now().toString(),
+                                        receiverId: element.uId!,
+                                      );
+                                    }
+                                  });
+                                }
+                                else if(selectedBloodType=='AB-'&& selectedScope=='Governorate')
+                                {
+                                  AppCubit.get(context).users.forEach((element) {
+                                    if((element.bloodType=='AB-' || element.bloodType=='A-' || element.bloodType=='B-' || element.bloodType=='O-')&&element.governorate==AppCubit.get(context).userModel.governorate)
                                     {
                                       AppCubit.get(context).sendRequest(
                                         bloodType:selectedBloodType!,
@@ -295,7 +472,20 @@ class Donate extends StatelessWidget {
                               }
                               else if (AppCubit.get(context).userModel!.userType!='Hospital')
                               {
-                                if(selectedBloodType=='A+')
+                                if(selectedBloodType=='A+' && selectedScope=='City')
+                                {
+                                  AppCubit.get(context).hospitals.forEach((element) {
+                                    if((element.APos!>0 || element.ANag!>0 || element.OPos!>0 || element.ONag!>0 ) && element.city==AppCubit.get(context).userModel.city)
+                                    {
+                                      AppCubit.get(context).sendRequest(
+                                        bloodType: selectedBloodType!,
+                                        dateTime: DateTime.now().toString(),
+                                        receiverId: element.uId!,
+                                      );
+                                    }
+                                  });
+                                }
+                                else if(selectedBloodType=='A+' && selectedScope=='Country')
                                 {
                                   AppCubit.get(context).hospitals.forEach((element) {
                                     if(element.APos!>0 || element.ANag!>0 || element.OPos!>0 || element.ONag!>0)
@@ -308,10 +498,10 @@ class Donate extends StatelessWidget {
                                     }
                                   });
                                 }
-                                if(selectedBloodType=='A-')
+                                else if(selectedBloodType=='A+' && selectedScope=='Governorate')
                                 {
                                   AppCubit.get(context).hospitals.forEach((element) {
-                                    if(element.ANag!>0 ||element.ONag!>0)
+                                    if((element.APos!>0 || element.ANag!>0 || element.OPos!>0 || element.ONag!>0)&&element.governorate==AppCubit.get(context).userModel.governorate)
                                     {
                                       AppCubit.get(context).sendRequest(
                                         bloodType: selectedBloodType!,
@@ -321,10 +511,10 @@ class Donate extends StatelessWidget {
                                     }
                                   });
                                 }
-                                else if(selectedBloodType=='B+')
+                                else if(selectedBloodType=='A-' && selectedScope=='City')
                                 {
                                   AppCubit.get(context).hospitals.forEach((element) {
-                                    if(element.BPos!>0 || element.BNag!>0 || element.OPos!>0 || element.ONag!>0)
+                                    if((element.ANag!>0 ||element.ONag!>0 ) && element.city==AppCubit.get(context).userModel.city)
                                     {
                                       AppCubit.get(context).sendRequest(
                                         bloodType: selectedBloodType!,
@@ -334,10 +524,10 @@ class Donate extends StatelessWidget {
                                     }
                                   });
                                 }
-                                else if(selectedBloodType=='B-')
+                                else if(selectedBloodType=='A-' && selectedScope=='Country')
                                 {
                                   AppCubit.get(context).hospitals.forEach((element) {
-                                    if(element.BNag!>0 || element.ONag!>0)
+                                    if((element.ANag!>0 ||element.ONag!>0 )&& element.country==AppCubit.get(context).userModel.country)
                                     {
                                       AppCubit.get(context).sendRequest(
                                         bloodType: selectedBloodType!,
@@ -347,10 +537,10 @@ class Donate extends StatelessWidget {
                                     }
                                   });
                                 }
-                                else if(selectedBloodType=='O+')
+                                else if(selectedBloodType=='A-'&& selectedScope=='Governorate')
                                 {
                                   AppCubit.get(context).hospitals.forEach((element) {
-                                    if(element.OPos!>0 || element.ONag!>0)
+                                    if((element.ANag!>0 ||element.ONag!>0 ) && element.governorate==AppCubit.get(context).userModel.governorate)
                                     {
                                       AppCubit.get(context).sendRequest(
                                         bloodType: selectedBloodType!,
@@ -360,10 +550,10 @@ class Donate extends StatelessWidget {
                                     }
                                   });
                                 }
-                                else if(selectedBloodType=='O-')
+                                else if(selectedBloodType=='B+'&& selectedScope=='City')
                                 {
                                   AppCubit.get(context).hospitals.forEach((element) {
-                                    if(element.ONag!>0)
+                                    if((element.BPos!>0 || element.BNag!>0 || element.OPos!>0 || element.ONag!>0 ) && element.city==AppCubit.get(context).userModel.city)
                                     {
                                       AppCubit.get(context).sendRequest(
                                         bloodType: selectedBloodType!,
@@ -373,10 +563,10 @@ class Donate extends StatelessWidget {
                                     }
                                   });
                                 }
-                                else if(selectedBloodType=='AB+')
+                                else if(selectedBloodType=='B+'&& selectedScope=='Country')
                                 {
                                   AppCubit.get(context).hospitals.forEach((element) {
-                                    if(element.ABPos!>0 || element.ABNag!>0 || element.APos!>0 || element.ANag!>0 || element.BPos!>0 || element.BNag!>0 || element.OPos!>0 || element.ONag!>0)
+                                    if((element.BPos!>0 || element.BNag!>0 || element.OPos!>0 || element.ONag!>0 )&& element.country==AppCubit.get(context).userModel.country)
                                     {
                                       AppCubit.get(context).sendRequest(
                                         bloodType: selectedBloodType!,
@@ -386,10 +576,205 @@ class Donate extends StatelessWidget {
                                     }
                                   });
                                 }
-                                else if(selectedBloodType=='AB-')
+                                else if(selectedBloodType=='B+' && selectedScope=='Governorate')
                                 {
                                   AppCubit.get(context).hospitals.forEach((element) {
-                                    if(element.ABNag!>0 || element.ANag!>0 || element.BNag!>0 || element.ONag!>0)
+                                    if((element.BPos!>0 || element.BNag!>0 || element.OPos!>0 || element.ONag!>0 ) && element.governorate==AppCubit.get(context).userModel.governorate)
+                                    {
+                                      AppCubit.get(context).sendRequest(
+                                        bloodType: selectedBloodType!,
+                                        dateTime: DateTime.now().toString(),
+                                        receiverId: element.uId!,
+                                      );
+                                    }
+                                  });
+                                }
+                                else if(selectedBloodType=='B-' && selectedScope=='City')
+                                {
+                                  AppCubit.get(context).hospitals.forEach((element) {
+                                    if((element.BNag!>0 || element.ONag!>0 ) && element.city==AppCubit.get(context).userModel.city)
+                                    {
+                                      AppCubit.get(context).sendRequest(
+                                        bloodType: selectedBloodType!,
+                                        dateTime: DateTime.now().toString(),
+                                        receiverId: element.uId!,
+                                      );
+                                    }
+                                  });
+                                }
+                                else if(selectedBloodType=='B-'&& selectedScope=='Country')
+                                {
+                                  AppCubit.get(context).hospitals.forEach((element) {
+                                    if((element.BNag!>0 || element.ONag!>0 )&& element.country==AppCubit.get(context).userModel.country)
+                                    {
+                                      AppCubit.get(context).sendRequest(
+                                        bloodType: selectedBloodType!,
+                                        dateTime: DateTime.now().toString(),
+                                        receiverId: element.uId!,
+                                      );
+                                    }
+                                  });
+                                }
+                                else if(selectedBloodType=='B-' && selectedScope=='Governorate')
+                                {
+                                  AppCubit.get(context).hospitals.forEach((element) {
+                                    if((element.BNag!>0 || element.ONag!>0 ) && element.governorate==AppCubit.get(context).userModel.governorate)
+                                    {
+                                      AppCubit.get(context).sendRequest(
+                                        bloodType: selectedBloodType!,
+                                        dateTime: DateTime.now().toString(),
+                                        receiverId: element.uId!,
+                                      );
+                                    }
+                                  });
+                                }
+                                else if(selectedBloodType=='O+' && selectedScope=='City')
+                                {
+                                  AppCubit.get(context).hospitals.forEach((element) {
+                                    if((element.OPos!>0 || element.ONag!>0 ) && element.city==AppCubit.get(context).userModel.city)
+                                    {
+                                      AppCubit.get(context).sendRequest(
+                                        bloodType: selectedBloodType!,
+                                        dateTime: DateTime.now().toString(),
+                                        receiverId: element.uId!,
+                                      );
+                                    }
+                                  });
+                                }
+                                else if(selectedBloodType=='O+' && selectedScope=='Country')
+                                {
+                                  AppCubit.get(context).hospitals.forEach((element) {
+                                    if((element.OPos!>0 || element.ONag!>0 )&& element.country==AppCubit.get(context).userModel.country)
+                                    {
+                                      AppCubit.get(context).sendRequest(
+                                        bloodType: selectedBloodType!,
+                                        dateTime: DateTime.now().toString(),
+                                        receiverId: element.uId!,
+                                      );
+                                    }
+                                  });
+                                }
+                                else if(selectedBloodType=='O+' && selectedScope=='Governorate')
+                                {
+                                  AppCubit.get(context).hospitals.forEach((element) {
+                                    if((element.OPos!>0 || element.ONag!>0 ) && element.governorate==AppCubit.get(context).userModel.governorate)
+                                    {
+                                      AppCubit.get(context).sendRequest(
+                                        bloodType: selectedBloodType!,
+                                        dateTime: DateTime.now().toString(),
+                                        receiverId: element.uId!,
+                                      );
+                                    }
+                                  });
+                                }
+                                else if(selectedBloodType=='O-' && selectedScope=='City')
+                                {
+                                  AppCubit.get(context).hospitals.forEach((element) {
+                                    if(element.ONag!>0 && element.city==AppCubit.get(context).userModel.city)
+                                    {
+                                      AppCubit.get(context).sendRequest(
+                                        bloodType: selectedBloodType!,
+                                        dateTime: DateTime.now().toString(),
+                                        receiverId: element.uId!,
+                                      );
+                                    }
+                                  });
+                                }
+                                else if(selectedBloodType=='O-' && selectedScope=='Country')
+                                {
+                                  AppCubit.get(context).hospitals.forEach((element) {
+                                    if(element.ONag!>0 && element.country==AppCubit.get(context).userModel.country)
+                                    {
+                                      AppCubit.get(context).sendRequest(
+                                        bloodType: selectedBloodType!,
+                                        dateTime: DateTime.now().toString(),
+                                        receiverId: element.uId!,
+                                      );
+                                    }
+                                  });
+                                }
+                                else if(selectedBloodType=='O-' && selectedScope=='Governorate')
+                                {
+                                  AppCubit.get(context).hospitals.forEach((element) {
+                                    if(element.ONag!>0 && element.governorate==AppCubit.get(context).userModel.governorate)
+                                    {
+                                      AppCubit.get(context).sendRequest(
+                                        bloodType: selectedBloodType!,
+                                        dateTime: DateTime.now().toString(),
+                                        receiverId: element.uId!,
+                                      );
+                                    }
+                                  });
+                                }
+                                else if(selectedBloodType=='AB+' && selectedScope=='City')
+                                {
+                                  AppCubit.get(context).hospitals.forEach((element) {
+                                    if((element.ABPos!>0 || element.ABNag!>0 || element.APos!>0 || element.ANag!>0 || element.BPos!>0 || element.BNag!>0 || element.OPos!>0 || element.ONag!>0) && element.city==AppCubit.get(context).userModel.city)
+                                    {
+                                      AppCubit.get(context).sendRequest(
+                                        bloodType: selectedBloodType!,
+                                        dateTime: DateTime.now().toString(),
+                                        receiverId: element.uId!,
+                                      );
+                                    }
+                                  });
+                                }
+                                else if(selectedBloodType=='AB+' && selectedScope=='Country')
+                                {
+                                  AppCubit.get(context).hospitals.forEach((element) {
+                                    if((element.ABPos!>0 || element.ABNag!>0 || element.APos!>0 || element.ANag!>0 || element.BPos!>0 || element.BNag!>0 || element.OPos!>0 || element.ONag!>0 )&& element.country==AppCubit.get(context).userModel.country)
+                                    {
+                                      AppCubit.get(context).sendRequest(
+                                        bloodType: selectedBloodType!,
+                                        dateTime: DateTime.now().toString(),
+                                        receiverId: element.uId!,
+                                      );
+                                    }
+                                  });
+                                }
+                                else if(selectedBloodType=='AB+' && selectedScope=='Governorate')
+                                {
+                                  AppCubit.get(context).hospitals.forEach((element) {
+                                    if((element.ABPos!>0 || element.ABNag!>0 || element.APos!>0 || element.ANag!>0 || element.BPos!>0 || element.BNag!>0 || element.OPos!>0 || element.ONag!>0 ) && element.governorate==AppCubit.get(context).userModel.governorate)
+                                    {
+                                      AppCubit.get(context).sendRequest(
+                                        bloodType: selectedBloodType!,
+                                        dateTime: DateTime.now().toString(),
+                                        receiverId: element.uId!,
+                                      );
+                                    }
+                                  });
+                                }
+                                else if(selectedBloodType=='AB-' && selectedScope=='City')
+                                {
+                                  AppCubit.get(context).hospitals.forEach((element) {
+                                    if((element.ABNag!>0 || element.ANag!>0 || element.BNag!>0 || element.ONag!>0 ) && element.city==AppCubit.get(context).userModel.city)
+                                    {
+                                      AppCubit.get(context).sendRequest(
+                                        bloodType: selectedBloodType!,
+                                        dateTime: DateTime.now().toString(),
+                                        receiverId: element.uId!,
+                                      );
+                                    }
+                                  });
+                                }
+                                else if(selectedBloodType=='AB-' && selectedScope=='Country')
+                                {
+                                  AppCubit.get(context).hospitals.forEach((element) {
+                                    if((element.ABNag!>0 || element.ANag!>0 || element.BNag!>0 || element.ONag!>0 )&& element.country==AppCubit.get(context).userModel.country)
+                                    {
+                                      AppCubit.get(context).sendRequest(
+                                        bloodType: selectedBloodType!,
+                                        dateTime: DateTime.now().toString(),
+                                        receiverId: element.uId!,
+                                      );
+                                    }
+                                  });
+                                }
+                                else if(selectedBloodType=='AB-' && selectedScope=='Governorate')
+                                {
+                                  AppCubit.get(context).hospitals.forEach((element) {
+                                    if((element.ABNag!>0 || element.ANag!>0 || element.BNag!>0 || element.ONag!>0 ) && element.governorate==AppCubit.get(context).userModel.governorate)
                                     {
                                       AppCubit.get(context).sendRequest(
                                         bloodType: selectedBloodType!,
@@ -401,11 +786,13 @@ class Donate extends StatelessWidget {
                                 }
                               }
                             }
+
                             var username= AppCubit.get(context).userModel?.name;
                             //  AppCubit.get(context).sendPushNotification(deviceToken!);
                             AppCubit.get(context).showNotification(
                                 username,
-                                " Your Request has been sent successfully ");
+                                " Your Request has been sent successfully "
+                            );
                           },
                           text: 'Request',
                           isUppercase: false,
